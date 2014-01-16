@@ -2,7 +2,7 @@ var http = require('http');
 
 var RESTful = {};
 
-RESTful.doGET = function(res, host, path) {
+RESTful.doGET = function(host, path, callback) {
 
     var options = {
         host: host,
@@ -13,7 +13,7 @@ RESTful.doGET = function(res, host, path) {
     var lastChunk = "";
     var totalData = [];
     var dataPerPage = "";
-    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+
 
     var fetchRequest = function (result) {
 
@@ -25,10 +25,8 @@ RESTful.doGET = function(res, host, path) {
         });
         result.on('end', function () {
             totalData = totalData.concat(JSON.parse(dataPerPage));
+            callback(totalData);
 
-            res.write(JSON.stringify(totalData));
-            res.end();
-            return;
 
         });
     }

@@ -60,7 +60,7 @@ app.get('/inquiries/getById/:inquiryId', inquiry.getInquiry);
 app.get('/inquiries/collectAll', inquiry.getInquiries);
 app.get('/inquiries/getByUser/:userAuthId/:userAuthProvider', inquiry.getInquiriesOfUser);
 
-app.get('/user/list', user.getUsers);
+app.get('/user/list', user.getUsers_RF);
 
 app.get('/comments', comments.list);
 app.get('/comments/:url', comments.comment);
