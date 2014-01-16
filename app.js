@@ -13,6 +13,7 @@ var express = require('express')
     , activity = require('./routes/activity')
     , badges = require('./routes/badges')
     , inquiry = require('./routes/inquiry')
+    , userInquiryList = require('./routes/userInquiryList')
   , http = require('http')
     , db = require('./dbConnection')
   , path = require('path');
@@ -56,11 +57,13 @@ app.get('/activitybydate/:date', activity.date);
 app.get('/blogposts', blogs.list);
 app.get('/blogposts/:url', blogs.blogpost);
 
-app.get('/inquiries/getById/:inquiryId', inquiry.getInquiry);
-app.get('/inquiries/collectAll', inquiry.getInquiries);
-app.get('/inquiries/getByUser/:userAuthId/:userAuthProvider', inquiry.getInquiriesOfUser);
+app.get('/inquiries/getById/:inquiryId', inquiry.getInquiry_RF);
+app.get('/inquiries/collectAll', inquiry.getInquiries_RF);
+app.get('/inquiries/getByUser/:userAuthId/:userAuthProvider', inquiry.getInquiriesOfUser_RF);
 
 app.get('/user/list', user.getUsers_RF);
+
+app.get('/userInquiryList/:userAuthId/:userAuthProvider' , userInquiryList.userInquiryList);
 
 app.get('/comments', comments.list);
 app.get('/comments/:url', comments.comment);

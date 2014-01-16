@@ -7,7 +7,7 @@ var RESTful = require('../RESTful.js').RESTful;
 //PARAMETERS:
 // - inquiryId
 //---------------
-exports.getInquiry = function(req, res) {
+exports.getInquiry_RF = function(req, res) {
     //param
     var inquiryId = req.params.inquiryId;
 
@@ -69,13 +69,13 @@ exports.getInquiry = function(req, res) {
 //PARAMETERS:
 // -
 //---------------
-function getInquiries(callback)
+exports.getInquiries = function(callback)
 {
     RESTful.doGET('inquiry.wespot.net','/services/api/rest/json/?method=site.inquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',callback);
 }
 
-exports.getInquiries = function(req, res) {
-    getInquiries(function(d)
+exports.getInquiries_RF = function(req, res) {
+    exports.getInquiries(function(d)
     {
         res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
         res.write(JSON.stringify(d));
@@ -90,15 +90,15 @@ exports.getInquiries = function(req, res) {
 // - userAuthProvider
 // - userAuthId
 //---------------
-function getInquiriesOfUser(userAuthId, userAuthProvider, callback)
+exports.getInquiriesOfUser = function(userAuthId, userAuthProvider, callback)
 {
     RESTful.doGET('inquiry.wespot.net','/services/api/rest/json/?method=user.inquiries&oauthId='+userAuthId+'&oauthProvider='+userAuthProvider+'&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',callback);
 }
-exports.getInquiriesOfUser = function(req, res) {
+exports.getInquiriesOfUser_RF = function(req, res) {
     var userAuthId = req.params.userAuthId;
     var userAuthProvider = req.params.userAuthProvider;
 
-    getInquiriesOfUser(userAuthId, userAuthProvider,function(d){
+    exports.getInquiriesOfUser(userAuthId, userAuthProvider,function(d){
         res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
         res.write(JSON.stringify(d));
         res.end();

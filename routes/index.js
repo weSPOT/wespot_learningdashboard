@@ -5,6 +5,7 @@ var user = require('./user.js');
 
 exports.index = function(req, res){
 
-  user.getUsers()
-  res.render('index.html');
+  user.getUsers(function(d){
+    res.render('index.html', {users: d[0].result});}
+  );
 };

@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>LARAe.weSPOT</title>
+</head>
+<body  id="mainBody">
+<div id="userlist">
+<% inquiries.forEach(function(inquiry){ %>
+   <a href=""><%= inquiry.title %></a><br/>
+    <%= inquiry.description %><br/>
+<% }); %>
+</div>
+</body>
+</html>
