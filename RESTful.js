@@ -26,9 +26,10 @@ exports.doPOST_Jose_Query = function(host, path, query, callback)
             totalData = totalData.concat(JSON.parse(dataPerPage));
             dataPerPage = "";
             page++;
-            if(true || lastChunk == "[]")
+            if(lastChunk == "[]")
             {
                 callback(totalData);
+                return;
             }
             var req = http.request(options,fetchRequest);
             req.write('{"query":"'+query+'", "pag":"' + page + '"}');

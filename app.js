@@ -14,6 +14,7 @@ var express = require('express')
     , badges = require('./routes/badges')
     , inquiry = require('./routes/inquiry')
     , userInquiryList = require('./routes/userInquiryList')
+    ,inquiryDashboard = require('./routes/inquiryDashboard')
   , http = require('http')
     , db = require('./dbConnection')
   , path = require('path');
@@ -64,6 +65,8 @@ app.get('/inquiries/getByUser/:userAuthId/:userAuthProvider', inquiry.getInquiri
 app.get('/user/list', user.getUsers_RF);
 
 app.get('/userInquiryList/:userAuthId/:userAuthProvider' , userInquiryList.userInquiryList);
+
+app.get('/inquiryDashboard/:inquiryId/:userAuthId/:userAuthProvider', inquiryDashboard.inquiryDashboard);
 
 app.get('/comments', comments.list);
 app.get('/comments/:url', comments.comment);

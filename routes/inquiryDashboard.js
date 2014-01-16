@@ -5,7 +5,7 @@ var inquiry = require('./inquiry.js');
 
 exports.inquiryDashboard = function(req, res){
 
-  inquiry.getInquiriesOfUser(req.params.userAuthId, req.params.userAuthProvider, function(d){
-    res.render('userInquiryList.html', {inquiries: d[0].result});}
+  inquiry.getInquiry(req.params.inquiryId, function(d){
+    res.render('inquiryDashboard.html', {events: d, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});}
   );
 };

@@ -7,11 +7,15 @@ var RESTful = require('../RESTful.js');
 //PARAMETERS:
 // - inquiryId
 //---------------
+exports.getInquiry = function(inquiryId, callback)
+{
+    RESTful.doPOST_Jose_Query('ariadne.cs.kuleuven.be','/wespot-dev-ws/rest/getEvents','select * from event where context like \'%' + inquiryId + '%\'', callback);
+}
+
 exports.getInquiry_RF = function(req, res) {
     //param
     var inquiryId = req.params.inquiryId;
-    RESTful.doPOST_Jose_Query('ariadne.cs.kuleuven.be','/wespot-dev-ws/rest/getEvents','select * from event where context like \'%' + inquiryId + '%\''
-        ,function(d)
+    exports.getInquiry(inquiryId, function(d)
         {
             res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
             res.write(JSON.stringify(d));

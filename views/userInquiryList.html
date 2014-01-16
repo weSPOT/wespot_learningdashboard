@@ -5,7 +5,7 @@
 <body  id="mainBody">
 <div id="inquirylist">
 <% inquiries.forEach(function(inquiry){ %>
-   <a href="inquiryDashboard"><%= inquiry.title %></a><br/>
+   <a href="/inquiryDashboard/<%= inquiry.inquiryId %>/<%= userAuthId %>/<%= userAuthProvider %>"><%= inquiry.title %></a><br/>
     <%= inquiry.description %><br/>
 <% }); %>
 </div>

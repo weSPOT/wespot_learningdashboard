@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>LARAe.weSPOT</title>
+</head>
+<body  id="mainBody">
+<div id="inquirylist">
+<% events.forEach(function(event){ %>
+    <% if(event.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) { %>
+        <div style="background-color:powderblue;">
+    <% } else { %>
+        <div>
+    <% } %>
+   <a href="<%= event.object %>">event id: <%= event.event_id %> phase: <%= JSON.parse(event.context)["phase"] %></a><br/>
+    <%= JSON.parse(event.context)["subphase"] %><br/>
+    <%= event.originalrequest %><br/>
+            <%= event.username %><br/>
+            <%= userAuthProvider + "_" + userAuthId %>
+    </div>
+<% }); %>
+</div>
+</body>
+</html>
