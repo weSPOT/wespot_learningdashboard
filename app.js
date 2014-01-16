@@ -6,7 +6,7 @@
 var express = require('express')
   , routes = require('./routes')
   , events = require('./routes/events')
-    , users = require('./routes/users')
+    , user = require('./routes/user')
     , blogs = require('./routes/blogs')
     , comments = require('./routes/comments')
     , relatedevents = require('./routes/relatedevents')
@@ -42,7 +42,7 @@ app.get('/events', events.list);
 app.get('/events/username/:username', events.username);
 app.get('/events/username/:username/:verb', events.username_verb);
 app.get('/events/verb/:verb', events.verb);
-app.get('/users', users.list);
+
 app.get('/relatedevents/:eventid', relatedevents.list);
 app.get('/relatedevents/activity/:verb/:eventid', relatedevents.listActivity);
 app.get('/badges', badges.list);
@@ -58,6 +58,9 @@ app.get('/blogposts/:url', blogs.blogpost);
 
 app.get('/inquiries/getById/:inquiryId', inquiry.getInquiry);
 app.get('/inquiries/collectAll', inquiry.getInquiries);
+app.get('/inquiries/getByUser/:userAuthId/:userAuthProvider', inquiry.getInquiriesOfUser);
+
+app.get('/user/list', user.getUsers);
 
 app.get('/comments', comments.list);
 app.get('/comments/:url', comments.comment);
