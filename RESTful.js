@@ -1,8 +1,51 @@
 var http = require('http');
 
-var RESTful = {};
+//do post (for jose's system with his pagination)
+exports.doPOST_Jose_Query = function(host, path, query, callback)
+{
+    var page = 0;
+    var options = {
+        host: host,
+        port: 80,
+        path: path,
+        method: 'POST'
+    };
+    var lastChunk = "";
+    var totalData = [];
+    var dataPerPage = "";
 
-RESTful.doGET = function(host, path, callback) {
+    var fetchRequest = function(result) {
+
+        result.setEncoding('utf8');
+        result.on('data', function (chunk) {
+            dataPerPage += chunk;
+            lastChunk = chunk;
+
+        });
+        result.on('end',function(){
+            totalData = totalData.concat(JSON.parse(dataPerPage));
+            dataPerPage = "";
+            page++;
+            if(true || lastChunk == "[]")
+            {
+                callback(totalData);
+            }
+            var req = http.request(options,fetchRequest);
+            req.write('{"query":"'+query+'", "pag":"' + page + '"}');
+            req.end();
+
+        });
+    }
+
+    var req = http.request(options,fetchRequest);
+
+    req.write('{"query":"'+query+'", "pag":"' + page + '"}');
+    req.end();
+    return;
+}
+
+
+exports.doGET = function(host, path, callback) {
 
     var options = {
         host: host,
@@ -39,4 +82,3 @@ RESTful.doGET = function(host, path, callback) {
 }
 
 
-exports.RESTful = RESTful;

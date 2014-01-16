@@ -1,5 +1,5 @@
 var http = require('http');
-var RESTful = require('../RESTful.js').RESTful;
+var RESTful = require('../RESTful.js');
 
 
 exports.getUsers = function(callback)

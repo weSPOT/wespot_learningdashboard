@@ -3,9 +3,9 @@
     <title>LARAe.weSPOT</title>
 </head>
 <body  id="mainBody">
-<div id="userlist">
+<div id="inquirylist">
 <% inquiries.forEach(function(inquiry){ %>
-   <a href=""><%= inquiry.title %></a><br/>
+   <a href="inquiryDashboard"><%= inquiry.title %></a><br/>
     <%= inquiry.description %><br/>
 <% }); %>
 </div>

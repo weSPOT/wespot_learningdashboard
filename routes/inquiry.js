@@ -1,6 +1,6 @@
 var http = require('http');
 
-var RESTful = require('../RESTful.js').RESTful;
+var RESTful = require('../RESTful.js');
 
 //---------------
 //get inquiry data from jose's datastore
@@ -10,55 +10,15 @@ var RESTful = require('../RESTful.js').RESTful;
 exports.getInquiry_RF = function(req, res) {
     //param
     var inquiryId = req.params.inquiryId;
-
-    var page = 0;
-    var options = {
-        host: 'ariadne.cs.kuleuven.be',
-        port: 80,
-        path: '/wespot-dev-ws/rest/getEvents',
-        method: 'POST'
-    };
-    var lastChunk = "";
-    var totalData = [];
-    var dataPerPage = "";
-    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
-
-    var fetchRequest = function(result) {
-
-        result.setEncoding('utf8');
-        result.on('data', function (chunk) {
-            dataPerPage += chunk;
-            lastChunk = chunk;
-
-        });
-        result.on('end',function(){
-            totalData = totalData.concat(JSON.parse(dataPerPage));
-            dataPerPage = "";
-            page++;
-            if(true || lastChunk == "[]")
-            {
-                res.write(JSON.stringify(totalData));
-                res.end();
-                return;
-            }
-            var req = http.request(options,fetchRequest);
-            req.write('{"query":"select * from event", "pag":"' + page + '"}');
-            req.end();
-
-        });
-    }
-
-    var req = http.request(options,fetchRequest);
-
-// write data to request body
-    //req.write('{"query":"select * from event where not context =\'thesis12\' and not context = \'chikul13\' and not context = \'mume12\' and not context = \'openBadges\'  and not context = \'gesyrt12\' and not context = \'thesis13\' and not context = \'mume13\' and not context = \'stefaan\'  and not context = \'chirevealit\' ", "pag":"' + page + '"}');
-
-    req.write('{"query":"select * from event where context like \'%' + inquiryId + '%\'", "pag":"' + page + '"}');
-    req.end();
-    return;
-
-
-
+    RESTful.doPOST_Jose_Query('ariadne.cs.kuleuven.be','/wespot-dev-ws/rest/getEvents','select * from event where context like \'%' + inquiryId + '%\''
+        ,function(d)
+        {
+            res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.write(JSON.stringify(d));
+            res.end();
+            return;
+        }
+    );
 
 }
 
