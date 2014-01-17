@@ -1,8 +1,108 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@font-face
+{
+    font-family: elysium;
+    src: url(Exo-Light.otf);
 }
 
-a {
-  color: #00B7FF;
+body
+{
+    background-color: #383838;
+    font-family: elysium;
+    font-size: 10px;
+    color: white;
+    font-weight:normal;
+
+}
+
+/* TITLE */
+
+#titleField
+{
+    width:100%;
+    border-bottom:solid 1px white;
+    color:white;
+}
+
+#titleField a, #titleField a:hover{
+    color:white;
+}
+
+
+#title
+{
+    font-size:20px;
+
+}
+
+#subtitle
+{
+    font-size:15px;
+    margin-right:450px;
+    color:#CCCCFF;
+}
+
+/* phase titles */
+
+#phases ul
+{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;
+    margin-left:120px;
+    margin-top:10px;
+}
+
+#phases ul li
+{
+
+    display:inline-block;
+    margin:0px;
+    padding:0px;
+    padding-top:3px;
+    padding-bottom:3px;
+    width:100px;
+    text-align:center;
+    background-color: #666699;
+    font-size: 10px;
+
+}
+
+
+/* user */
+
+#userList
+{
+
+    width: 735px
+}
+.user_vis
+{
+    padding:0;
+    margin:0;
+}
+
+#userList h2
+{
+    display:inline;
+    font-size:10px;
+    width:100px;
+    overflow:hidden;
+    float:left;
+}
+
+/* visualization */
+.box_vis
+{
+   margin-left:120px;
+
+
+    display:block;
+    border-bottom:solid 1px white;
+}
+
+.visualization
+{
+    margin:5px;
+    display:inline-block;
+
 }

@@ -2,38 +2,72 @@
   <head>
 
      <title>LARAe.weSPOT</title>
+      <link rel="stylesheet" href="/stylesheets/style.css">
+
      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
      <script type="application/javascript">
+
+
+
          function drawPhase(data, username)
          {
-             var div = d3.select("#user_"+username);
+             var heighestNumberOfEvents_ForAPhase = 150;
+             var sizeOfBox = 7;
+             var width = 90;
+             var spacingBetweenSquares = 1;
+             var columns  = parseInt(width / (sizeOfBox + spacingBetweenSquares));  //parseInt(Math.sqrt(heighestNumberOfEvents_ForAPhase));
+            //$('.visualization').width();
+
+             //var sizeOfBox = (width / columns);
+
+             var numberOfRows = (heighestNumberOfEvents_ForAPhase / columns);
+             var height = numberOfRows *  (sizeOfBox + spacingBetweenSquares);
+             var div = d3.select("#box_"+username);
              var svg = div
                      .append("svg")
-                     .attr("class","")
-                     .attr("width", 50)   // <-- Here
-                     .attr("height", 50); // <-- and here!
+                     .attr("class","visualization")
+                     .attr("width", width)
+                     .attr("height",height);
+
              svg.selectAll("rect")
                      .data(data)
                      .enter()
                      .append("rect")
-                     .attr("x", function(d,i){return i * 7;})
-                     .attr("y", function(d,i){return 1 * 7;})
-                     .attr("width", 6)
-                     .attr("height", 6)
+                     .attr("x", function(d,i){return (i % columns) * (sizeOfBox + spacingBetweenSquares);})
+                     .attr("y", function(d,i){return parseInt((i) / columns) * (sizeOfBox+spacingBetweenSquares)})
+                     .attr("width", sizeOfBox)
+                     .attr("height", sizeOfBox)
                      .attr("class", function(d){if(1 == 1) return "rectPositive"; return "rectNegative";})
-                     .attr("fill", function(d){return "blue";});
+                     .attr("fill", function(d){return "#9999ff";});
          }
 
 
      </script>
 </head>
 <body  id="mainBody">
+<div id="titleField">
+    <span id="title">LARAe</span><span id="subtitle">.wespot</span>
+</div>
+<div id="phases">
+    <ul>
+        <li>Question/Hypothesis</li>
+        <li>Operationalisation</li>
+        <li>Data Collection</li>
+        <li>Data Analysis</li>
+        <li>Interpretation</li>
+        <li>Communication</li>
+    </ul>
+</div>
+<div style="display:hidden" class=".visualization">
 <div id="userList">
 <% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()];
 
     if(userEvent != undefined) { %>
-        <div id="user_<%= userEvent.username %>"/>
+        <div id="user_<%= userEvent.username %>" class="user_vis"/>
         <h2><%= userEvent.username %></h2>
+            <div id="box_<%= userEvent.username %>" class="box_vis"/>
     <%
 
         for(var i=1;i<=6;i++)
@@ -42,7 +76,7 @@
             if(user_events == undefined) continue;
     %>
 
-            phase <%= i %>
+
             <script type="application/javascript">
                 var data = <%- JSON.stringify(user_events) %>;
                 drawPhase(data, "<%= userEvent.username %>");
@@ -51,6 +85,7 @@
 
         }
     %>
+            </div>
         </div>
     <%
     }
@@ -60,8 +95,9 @@
             var user_phases = events[user_phases_key];
             if(user_phases.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue;
     %>
-            <div id="user_<%= user_phases.username %>"/>
+            <div id="user_<%= user_phases.username %>" class="user_vis"/>
             <h2><%= user_phases.username %></h2>
+                <div id="box_<%= user_phases.username %>" class="box_vis"/>
     <%
 
             for(var i=1;i<=6;i++)
@@ -73,11 +109,12 @@
 
                 });*/
     %>
-                phase <%= i %>
+
                 <script type="application/javascript">
                     var data = <%- JSON.stringify(user_events) %>;
                     drawPhase(data, "<%= user_phases.username %>");
                 </script>
+
 
     <%
             }
@@ -88,6 +125,10 @@
     %>
 
 
+<script type="application/javascript">
 
+
+
+</script>
 </body>
 </html>
