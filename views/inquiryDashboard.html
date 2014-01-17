@@ -4,19 +4,25 @@
 </head>
 <body  id="mainBody">
 <div id="inquirylist">
-<% events.forEach(function(event){ %>
-    <% if(event.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) { %>
-        <div style="background-color:powderblue;">
-    <% } else { %>
-        <div>
-    <% } %>
-   <a href="<%= event.object %>">event id: <%= event.event_id %> phase: <%= JSON.parse(event.context)["phase"] %></a><br/>
-    <%= JSON.parse(event.context)["subphase"] %><br/>
-    <%= event.originalrequest %><br/>
-            <%= event.username %><br/>
-            <%= userAuthProvider + "_" + userAuthId %>
-    </div>
-<% }); %>
-</div>
+<% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()]; %>
+    <%= userEvent.username %>
+    <br/>
+    <br/>
+    <% for(var user_events_key in events){
+    var user_events = events[user_events_key];
+    if(user_events.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue; %>
+    <%= user_events.username %>
+
+    <% for(var event_key in user_events) {
+        var event = user_events[event_key];
+    %>
+        <%= event.phase %> <%= event.subphase %> <%= event.data %>
+    <br/>
+    <% }; %>
+    <br/>
+<% }; %>
+
+
+
 </body>
 </html>
