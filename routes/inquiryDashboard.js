@@ -14,12 +14,13 @@ var inquiry = require('./inquiry.js');
       format:
         [user]
             username
-            [eventid]
-                inquiryId
-                phase
-                subphase
-                username
-                data
+            [phase]
+                [eventid]
+                    inquiryId
+                    phase
+                    subphase
+                    username
+                    data
 */
 function convertToEventsByUsersAndEventId(data)
 {
@@ -27,17 +28,32 @@ function convertToEventsByUsersAndEventId(data)
     data.forEach(
         function(d)
         {
+            var username = d.username.toLowerCase();
             var context = JSON.parse(d.context);
             var event = {};
             event.inquiryId = context.course;
             event.phase = context.phase;
+            //quick hack
+            if(context.subphase == "Data Collection") context.subphase = 3;
             event.subphase = context.subphase;
-            event.username = d.username.toLowerCase();
+            event.username = username;
             event.data = d.object;
-            if(orderedData[d.username.toLowerCase()] == undefined)
-                orderedData[d.username.toLowerCase()] = {};
-            orderedData[d.username.toLowerCase()].username = event.username;
-            orderedData[d.username.toLowerCase()][d.event_id] = event;
+            event.id = d.event_id;
+            if(orderedData[username] == undefined)
+            {
+                orderedData[username] = {};
+                //PHASES
+                orderedData[username][1] = [];
+                orderedData[username][2] = [];
+                orderedData[username][3] = [];
+                orderedData[username][4] = [];
+                orderedData[username][5] = [];
+                orderedData[username][6] = [];
+
+            }
+            orderedData[username].username = event.username;
+
+            orderedData[username][parseInt(event.phase)].push(event);
         }
     );
     return orderedData;

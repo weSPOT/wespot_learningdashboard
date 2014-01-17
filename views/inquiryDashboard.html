@@ -4,23 +4,42 @@
 </head>
 <body  id="mainBody">
 <div id="inquirylist">
-<% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()]; %>
-    <%= userEvent.username %>
-    <br/>
-    <br/>
-    <% for(var user_events_key in events){
-    var user_events = events[user_events_key];
-    if(user_events.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue; %>
-    <%= user_events.username %>
+<% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()];
 
-    <% for(var event_key in user_events) {
-        var event = user_events[event_key];
+    if(userEvent != undefined) { %>
+        <%= userEvent.username %>
+    <% }%>
+    <br/>
+    <br/>
+    <%  for(var user_phases_key in events)
+        {
+            var user_phases = events[user_phases_key];
+            if(user_phases.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue;
     %>
-        <%= event.phase %> <%= event.subphase %> <%= event.data %>
-    <br/>
-    <% }; %>
-    <br/>
-<% }; %>
+        <h2><%= user_phases.username %></h2>
+    <%
+
+    for(var i=1;i<=6;i++)
+            {
+                var user_events = user_phases[i]
+                if(user_events == undefined) continue;
+                user_events.forEach(function(event)
+                {
+
+    %>
+
+                    <%= event.phase %> <%= event.subphase %> <%= event.data %>
+
+                <br/>
+    <%
+                });
+    %>
+                phase <%= i %>
+                <br/>
+    <%
+            }
+        }
+    %>
 
 
 
