@@ -1,43 +1,89 @@
 <html>
   <head>
-    <title>LARAe.weSPOT</title>
+
+     <title>LARAe.weSPOT</title>
+     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+     <script type="application/javascript">
+         function drawPhase(data, username)
+         {
+             var div = d3.select("#user_"+username);
+             var svg = div
+                     .append("svg")
+                     .attr("class","")
+                     .attr("width", 50)   // <-- Here
+                     .attr("height", 50); // <-- and here!
+             svg.selectAll("rect")
+                     .data(data)
+                     .enter()
+                     .append("rect")
+                     .attr("x", function(d,i){return i * 7;})
+                     .attr("y", function(d,i){return 1 * 7;})
+                     .attr("width", 6)
+                     .attr("height", 6)
+                     .attr("class", function(d){if(1 == 1) return "rectPositive"; return "rectNegative";})
+                     .attr("fill", function(d){return "blue";});
+         }
+
+
+     </script>
 </head>
 <body  id="mainBody">
-<div id="inquirylist">
+<div id="userList">
 <% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()];
 
     if(userEvent != undefined) { %>
-        <%= userEvent.username %>
-    <% }%>
-    <br/>
-    <br/>
-    <%  for(var user_phases_key in events)
+        <div id="user_<%= userEvent.username %>"/>
+        <h2><%= userEvent.username %></h2>
+    <%
+
+        for(var i=1;i<=6;i++)
+        {
+            var user_events = userEvent[i];
+            if(user_events == undefined) continue;
+    %>
+
+            phase <%= i %>
+            <script type="application/javascript">
+                var data = <%- JSON.stringify(user_events) %>;
+                drawPhase(data, "<%= userEvent.username %>");
+            </script>
+    <%
+
+        }
+    %>
+        </div>
+    <%
+    }
+
+        for(var user_phases_key in events)
         {
             var user_phases = events[user_phases_key];
             if(user_phases.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue;
     %>
-        <h2><%= user_phases.username %></h2>
+            <div id="user_<%= user_phases.username %>"/>
+            <h2><%= user_phases.username %></h2>
     <%
 
-    for(var i=1;i<=6;i++)
+            for(var i=1;i<=6;i++)
             {
                 var user_events = user_phases[i]
                 if(user_events == undefined) continue;
-                user_events.forEach(function(event)
+                /*user_events.forEach(function(event)
                 {
 
-    %>
-
-                    <%= event.phase %> <%= event.subphase %> <%= event.data %>
-
-                <br/>
-    <%
-                });
+                });*/
     %>
                 phase <%= i %>
-                <br/>
+                <script type="application/javascript">
+                    var data = <%- JSON.stringify(user_events) %>;
+                    drawPhase(data, "<%= user_phases.username %>");
+                </script>
+
     <%
             }
+    %>
+            </div>
+    <%
         }
     %>
 

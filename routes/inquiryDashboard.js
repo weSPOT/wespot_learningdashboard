@@ -32,9 +32,10 @@ function convertToEventsByUsersAndEventId(data)
             var context = JSON.parse(d.context);
             var event = {};
             event.inquiryId = context.course;
-            event.phase = context.phase;
             //quick hack
-            if(context.subphase == "Data Collection") context.subphase = 3;
+            if(context.phase == "Data Collection") context.phase = 3;
+            event.phase = context.phase;
+
             event.subphase = context.subphase;
             event.username = username;
             event.data = d.object;
