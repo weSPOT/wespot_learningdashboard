@@ -9,11 +9,16 @@
 
      <script type="application/javascript">
 
+         var colors = ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC","#99CC66","#9999FF","#FFCC66", "#FF9966"];
 
+        function loadContent(data)
+        {
+            $("#eventData").html(JSON.stringify(data.originalRequest));
+        }
 
          function drawPhase(data, username)
          {
-             var heighestNumberOfEvents_ForAPhase = 150;
+             var heighestNumberOfEvents_ForAPhase = 50;
              var sizeOfBox = 7;
              var width = 90;
              var spacingBetweenSquares = 1;
@@ -40,7 +45,8 @@
                      .attr("width", sizeOfBox)
                      .attr("height", sizeOfBox)
                      .attr("class", function(d){if(1 == 1) return "rectPositive"; return "rectNegative";})
-                     .attr("fill", function(d){return "#9999ff";});
+                     .attr("fill", function(d){return colors[d.phase-1];}) //"#9999ff";})
+                     .on("click",function(d){ loadContent(d); });
          }
 
 
@@ -50,17 +56,23 @@
 <div id="titleField">
     <span id="title">LARAe</span><span id="subtitle">.wespot</span>
 </div>
+<div id="realContent">
+    <h2>Event Data</h2>
+    <div id="eventData">
+    </div>
+</div>
 <div id="phases">
     <ul>
-        <li>Question/Hypothesis</li>
-        <li>Operationalisation</li>
-        <li>Data Collection</li>
-        <li>Data Analysis</li>
-        <li>Interpretation</li>
-        <li>Communication</li>
+        <li class="title_phase1">Question/Hypothesis</li>
+        <li class="title_phase2">Operationalisation</li>
+        <li class="title_phase3">Data Collection</li>
+        <li class="title_phase4">Data Analysis</li>
+        <li class="title_phase5">Interpretation</li>
+        <li class="title_phase6">Communication</li>
     </ul>
 </div>
-<div style="display:hidden" class=".visualization">
+<div style="display:hidden" class=".visualization"></div>
+
 <div id="userList">
 <% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()];
 
@@ -120,15 +132,11 @@
             }
     %>
             </div>
+            </div>
     <%
         }
     %>
+</div>
 
-
-<script type="application/javascript">
-
-
-
-</script>
 </body>
 </html>

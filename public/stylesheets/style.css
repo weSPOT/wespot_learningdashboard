@@ -50,6 +50,7 @@ body
     margin:0px;
     margin-left:120px;
     margin-top:10px;
+    margin-bottom:5px;
 }
 
 #phases ul li
@@ -58,13 +59,43 @@ body
     display:inline-block;
     margin:0px;
     padding:0px;
-    padding-top:3px;
-    padding-bottom:3px;
+    padding-top:5px;
+    padding-bottom:5px;
     width:100px;
     text-align:center;
-    background-color: #666699;
     font-size: 10px;
+    border-bottom-style: solid;
+    border-bottom-width:1px;
 
+
+}
+
+.title_phase1
+{
+    border-color: #33FF99;
+}
+.title_phase2
+{
+    border-color: #33CCFF;
+}
+
+.title_phase3
+{
+    border-color: #CCFF33;
+}
+
+.title_phase4
+{
+    border-color: #FF0066;
+}
+
+.title_phase5
+{
+    border-color: #CCFFFF;
+}
+.title_phase6
+{
+    border-color: #FF66CC;
 }
 
 
@@ -97,12 +128,43 @@ body
 
 
     display:block;
-    border-bottom:solid 1px white;
+    border-bottom:dotted 1px #B0B0B0;
 }
 
 .visualization
 {
     margin:5px;
     display:inline-block;
+
+}
+
+
+/* content */
+#realContent
+{
+    float:right;
+
+    margin:0px;
+    width:300px;
+   }
+
+#realContent h2
+{
+    margin-top:10px;
+
+    padding:0px;
+    padding-top:5px;
+    padding-bottom:5px;
+    text-align:center;
+    border-bottom: solid 1px #666699;
+    text-align:center;
+    font-size: 10px;
+    margin-bottom:5px;
+
+
+}
+
+#event_data
+{
 
 }

@@ -40,6 +40,15 @@ function convertToEventsByUsersAndEventId(data)
             event.username = username;
             event.data = d.object;
             event.id = d.event_id;
+            try
+            {
+                event.originalRequest = JSON.parse(d.originalrequest)
+            }
+            catch(exc)
+            {
+                console.log(exc.toString());
+                console.log(d.originalrequest.toString());
+            }
             if(orderedData[username] == undefined)
             {
                 orderedData[username] = {};
