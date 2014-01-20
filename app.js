@@ -15,14 +15,19 @@ var express = require('express')
     , inquiry = require('./routes/inquiry')
     , userInquiryList = require('./routes/userInquiryList')
     ,inquiryDashboard = require('./routes/inquiryDashboard')
+    ,casRoute = require('./routes/cas')
   , http = require('http')
     , db = require('./dbConnection')
   , path = require('path');
+var cas = require('grand_master_cas');
 var static = require('node-static');
 
 var app = express();
 
 // all environments
+app.use(express.cookieParser());
+app.use(express.session({secret: "LARA.emo_was_here"}));
+
 app.set('port', process.env.PORT || 3013);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -38,6 +43,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+
+
+//CAS
+cas.configure({
+    casHost: "cas-no-ssl.wespot.it.fmi.uni-sofia.bg",//"tapies",   // required
+    casPath: "/cas",                  // your cas login route (defaults to "/cas")
+    ssl: false,                        // is the cas url https? defaults to false
+    casPort: 7070,                        // defaults to 80 if ssl false, 443 if ssl true
+    service: "http://localhost:3013", // your site
+    sessionName: "cas_user",          // the cas user_name will be at req.session.cas_user (this is the default)
+    renew: false,                     // true or false, false is the default
+    gateway: false,                   // true or false, false is the default
+    redirectUrl: '/test'            // the route that cas.blocker will send to if not authed. Defaults to '/'
+});
+
+// cas.bouncer prompts for authentication and performs login if not logged in. If logged in it passes on.
+app.get('/', cas.bouncer, routes.index);
+// cas.blocker redirects to the redirectUrl supplied above if not logged in.
+app.get('/', cas.blocker, casRoute.accessDenied);
+app.get('/logout', casRoute.logout);
+
 
 app.get('/', routes.index);
 app.get('/events', events.list);
@@ -78,15 +105,3 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-
-//create static file server where we'll add LARAe03 interface
-var file = new static.Server('./LARAe03');
-
-require('http').createServer(function (request, response) {
-    request.addListener('end', function () {
-        //
-        // Serve files!
-        //
-        file.serve(request, response);
-    }).resume();
-}).listen(4013);
