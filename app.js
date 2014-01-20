@@ -56,7 +56,7 @@ cas.configure({
     sessionName: "cas_user",          // the cas user_name will be at req.session.cas_user (this is the default)
     renew: false,                     // true or false, false is the default
     gateway: false,                   // true or false, false is the default
-    redirectUrl: '/test'            // the route that cas.blocker will send to if not authed. Defaults to '/'
+    redirectUrl: '/accessDenied'            // the route that cas.blocker will send to if not authed. Defaults to '/'
 });
 
 // cas.bouncer prompts for authentication and performs login if not logged in. If logged in it passes on.
@@ -64,8 +64,8 @@ app.get('/', cas.bouncer, routes.index);
 // cas.blocker redirects to the redirectUrl supplied above if not logged in.
 
 app.get('/logout', casRoute.logout);
-app.get('/', cas.blocker, casRoute.accessDenied);
-app.get('/', casRoute.accessDenied);
+app.get('/accessDenied', cas.blocker, casRoute.accessDenied);
+//app.get('/accessDenied', casRoute.accessDenied);
 
 //REST services
 app.get('/inquiries/getById/:inquiryId', inquiry.getInquiry_RF);

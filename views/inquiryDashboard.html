@@ -78,7 +78,7 @@
 
     if(userEvent != undefined) { %>
         <div id="user_<%= userEvent.username %>" class="user_vis"/>
-        <h2><%= userEvent.username %></h2>
+        <h2><%= users[userEvent.username].name %></h2>
             <div id="box_<%= userEvent.username %>" class="box_vis"/>
     <%
 
@@ -108,7 +108,7 @@
             if(user_phases.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue;
     %>
             <div id="user_<%= user_phases.username %>" class="user_vis"/>
-            <h2><%= user_phases.username %></h2>
+            <h2><%= users[user_phases.username].name %></h2><!--<img src="<%= users[user_phases.username].icon %>"/>-->
                 <div id="box_<%= user_phases.username %>" class="box_vis"/>
     <%
 

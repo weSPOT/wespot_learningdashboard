@@ -1,4 +1,5 @@
 var inquiry = require('./inquiry.js');
+var user = require('./user.js');
 /*
  * GET home page.
  */
@@ -75,6 +76,6 @@ exports.inquiryDashboard = function(req, res){
   inquiry.getInquiry(req.params.inquiryId, function(d){
     //order the events by user
     var parsedData = convertToEventsByUsersAndEventId(d);
-    res.render('inquiryDashboard.html', {events: parsedData, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});}
+    res.render('inquiryDashboard.html', {users: user.users, events: parsedData, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});}
   );
 };

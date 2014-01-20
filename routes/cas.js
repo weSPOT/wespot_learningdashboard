@@ -7,7 +7,11 @@ exports.accessDenied = function(req, res)
 
 exports.logout = function(req,res)
 {
+    delete req.session["activeUser"];
+    delete req.session["authId"];
+    delete req.session["activeProvider"];
     cas.logout(req,res);
+
     //req.session.destroy();
 
     //res.send("logged out");
