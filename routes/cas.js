@@ -10,5 +10,5 @@ exports.logout = function(req,res)
     cas.logout(req,res);
     //req.session.destroy();
 
-    res.send("logged out");
+    //res.send("logged out");
 }

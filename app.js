@@ -62,41 +62,22 @@ cas.configure({
 // cas.bouncer prompts for authentication and performs login if not logged in. If logged in it passes on.
 app.get('/', cas.bouncer, routes.index);
 // cas.blocker redirects to the redirectUrl supplied above if not logged in.
-app.get('/', cas.blocker, casRoute.accessDenied);
+
 app.get('/logout', casRoute.logout);
+app.get('/', cas.blocker, casRoute.accessDenied);
+app.get('/', casRoute.accessDenied);
 
-
-app.get('/', routes.index);
-app.get('/events', events.list);
-app.get('/events/username/:username', events.username);
-app.get('/events/username/:username/:verb', events.username_verb);
-app.get('/events/verb/:verb', events.verb);
-
-app.get('/relatedevents/:eventid', relatedevents.list);
-app.get('/relatedevents/activity/:verb/:eventid', relatedevents.listActivity);
-app.get('/badges', badges.list);
-app.get('/flatActivity', activity.flatList);
-app.get('/activity', activity.list);
-app.get('/activity/total/:user', activity.listForUser);
-app.get('/activity/:verb', activity.listForVerb);
-app.get('/activity/:verb/:user', activity.listForVerbAndUser);
-app.get('/activitybydate/:date/:verb', activity.date);
-app.get('/activitybydate/:date', activity.date);
-app.get('/blogposts', blogs.list);
-app.get('/blogposts/:url', blogs.blogpost);
-
+//REST services
 app.get('/inquiries/getById/:inquiryId', inquiry.getInquiry_RF);
 app.get('/inquiries/collectAll', inquiry.getInquiries_RF);
 app.get('/inquiries/getByUser/:userAuthId/:userAuthProvider', inquiry.getInquiriesOfUser_RF);
-
 app.get('/user/list', user.getUsers_RF);
 
-app.get('/userInquiryList/:userAuthId/:userAuthProvider' , userInquiryList.userInquiryList);
 
-app.get('/inquiryDashboard/:inquiryId/:userAuthId/:userAuthProvider', inquiryDashboard.inquiryDashboard);
+//web pages
+app.get('/userInquiryList/:userAuthId/:userAuthProvider' ,cas.bouncer, userInquiryList.userInquiryList);
+app.get('/inquiryDashboard/:inquiryId/:userAuthId/:userAuthProvider',cas.bouncer,  inquiryDashboard.inquiryDashboard);
 
-app.get('/comments', comments.list);
-app.get('/comments/:url', comments.comment);
 
 
 
