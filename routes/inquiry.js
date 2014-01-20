@@ -9,7 +9,7 @@ var RESTful = require('../RESTful.js');
 //---------------
 exports.getInquiry = function(inquiryId, callback)
 {
-    RESTful.doPOST_Jose_Query('ariadne.cs.kuleuven.be','/wespot-dev-ws/rest/getEvents','select * from event where context like \'%' + inquiryId + '%\'', callback);
+    RESTful.doPOST_Jose_Query('ariadne.cs.kuleuven.be','/wespot-dev-ws/rest/getEvents/'+ inquiryId , callback);
 }
 
 exports.getInquiry_RF = function(req, res) {

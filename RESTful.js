@@ -1,7 +1,7 @@
 var http = require('http');
 
 //do post (for jose's system with his pagination)
-exports.doPOST_Jose_Query = function(host, path, query, callback)
+exports.doPOST_Jose_Query = function(host, path, callback)
 {
     var page = 0;
     var options = {
@@ -32,7 +32,7 @@ exports.doPOST_Jose_Query = function(host, path, query, callback)
                 return;
             }
             var req = http.request(options,fetchRequest);
-            req.write('{"query":"'+query+'", "pag":"' + page + '"}');
+            req.write('{"pag":"' + page + '"}');
             req.end();
 
         });
@@ -40,7 +40,7 @@ exports.doPOST_Jose_Query = function(host, path, query, callback)
 
     var req = http.request(options,fetchRequest);
 
-    req.write('{"query":"'+query+'", "pag":"' + page + '"}');
+    req.write('{"pag":"' + page + '"}');
     req.end();
     return;
 }

@@ -23,6 +23,83 @@ var user = require('./user.js');
                     username
                     data
 */
+
+
+
+function convertEventData(rawEvent) {
+    var event = {};
+
+    event.data = rawEvent;
+    event.id = rawEvent.event_id;
+    var context = rawEvent.context;
+    //try{
+        //context = JSON.parse(rawEvent.context);
+    //}
+    //catch(exc)
+    //{
+    //    console.log(exc.toString());
+
+    //}
+
+    if(context.phase == "Data Collection") context.phase = 3;
+
+    event.inquiryId = context.course;
+    event.phase = context.phase;
+    event.subphase = context.subphase;
+
+    try {
+        event.originalRequest = rawEvent.originalrequest;// JSON.parse(rawEvent.originalrequest)
+
+        if(rawEvent.verb == "response") //ARLearn
+        {
+            if(rawEvent.originalrequest.responseValue.imageUrl != undefined)
+                event.html = "<img src='" + rawEvent.originalrequest.responseValue.imageUrl.replace(/\\/g, "") + "'></img>";
+            if(rawEvent.originalrequest.responseValue.audioUrl != undefined)
+            {
+                event.html = "<audio controls> <source src='" + rawEvent.originalrequest.responseValue.audioUrl.replace(/\\/g, "") + "'> Your browser does not support the audio tag.</audio>";
+                event.html += "[<a href='" + rawEvent.originalrequest.responseValue.audioUrl.replace(/\\/g, "") + "'>source</a>]";
+            }    //
+            if(rawEvent.originalrequest.responseValue.videoUrl != undefined)
+            {
+                event.html = "<video controls> <source src='" + rawEvent.originalrequest.responseValue.videoUrl.replace(/\\/g, "") + "' type='video/mp4'> Your browser does not support the video tag.</video>";
+                event.html += "[<a href='" + rawEvent.originalrequest.responseValue.videoUrl.replace(/\\/g, "") + "'>source</a>]";
+            }
+            if(rawEvent.originalrequest.responseValue.text != undefined)
+                event.html = rawEvent.originalrequest.responseValue.text;
+
+            return event;
+        }
+        if(rawEvent.verb == "like") //ELGG
+        {
+            event.html = event.subphase + " liked [<a href='" + rawEvent.object + "'>source</a>]";
+            return event;
+        }
+        if(rawEvent.verb == "comment") //ELGG
+        {
+            event.html = event.subphase + " commented on [<a href='" + rawEvent.object + "'>source</a>]";
+            return event;
+        }
+        if(rawEvent.verb == "create") //ELGG
+        {
+            event.html = event.subphase + " created [<a href='" + rawEvent.object + "'>source</a>]";
+            return event;
+        }
+        if(rawEvent.verb == "rated") //ELGG
+        {
+            event.html = event.subphase + " rated [<a href='" + rawEvent.object + "'>source</a>]";
+            return event;
+        }
+    }
+    catch (exc) {
+        console.log(exc.toString());
+        console.log(rawEvent.originalrequest.toString());
+        return null;
+    }
+
+
+
+    return null;
+}
 function convertToEventsByUsersAndEventId(data)
 {
     var orderedData = {};
@@ -30,26 +107,11 @@ function convertToEventsByUsersAndEventId(data)
         function(d)
         {
             var username = d.username.toLowerCase();
-            var context = JSON.parse(d.context);
-            var event = {};
-            event.inquiryId = context.course;
-            //quick hack
-            if(context.phase == "Data Collection") context.phase = 3;
-            event.phase = context.phase;
 
-            event.subphase = context.subphase;
+
+            var event = convertEventData(d);
+            if(event == null) return;
             event.username = username;
-            event.data = d.object;
-            event.id = d.event_id;
-            try
-            {
-                event.originalRequest = JSON.parse(d.originalrequest)
-            }
-            catch(exc)
-            {
-                console.log(exc.toString());
-                console.log(d.originalrequest.toString());
-            }
             if(orderedData[username] == undefined)
             {
                 orderedData[username] = {};

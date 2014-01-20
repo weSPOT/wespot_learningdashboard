@@ -164,7 +164,25 @@ body
 
 }
 
-#event_data
+#eventData
 {
+    text-align: center;
+}
+#eventData img
+{
+    width:95%;
+    border:solid 1px lightslategray;
+    padding:5px;
+}
 
+#eventData video
+{
+    width:95%;
+    border:solid 1px lightslategray;
+    padding:5px;
+}
+
+#eventData a{
+
+    color:#CCCCFF;
 }
