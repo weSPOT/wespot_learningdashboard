@@ -78,26 +78,24 @@ function convertEventData(rawEvent) {
 
             return event;
         }
-        if(rawEvent.verb == "like") //ELGG
+        if(rawEvent.verb == "like"
+            || rawEvent.verb == "comment"
+            || rawEvent.verb == "create"
+            || rawEvent.verb == "rated") //ELGG
         {
-            event.html = event.subphase + " liked [<a href='" + rawEvent.object + "'>source</a>]";
+            var htmlData = "";
+            if(rawEvent.originalrequest.value && rawEvent.originalrequest.value.title != undefined)
+            {
+                htmlData = "<h3>" + rawEvent.originalrequest.value.title + "</h3>" + "<p>"+rawEvent.originalrequest.value.description  + "</p>"
+            }
+            else
+            {
+                htmlData = rawEvent.originalrequest.value;
+            }
+            event.html = event.subphase + " / " + rawEvent.verb + "<br/>"+ htmlData  + "<br/>[<a href='" + rawEvent.object + "'>source</a>]";
             return event;
         }
-        if(rawEvent.verb == "comment") //ELGG
-        {
-            event.html = event.subphase + " commented on [<a href='" + rawEvent.object + "'>source</a>]";
-            return event;
-        }
-        if(rawEvent.verb == "create") //ELGG
-        {
-            event.html = event.subphase + " created [<a href='" + rawEvent.object + "'>source</a>]";
-            return event;
-        }
-        if(rawEvent.verb == "rated") //ELGG
-        {
-            event.html = event.subphase + " rated [<a href='" + rawEvent.object + "'>source</a>]";
-            return event;
-        }
+
     }
     catch (exc) {
         console.log(exc.toString());
