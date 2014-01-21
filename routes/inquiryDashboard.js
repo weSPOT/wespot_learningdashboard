@@ -31,6 +31,15 @@ function convertEventData(rawEvent) {
 
     event.data = rawEvent;
     event.id = rawEvent.event_id;
+
+    //convert to a day
+
+    event.startTime = Date.UTC(new Date(rawEvent.starttime).getFullYear(), new Date(rawEvent.starttime).getMonth(), new Date(rawEvent.starttime).getDate());
+    var today = Date.UTC(new Date(Date.now()).getFullYear(), new Date(Date.now()).getMonth(), new Date(Date.now()).getDate());
+    if(event.startTime == today)
+        event.today = true;
+    else event.today = false;
+
     var context = rawEvent.context;
     //try{
         //context = JSON.parse(rawEvent.context);

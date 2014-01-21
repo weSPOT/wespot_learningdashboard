@@ -5,19 +5,19 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , events = require('./routes/events')
+  //, events = require('./routes/events')
     , user = require('./routes/user')
-    , blogs = require('./routes/blogs')
-    , comments = require('./routes/comments')
-    , relatedevents = require('./routes/relatedevents')
-    , activity = require('./routes/activity')
-    , badges = require('./routes/badges')
+   // , blogs = require('./routes/blogs')
+   // , comments = require('./routes/comments')
+   // , relatedevents = require('./routes/relatedevents')
+   // , activity = require('./routes/activity')
+   // , badges = require('./routes/badges')
     , inquiry = require('./routes/inquiry')
     , userInquiryList = require('./routes/userInquiryList')
     ,inquiryDashboard = require('./routes/inquiryDashboard')
     ,casRoute = require('./routes/cas')
   , http = require('http')
-    , db = require('./dbConnection')
+   // , db = require('./dbConnection')
   , path = require('path');
 var cas = require('grand_master_cas');
 var static = require('node-static');

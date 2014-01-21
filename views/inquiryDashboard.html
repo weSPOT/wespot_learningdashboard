@@ -9,8 +9,8 @@
 
      <script type="application/javascript">
 
-         var colors = ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC","#99CC66","#9999FF","#FFCC66", "#FF9966"];
-
+         var colors =           ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC","#99CC66","#9999FF","#FFCC66", "#FF9966"];
+         var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
         function loadContent(data)
         {
             $("#eventData").html(data.html);
@@ -45,7 +45,13 @@
                      .attr("width", sizeOfBox)
                      .attr("height", sizeOfBox)
                      .attr("class", function(d){if(1 == 1) return "rectPositive"; return "rectNegative";})
-                     .attr("fill", function(d){return colors[d.phase-1];}) //"#9999ff";})
+                     .attr("fill", function(d){
+                         if(!d.today)
+                            return colors_dark[d.phase-1];
+                         else
+                            return colors[d.phase-1];
+                          })
+
                      .on("click",function(d){ loadContent(d); });
          }
 
@@ -55,6 +61,13 @@
 <body  id="mainBody">
 <div id="titleField">
     <span id="title">LARAe</span><span id="subtitle">.wespot</span>
+    <div id="subsections">
+        <ul>
+            <li class="title_subsection">Inquiry Activity Overview</li>
+            <li class="title_subsection">Dashboard #2 (coming soon)</li>
+            <li class="title_subsection">Dashboard #3 (coming soon)</li>
+        </ul>
+    </div>
 </div>
 <div id="realContent">
     <h2>Event Data</h2>
