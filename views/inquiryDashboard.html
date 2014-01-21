@@ -19,35 +19,58 @@
             $("#eventData").html(data.html);
         }
 
-         function drawPhase(data, username)
+         var heighestNumberOfEvents_ForAPhase = 50;
+         var sizeOfBox = 10;
+         var width = 90;
+         var spacingBetweenSquares = 1;
+         var columns  = parseInt(width / (sizeOfBox + spacingBetweenSquares));  //parseInt(Math.sqrt(heighestNumberOfEvents_ForAPhase));
+         //$('.visualization').width();
+
+         //var sizeOfBox = (width / columns);
+
+         var numberOfRows = (heighestNumberOfEvents_ForAPhase / columns);
+         var height = numberOfRows *  (sizeOfBox + spacingBetweenSquares);
+
+        function filter(phase, widget)
+        {
+            //make small the circles that aren't selected
+            var svgs = d3.selectAll(".vis_phase" + phase);
+            svgs.selectAll("circle")
+                    .attr("r", function(){
+                        if(widget == "" || this.__data__.subphase == widget)
+                                return sizeOfBox/2;
+                        else
+                            return sizeOfBox/4;
+                    });
+            //select the right dropdown
+            $("#dropdown-phase"+phase + " .dd_selected")[0].setAttribute("class","");
+            $("#dropdown-phase"+phase + "_" + widget)[0].setAttribute("class","dd_selected");
+
+
+
+
+        }
+        function drawPhase(data, username,phase)
          {
-             var heighestNumberOfEvents_ForAPhase = 50;
-             var sizeOfBox = 7;
-             var width = 90;
-             var spacingBetweenSquares = 1;
-             var columns  = parseInt(width / (sizeOfBox + spacingBetweenSquares));  //parseInt(Math.sqrt(heighestNumberOfEvents_ForAPhase));
-            //$('.visualization').width();
 
-             //var sizeOfBox = (width / columns);
-
-             var numberOfRows = (heighestNumberOfEvents_ForAPhase / columns);
-             var height = numberOfRows *  (sizeOfBox + spacingBetweenSquares);
              var div = d3.select("#box_"+username);
              var svg = div
                      .append("svg")
-                     .attr("class","visualization")
+
+                     .attr("class","visualization vis_phase" + phase)
                      .attr("width", width)
                      .attr("height",height);
 
-             svg.selectAll("rect")
+             svg.selectAll("circle")
                      .data(data)
                      .enter()
-                     .append("rect")
-                     .attr("x", function(d,i){return (i % columns) * (sizeOfBox + spacingBetweenSquares);})
-                     .attr("y", function(d,i){return parseInt((i) / columns) * (sizeOfBox+spacingBetweenSquares)})
-                     .attr("width", sizeOfBox)
-                     .attr("height", sizeOfBox)
-                     .attr("class", function(d){ return "eventSquare";})
+                     .append("circle")
+                     .attr("cx", function(d,i){return (i % columns) * (sizeOfBox + spacingBetweenSquares) + sizeOfBox/2;})
+                     .attr("cy", function(d,i){return parseInt((i) / columns) * (sizeOfBox+spacingBetweenSquares)+sizeOfBox/2})
+                     .attr("r", sizeOfBox/2 )
+                     //.attr("width", sizeOfBox)
+                     //.attr("height", sizeOfBox)
+                     .attr("class", function(d){ return "eventSquare widget_" + d.subphase ;})
                      .attr("fill", function(d){
                          if(!d.today)
                             return colors_dark[d.phase-1];
@@ -108,7 +131,7 @@
 
             <script type="application/javascript">
                 var data = <%- JSON.stringify(user_events) %>;
-                drawPhase(data, "<%= userEvent.username %>");
+                drawPhase(data, "<%= userEvent.username %>",<%= i %>);
             </script>
     <%
 
@@ -141,7 +164,7 @@
 
                 <script type="application/javascript">
                     var data = <%- JSON.stringify(user_events) %>;
-                    drawPhase(data, "<%= user_phases.username %>");
+                    drawPhase(data, "<%= user_phases.username %>",<%= i %>);
                 </script>
 
 
@@ -163,12 +186,12 @@
 
     <div id="dropdown-phase<%= p %>" class="dropdown dropdown-tip">
         <ul class="dropdown-menu">
-            <li><a href="#1"><%= d %></a></li>
+            <li><a id="dropdown-phase<%= p %>_" href="#" class="dd_selected" onClick="javascript:filter(<%= p %>,'')">all</a></li>
 <%
         if(widgetsPerPhase[p] != undefined)
         {
             widgetsPerPhase[p].forEach(function(d){ %>
-            <li><a href="#1"><%= d %></a></li>
+            <li><a id="dropdown-phase<%= p %>_<%= d %>" href="#" onClick="javascript:filter(<%= p %>, '<%= d %>')"><%= d %></a></li>
 <%          });
         }
 %>

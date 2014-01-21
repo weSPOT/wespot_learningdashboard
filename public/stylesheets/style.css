@@ -178,13 +178,20 @@ body
 
 }
 
+.dd_selected::before
+{
+    position:absolute;
+    left:3px;
+    content: "\2611";
+}
+
 /* user */
 
 #userList
 {
 
     width: 735px;
-    padding:7px;
+
 }
 .user_vis
 {
@@ -194,11 +201,13 @@ body
 
 #userList h2
 {
-    display:inline;
+    display:inline-box;
     font-size:10px;
     width:100px;
     overflow:hidden;
     float:left;
+    margin-left:7px;
+
 }
 
 /* visualization */

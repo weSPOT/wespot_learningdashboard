@@ -41,14 +41,7 @@ function convertEventData(rawEvent) {
     else event.today = false;
 
     var context = rawEvent.context;
-    //try{
-        //context = JSON.parse(rawEvent.context);
-    //}
-    //catch(exc)
-    //{
-    //    console.log(exc.toString());
 
-    //}
 
     if(context.phase == "Data Collection") context.phase = 3;
 
@@ -138,7 +131,14 @@ function convertToEventsByUsersAndEventId(data)
             }
             orderedData[username].username = event.username;
 
+            try{
             orderedData[username][parseInt(event.phase)].push(event);
+            }
+            catch(exc)
+            {
+                console.log(event.phase);
+
+            }
         }
     );
 
