@@ -15,7 +15,20 @@ body
 }
 
 /* TITLE */
+.navbar-default
+{
+    background-color: #383838;
+    font-family: elysium;
+    font-size: 10px;
+    color: white;
+    font-weight:normal;
+}
 
+.navbar-default .navbar-text, .navbar-default .navbar-brand
+{
+    color:white;
+
+}
 #titleField
 {
     width:100%;
