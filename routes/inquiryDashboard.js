@@ -110,6 +110,7 @@ function convertEventData(rawEvent) {
 function convertToEventsByUsersAndEventId(data)
 {
     var orderedData = {};
+    var widgetsPerPhase = {};
     data.forEach(
         function(d)
         {
@@ -119,6 +120,10 @@ function convertToEventsByUsersAndEventId(data)
             var event = convertEventData(d);
             if(event == null) return;
             event.username = username;
+            if(widgetsPerPhase[event.phase] == undefined)
+                widgetsPerPhase[event.phase] = [];
+            if(widgetsPerPhase[event.phase].indexOf(event.subphase) == -1)
+                widgetsPerPhase[event.phase].push(event.subphase);
             if(orderedData[username] == undefined)
             {
                 orderedData[username] = {};
@@ -136,7 +141,8 @@ function convertToEventsByUsersAndEventId(data)
             orderedData[username][parseInt(event.phase)].push(event);
         }
     );
-    return orderedData;
+
+    return {events: orderedData, widgetsPerPhase: widgetsPerPhase};
 
 }
 
@@ -144,7 +150,8 @@ exports.inquiryDashboard = function(req, res){
 
   inquiry.getInquiry(req.params.inquiryId, function(d){
     //order the events by user
+
     var parsedData = convertToEventsByUsersAndEventId(d);
-    res.render('inquiryDashboard.html', {users: user.users, events: parsedData, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});}
+    res.render('inquiryDashboard.html', {widgetsPerPhase:parsedData.widgetsPerPhase,users: user.users, events: parsedData.events, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});}
   );
 };

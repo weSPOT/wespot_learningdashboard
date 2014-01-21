@@ -122,6 +122,17 @@ body
 
 }
 
+#phases ul li::after
+{
+    content: '↓';
+    margin-left: 2px;
+}
+#phases ul li a, #phases ul li a:hover, #phases ul li a:visited
+{
+    color:white;
+    text-decoration: none;
+}
+
 .title_phase1
 {
     border-color: #33FF99;
@@ -150,6 +161,22 @@ body
     border-color: #FF66CC;
 }
 
+
+
+.dropdown .dropdown-menu, .dropdown .dropdown-panel {
+    background-color: #404040;
+}
+
+.dropdown .dropdown-menu LI > A, .dropdown .dropdown-menu LABEL {
+    color:white;
+}
+
+.dropdown .dropdown-menu LI > A:hover,
+.dropdown .dropdown-menu LABEL:hover {
+    background-color: #FFFFFF;
+    color: #404040;
+
+}
 
 /* user */
 
@@ -238,4 +265,9 @@ body
 #eventData a{
 
     color:#CCCCFF;
+}
+
+.eventSquare:hover
+{
+    cursor: pointer;
 }

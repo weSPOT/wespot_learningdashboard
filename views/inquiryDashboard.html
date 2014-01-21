@@ -2,10 +2,13 @@
   <head>
 
      <title>LARAe.weSPOT</title>
-      <link rel="stylesheet" href="/stylesheets/style.css">
+
 
      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
      <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+      <link type="text/css" rel="stylesheet" href="/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.css" />
+      <script type="text/javascript" src="/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.js"></script>
 
      <script type="application/javascript">
 
@@ -44,7 +47,7 @@
                      .attr("y", function(d,i){return parseInt((i) / columns) * (sizeOfBox+spacingBetweenSquares)})
                      .attr("width", sizeOfBox)
                      .attr("height", sizeOfBox)
-                     .attr("class", function(d){if(1 == 1) return "rectPositive"; return "rectNegative";})
+                     .attr("class", function(d){ return "eventSquare";})
                      .attr("fill", function(d){
                          if(!d.today)
                             return colors_dark[d.phase-1];
@@ -57,6 +60,7 @@
 
 
      </script>
+      <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body  id="mainBody">
 <div id="titleField">
@@ -76,12 +80,12 @@
 </div>
 <div id="phases">
     <ul>
-        <li class="title_phase1">Question/Hypothesis</li>
-        <li class="title_phase2">Operationalisation</li>
-        <li class="title_phase3">Data Collection</li>
-        <li class="title_phase4">Data Analysis</li>
-        <li class="title_phase5">Interpretation</li>
-        <li class="title_phase6">Communication</li>
+        <li class="title_phase1"><a href="#" data-dropdown="#dropdown-phase1">Question/Hypothesis</a></li>
+        <li class="title_phase2"><a href="#" data-dropdown="#dropdown-phase2">Operationalisation</a></li>
+        <li class="title_phase3"><a href="#" data-dropdown="#dropdown-phase3">Data Collection</a></li>
+        <li class="title_phase4"><a href="#" data-dropdown="#dropdown-phase4">Data Analysis</a></li>
+        <li class="title_phase5"><a href="#" data-dropdown="#dropdown-phase5">Interpretation</a></li>
+        <li class="title_phase6"><a href="#" data-dropdown="#dropdown-phase6">Communication</a></li>
     </ul>
 </div>
 <div style="display:hidden" class=".visualization"></div>
@@ -150,6 +154,29 @@
         }
     %>
 </div>
+
+<%
+    var phases = [1,2,3,4,5,6];
+    phases.forEach(function(p)
+    {
+%>
+
+    <div id="dropdown-phase<%= p %>" class="dropdown dropdown-tip">
+        <ul class="dropdown-menu">
+            <li><a href="#1"><%= d %></a></li>
+<%
+        if(widgetsPerPhase[p] != undefined)
+        {
+            widgetsPerPhase[p].forEach(function(d){ %>
+            <li><a href="#1"><%= d %></a></li>
+<%          });
+        }
+%>
+        </ul>
+    </div>
+<%
+    });
+%>
 
 </body>
 </html>
