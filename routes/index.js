@@ -36,7 +36,7 @@ exports.index = function(req,res)
             }
         });
 
-        res.redirect("/userInquiryList/"+authId+"/"+authProvider);
+        res.redirect("/wespot/userInquiryList/"+authId+"/"+authProvider);
     });
 
 }

@@ -38,7 +38,7 @@
     <% inquiries.forEach(function(inquiry){ %>
         <tr>
             <td>
-                <a href="/inquiryDashboard/<%= inquiry.inquiryId %>/<%= userAuthId %>/<%= userAuthProvider %>"><%= inquiry.title %></a>
+                <a href="/wespot/inquiryDashboard/<%= inquiry.inquiryId %>/<%= userAuthId %>/<%= userAuthProvider %>"><%= inquiry.title %></a>
             </td>
             <td>
                 <%- inquiry.description %>

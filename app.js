@@ -66,8 +66,8 @@ app.get(path.join(context,'/'), cas.bouncer, routes.index);
 // cas.blocker redirects to the redirectUrl supplied above if not logged in.
 
 app.get(path.join(context,'/logout'), casRoute.logout);
-app.get(path.join(context,'/accessDenied'), cas.blocker, casRoute.accessDenied);
-//app.get('/accessDenied', casRoute.accessDenied);
+//app.get(path.join(context,'/accessDenied'), cas.blocker, casRoute.accessDenied);
+app.get(path.join(context,'/accessDenied'), casRoute.accessDenied);
 
 //REST services
 app.get(path.join(context,'/inquiries/getById/:inquiryId'), inquiry.getInquiry_RF);
@@ -77,8 +77,8 @@ app.get(path.join(context,'/user/list'), user.getUsers_RF);
 
 
 //web pages
-app.get('/userInquiryList/:userAuthId/:userAuthProvider' ,cas.bouncer, userInquiryList.userInquiryList);
-app.get('/inquiryDashboard/:inquiryId/:userAuthId/:userAuthProvider',cas.bouncer,  inquiryDashboard.inquiryDashboard);
+app.get(path.join(context,'/userInquiryList/:userAuthId/:userAuthProvider') ,cas.bouncer, userInquiryList.userInquiryList);
+app.get(path.join(context,'/inquiryDashboard/:inquiryId/:userAuthId/:userAuthProvider'),cas.bouncer,  inquiryDashboard.inquiryDashboard);
 
 
 
