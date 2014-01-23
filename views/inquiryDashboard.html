@@ -16,8 +16,15 @@
          var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
         function loadContent(data)
         {
+            $("#realContent_wrapper").height($("body").height());
+            $("#realContent_wrapper").show();
             $("#eventData").html(data.html);
         }
+
+         function hideRealContent()
+         {
+             $("#realContent_wrapper").hide();
+         }
 
          var heighestNumberOfEvents_ForAPhase = 50;
          var sizeOfBox = 10;
@@ -96,11 +103,20 @@
         </ul>
     </div>
 </div>
-<div id="realContent">
-    <h2>Event Data</h2>
-    <div id="eventData">
+<div id="realContent_wrapper" onClick="javascript:hideRealContent();">
+    <div id="realContent">
+        <div id="realContent_close" onClick="javascript:hideRealContent();">close</div>
+        <h2>Event Data</h2>
+
+        <div id="eventData">
+        </div>
     </div>
 </div>
+<script type="application/javascript">
+    $("#realContent").on("click", function(event){
+        event.stopPropagation(); //prevent clicks in realcontent to close
+    });
+</script>
 <div id="phases">
     <ul>
         <li class="title_phase1"><a href="#" data-dropdown="#dropdown-phase1">Question/Hypothesis</a></li>
