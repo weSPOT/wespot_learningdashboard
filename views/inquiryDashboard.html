@@ -27,8 +27,8 @@
          }
 
          var heighestNumberOfEvents_ForAPhase = 50;
-         var sizeOfBox = 10;
-         var width = 120;
+         var sizeOfBox = 8;
+         var width = 100;
          var spacingBetweenSquares = 1;
          var columns  = parseInt(width / (sizeOfBox + spacingBetweenSquares));  //parseInt(Math.sqrt(heighestNumberOfEvents_ForAPhase));
          //$('.visualization').width();
@@ -65,16 +65,16 @@
                      .append("svg")
 
                      .attr("class","visualization vis_phase" + phase)
-                     .attr("width", width)
+
                      .attr("height",height);
 
              svg.selectAll("circle")
                      .data(data)
                      .enter()
                      .append("circle")
-                     .attr("cx", function(d,i){return (i % columns) * (sizeOfBox + spacingBetweenSquares) + sizeOfBox/2;})
-                     .attr("cy", function(d,i){return parseInt((i) / columns) * (sizeOfBox+spacingBetweenSquares)+sizeOfBox/2})
-                     .attr("r", sizeOfBox/2 )
+                     .attr("cx", function(d,i){return ((i % columns) * (sizeOfBox + spacingBetweenSquares) + sizeOfBox/2) +"%";})
+                     .attr("cy", function(d,i){return (parseInt((i) / columns) * (sizeOfBox+spacingBetweenSquares)+sizeOfBox/2)})
+                     .attr("r", (sizeOfBox/2) + "%" )
                      //.attr("width", sizeOfBox)
                      //.attr("height", sizeOfBox)
                      .attr("class", function(d){ return "eventSquare widget_" + d.subphase ;})
@@ -97,9 +97,9 @@
     <span id="title">LARAe</span><span id="subtitle">.wespot</span>
     <div id="subsections">
         <ul>
-            <li class="title_subsection">Inquiry Activity Overview</li>
-            <li class="title_subsection">Dashboard #2 (coming soon)</li>
-            <li class="title_subsection">Dashboard #3 (coming soon)</li>
+            <li class="title_subsection active">Inquiry Activity Overview</li>
+            <li class="title_subsection disabled">Dashboard #2 (coming soon)</li>
+            <li class="title_subsection disabled">Dashboard #3 (coming soon)</li>
         </ul>
     </div>
 </div>
