@@ -24,11 +24,13 @@ var static = require('node-static');
 
 var app = express();
 
+var context = '/wespot';
+
 // all environments
 app.use(express.cookieParser());
 app.use(express.session({secret: "LARA.emo_was_here"}));
 
-app.set('port', process.env.PORT || 3013);
+app.set('port', process.env.PORT || 3017);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
@@ -52,26 +54,26 @@ cas.configure({
     casPath: "/cas",                  // your cas login route (defaults to "/cas")
     ssl: false,                        // is the cas url https? defaults to false
     casPort: 7070,                        // defaults to 80 if ssl false, 443 if ssl true
-    service: "http://localhost:3013", // your site
+    service: "http://localhost:3017/wespot/", // your site
     sessionName: "cas_user",          // the cas user_name will be at req.session.cas_user (this is the default)
     renew: false,                     // true or false, false is the default
     gateway: false,                   // true or false, false is the default
-    redirectUrl: '/accessDenied'            // the route that cas.blocker will send to if not authed. Defaults to '/'
+    redirectUrl: path.join(context,'/accessDenied')            // the route that cas.blocker will send to if not authed. Defaults to '/'
 });
 
 // cas.bouncer prompts for authentication and performs login if not logged in. If logged in it passes on.
-app.get('/', cas.bouncer, routes.index);
+app.get(path.join(context,'/'), cas.bouncer, routes.index);
 // cas.blocker redirects to the redirectUrl supplied above if not logged in.
 
-app.get('/logout', casRoute.logout);
-app.get('/accessDenied', cas.blocker, casRoute.accessDenied);
+app.get(path.join(context,'/logout'), casRoute.logout);
+app.get(path.join(context,'/accessDenied'), cas.blocker, casRoute.accessDenied);
 //app.get('/accessDenied', casRoute.accessDenied);
 
 //REST services
-app.get('/inquiries/getById/:inquiryId', inquiry.getInquiry_RF);
-app.get('/inquiries/collectAll', inquiry.getInquiries_RF);
-app.get('/inquiries/getByUser/:userAuthId/:userAuthProvider', inquiry.getInquiriesOfUser_RF);
-app.get('/user/list', user.getUsers_RF);
+app.get(path.join(context,'/inquiries/getById/:inquiryId'), inquiry.getInquiry_RF);
+app.get(path.join(context,'/inquiries/collectAll'), inquiry.getInquiries_RF);
+app.get(path.join(context,'/inquiries/getByUser/:userAuthId/:userAuthProvider'), inquiry.getInquiriesOfUser_RF);
+app.get(path.join(context,'/user/list'), user.getUsers_RF);
 
 
 //web pages
