@@ -7,8 +7,8 @@
      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
      <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
-      <link type="text/css" rel="stylesheet" href="/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.css" />
-      <script type="text/javascript" src="/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.js"></script>
+      <link type="text/css" rel="stylesheet" href="/wespot/static/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.css" />
+      <script type="text/javascript" src="/wespot/static/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.js"></script>
 
      <script type="application/javascript">
 
@@ -27,9 +27,9 @@
          }
 
          var heighestNumberOfEvents_ForAPhase = 50;
-         var sizeOfBox = 8;
-         var width = 100;
-         var spacingBetweenSquares = 1;
+         var sizeOfBox = 10;
+         var width = 120;
+         var spacingBetweenSquares = 2;
          var columns  = parseInt(width / (sizeOfBox + spacingBetweenSquares));  //parseInt(Math.sqrt(heighestNumberOfEvents_ForAPhase));
          //$('.visualization').width();
 
@@ -72,9 +72,9 @@
                      .data(data)
                      .enter()
                      .append("circle")
-                     .attr("cx", function(d,i){return ((i % columns) * (sizeOfBox + spacingBetweenSquares) + sizeOfBox/2) +"%";})
+                     .attr("cx", function(d,i){return ((i % columns) * (sizeOfBox + spacingBetweenSquares) + sizeOfBox/2);})
                      .attr("cy", function(d,i){return (parseInt((i) / columns) * (sizeOfBox+spacingBetweenSquares)+sizeOfBox/2)})
-                     .attr("r", (sizeOfBox/2) + "%" )
+                     .attr("r", (sizeOfBox/2) )
                      //.attr("width", sizeOfBox)
                      //.attr("height", sizeOfBox)
                      .attr("class", function(d){ return "eventSquare widget_" + d.subphase ;})
@@ -90,10 +90,12 @@
 
 
      </script>
-      <link rel="stylesheet" href="/stylesheets/style.css">
+      <link rel="stylesheet" href="/wespot/static/stylesheets/style.css">
 </head>
 <body  id="mainBody">
 <div id="titleField">
+    <img id="wespot_logo" src="/wespot/static/images/wespot_logo.png"/>
+    <span id="wespot_title">Learning Analytics Reflection & Awareness environment</span>
     <span id="title">LARAe</span><span id="subtitle">.wespot</span>
     <div id="subsections">
         <ul>
@@ -162,9 +164,14 @@
         {
             var user_phases = events[user_phases_key];
             if(user_phases.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue;
+            var displayUser = "";
+            if(users[user_phases.username] != undefined)
+                displayUser= users[user_phases.username].name;
+            else
+                displayUser = user_phases.username;
     %>
             <div id="user_<%= user_phases.username %>" class="user_vis"/>
-            <h2><%= users[user_phases.username].name %></h2><!--<img src="<%= users[user_phases.username].icon %>"/>-->
+            <h2><%= displayUser %></h2>
                 <div id="box_<%= user_phases.username %>" class="box_vis"/>
     <%
 

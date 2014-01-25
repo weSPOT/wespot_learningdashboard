@@ -28,7 +28,8 @@ exports.index = function(req,res)
         d[0].result.forEach(function(u)
         {
             try{
-            user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId] = {name:u.name, icon:u.icon};
+                //TODO: should not lowercase the ID, quick fix
+            user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name:u.name, icon:u.icon};
             }
             catch(exc)
             {
