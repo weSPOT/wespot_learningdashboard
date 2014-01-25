@@ -3,6 +3,7 @@
   <head>
     <title>LARAe.weSPOT</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="/wespot/static/stylesheets/style.css">
       <!-- Bootstrap -->
       <link href="/wespot/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -17,21 +18,14 @@
       <script src="/wespot/static/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">LARAe.wespot</a>
-    </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <p class="navbar-text navbar-right"><%= users[userAuthProvider + "_" + userAuthId].name %></p>
-        <p class="navbar-text navbar-right"><img class="img-circle" style="height:20px" src='<%= users[userAuthProvider + "_" + userAuthId].icon %>'> </p>
-    </div>
-</nav>
+<div id="titleField">
+    <img id="wespot_logo" src="/wespot/static/images/wespot_logo.png"/>
+    <span id="wespot_title">Learning Analytics Reflection & Awareness environment</span>
+    <span id="title">LARAe</span><span id="subtitle">.wespot</span>
+    <div id="user"><img class="img-circle" style="height:20px" src='<%= users[userAuthProvider + "_" + userAuthId].icon %>'><%= users[userAuthProvider + "_" + userAuthId].name %></div>
+
+</div>
+
 <div class="container">
     <table class="table table-hover">
 

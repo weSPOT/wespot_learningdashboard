@@ -49,6 +49,7 @@
   margin-left: 10px;
   padding-left: 5px;
   border-left: solid 6px #f4f4f4;
+  vertical-align: top;
 }
 .wespot_logo {
   height: 30px;
@@ -106,6 +107,7 @@ body {
   margin-left: 10px;
   padding-left: 5px;
   border-left: solid 6px #f4f4f4;
+  vertical-align: top;
 }
 #title {
   display: none;
@@ -142,6 +144,20 @@ body {
 }
 #subsections ul li.disabled {
   color: #c2c2c2;
+}
+#user img {
+  float: right;
+  vertical-align: center;
+  margin-left: 10px;
+  display: block;
+}
+#user {
+  color: #383838;
+  display: inline;
+  position: absolute;
+  right: 20px;
+  font-size: 12px;
+  font-family: elysium;
 }
 /* phase titles */
 #phases ul {
