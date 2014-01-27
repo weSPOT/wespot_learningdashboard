@@ -19,6 +19,12 @@ exports.index = function(req,res)
         authProvider = "facebook";
         authId = userSplit[1];
     }
+    if(activeUser.indexOf("LinkedInProfile") != -1)
+    {
+        var userSplit = activeUser.split("#");
+        authProvider = "linkedin";
+        authId = userSplit[1];
+    }
     //TODO: add other accounts
 
     req.session["activeUser"] = authProvider + "_" + authId;

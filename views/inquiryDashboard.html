@@ -67,7 +67,7 @@
                      .attr("class","visualization vis_phase" + phase)
 
                      .attr("height",height);
-
+            data = data.sort(function(a, b){ return d3.ascending(a.startTime, b.startTime); });
              svg.selectAll("circle")
                      .data(data)
                      .enter()
@@ -104,6 +104,8 @@
             <li class="title_subsection disabled">Dashboard #3 (coming soon)</li>
         </ul>
     </div>
+    <div id="user"><img class="img-circle" style="height:20px" src='<%= users[userAuthProvider + "_" + userAuthId].icon %>'><%= users[userAuthProvider + "_" + userAuthId].name %></div>
+
 </div>
 <div id="realContent_wrapper" onClick="javascript:hideRealContent();">
     <div id="realContent">
@@ -136,7 +138,7 @@
 
     if(userEvent != undefined) { %>
         <div id="user_<%= userEvent.username %>" class="user_vis"/>
-        <h2><%= users[userEvent.username].name %></h2>
+        <h2><%= users[userEvent.username.toLowerCase()].name %></h2>
             <div id="box_<%= userEvent.username %>" class="box_vis"/>
     <%
 

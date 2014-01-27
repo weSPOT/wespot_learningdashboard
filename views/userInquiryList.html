@@ -22,7 +22,7 @@
     <img id="wespot_logo" src="/wespot/static/images/wespot_logo.png"/>
     <span id="wespot_title">Learning Analytics Reflection & Awareness environment</span>
     <span id="title">LARAe</span><span id="subtitle">.wespot</span>
-    <div id="user"><img class="img-circle" style="height:20px" src='<%= users[userAuthProvider + "_" + userAuthId].icon %>'><%= users[userAuthProvider + "_" + userAuthId].name %></div>
+    <div id="user"><img class="img-circle" style="height:20px" src='<%= users[(userAuthProvider + "_" + userAuthId).toLowerCase()].icon %>'><%= users[(userAuthProvider + "_" + userAuthId).toLowerCase()].name %></div>
 
 </div>
 
