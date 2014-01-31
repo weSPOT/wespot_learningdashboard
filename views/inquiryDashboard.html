@@ -60,23 +60,28 @@
         function drawPhase(data, username,phase)
          {
 
-             var div = d3.select("#box_"+username);
-             var svg = div
-                     .append("svg")
+             var tr = d3.select("#box_"+username);
+             var svgCollection = tr
+                     .append("td")
 
                      .attr("class","visualization vis_phase" + phase)
 
-                     .attr("height",height);
+                     .attr("height",height)
+                     .text("");
+
             data = data.sort(function(a, b){ return d3.ascending(a.startTime, b.startTime); });
-             svg.selectAll("circle")
+             svgCollection.selectAll("svg")
                      .data(data)
                      .enter()
+                     .append("svg")
+                     .attr("class", "vis_circle")
+                     .attr("height", 16)
+                     .attr("width",16)
                      .append("circle")
-                     .attr("cx", function(d,i){return ((i % columns) * (sizeOfBox + spacingBetweenSquares) + sizeOfBox/2);})
-                     .attr("cy", function(d,i){return (parseInt((i) / columns) * (sizeOfBox+spacingBetweenSquares)+sizeOfBox/2)})
-                     .attr("r", (sizeOfBox/2) )
-                     //.attr("width", sizeOfBox)
-                     //.attr("height", sizeOfBox)
+                     .attr("cx", 8)
+                     .attr("cy", 8)
+                     .attr("r", 8)
+
                      .attr("class", function(d){ return "eventSquare widget_" + d.subphase ;})
                      .attr("fill", function(d){
                          if(!d.today)
@@ -121,25 +126,29 @@
         event.stopPropagation(); //prevent clicks in realcontent to close
     });
 </script>
-<div id="phases">
-    <ul>
-        <li class="title_phase1"><a href="#" data-dropdown="#dropdown-phase1">Question/Hypothesis</a></li>
-        <li class="title_phase2"><a href="#" data-dropdown="#dropdown-phase2">Operationalisation</a></li>
-        <li class="title_phase3"><a href="#" data-dropdown="#dropdown-phase3">Data Collection</a></li>
-        <li class="title_phase4"><a href="#" data-dropdown="#dropdown-phase4">Data Analysis</a></li>
-        <li class="title_phase5"><a href="#" data-dropdown="#dropdown-phase5">Interpretation</a></li>
-        <li class="title_phase6"><a href="#" data-dropdown="#dropdown-phase6">Communication</a></li>
-    </ul>
-</div>
-<div style="display:hidden" class=".visualization"></div>
+<table id="phases">
+<tr >
 
-<div id="userList">
+        <th class="title_student"><a href="#" data-dropdown="#dropdown-phase1">Name</a></th>
+        <th class="title_phase1"><a href="#" data-dropdown="#dropdown-phase1">Question / Hypothesis</a></th>
+        <th class="title_phase2"><a href="#" data-dropdown="#dropdown-phase2">Operationalisation</a></th>
+        <th class="title_phase3"><a href="#" data-dropdown="#dropdown-phase3">Data Collection</a></th>
+        <th class="title_phase4"><a href="#" data-dropdown="#dropdown-phase4">Data Analysis</a></th>
+        <th class="title_phase5"><a href="#" data-dropdown="#dropdown-phase5">Interpretation</a></th>
+        <th class="title_phase6"><a href="#" data-dropdown="#dropdown-phase6">Communication</a></th>
+
+</tr>
+</table>
+<div class="scrollableView">
+<table id="userList">
 <% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()];
 
     if(userEvent != undefined) { %>
-        <div id="user_<%= userEvent.username %>" class="user_vis"/>
-        <h2>Me<!--<%= users[userEvent.username.toLowerCase()].name %>--></h2>
-            <div id="box_<%= userEvent.username %>" class="box_vis"/>
+            <tr id="box_<%= userEvent.username %>" class="box_vis">
+                    <td class="studentName"><%= users[userEvent.username.toLowerCase()].name %></td>
+
+            </tr>
+
     <%
 
         for(var i=1;i<=6;i++)
@@ -157,8 +166,7 @@
 
         }
     %>
-            </div>
-        </div>
+
     <%
     }
 
@@ -172,9 +180,10 @@
             else
                 displayUser = user_phases.username;
     %>
-            <div id="user_<%= user_phases.username %>" class="user_vis"/>
-            <h2><%= displayUser %></h2>
-                <div id="box_<%= user_phases.username %>" class="box_vis"/>
+            <tr id="box_<%= user_phases.username %>" class="box_vis">
+                        <td class="studentName"><%= displayUser %></td>
+            </tr>
+
     <%
 
             for(var i=1;i<=6;i++)
@@ -196,13 +205,14 @@
     <%
             }
     %>
-            </div>
-            </div>
+
+
     <%
         }
     %>
-</div>
 
+</table>
+</div>
 <%
     var phases = [1,2,3,4,5,6];
     phases.forEach(function(p)
