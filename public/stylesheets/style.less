@@ -235,7 +235,7 @@ body
 
 #phases
 {
-  width: 60%;
+  width: 100%;
   overflow:scroll;
 }
 
@@ -338,8 +338,9 @@ body
 
 
 
-  width: 60%;
-
+  width: 100%;
+  margin:0px;
+  display:inline-block;
 
 }
 
@@ -347,15 +348,13 @@ body
 
 
 /* visualization */
-.box_vis
+.visualization
 {
 
 
-  vertical-align: top;
 
 
-
-    border-bottom:solid 3px @visualisation_bottombar_color;
+    border-bottom:solid 5px @visualisation_bottombar_color;
     background-color: @visualisation_background_color;
 
 
@@ -374,6 +373,7 @@ body
 {
  margin:0;
   padding:0;
+  height:auto;
 
 
 
@@ -422,11 +422,9 @@ body
 #realContent
 {
 
-    margin-left:auto;
-    margin-right:auto;
-    margin-top:5px;
-    width: 50%;
 
+
+    display:inline-block;
     background-color: @content_background_color;
     padding:10px;
     /*position: absolute;
@@ -474,4 +472,19 @@ body
 .eventSquare:hover
 {
     cursor: pointer;
+}
+
+/* app layout */
+#leftInterface
+{
+  float:left;
+  display:inline-block;
+  width:60%;
+}
+
+#rightInterface
+{
+  display:inline-block;
+  float:right;
+  width:40%;
 }

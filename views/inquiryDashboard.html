@@ -16,8 +16,8 @@
          var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
         function loadContent(data)
         {
-            $("#realContent_wrapper").height($("body").height());
-            $("#realContent_wrapper").show();
+            /*$("#realContent_wrapper").height($("body").height());
+            $("#realContent_wrapper").show();*/
             $("#eventData").html(data.html);
         }
 
@@ -113,19 +113,14 @@
 
 </div>
 <div id="realContent_wrapper" onClick="javascript:hideRealContent();">
-    <div id="realContent">
-        <div id="realContent_close" onClick="javascript:hideRealContent();">close</div>
-        <h2>Event Data</h2>
 
-        <div id="eventData">
-        </div>
-    </div>
 </div>
 <script type="application/javascript">
     $("#realContent").on("click", function(event){
         event.stopPropagation(); //prevent clicks in realcontent to close
     });
 </script>
+<div id="leftInterface">
 <table id="phases">
 <tr >
 
@@ -139,15 +134,17 @@
 
 </tr>
 </table>
-<div class="scrollableView">
-<table id="userList">
+<div id="userList" class="scrollableView">
+<table>
 <% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()];
 
     if(userEvent != undefined) { %>
             <tr id="box_<%= userEvent.username %>" class="box_vis">
                     <td class="studentName"><%= users[userEvent.username.toLowerCase()].name %></td>
 
+
             </tr>
+
 
     <%
 
@@ -212,6 +209,16 @@
     %>
 
 </table>
+</div>
+</div>
+<div id="rightInterface">
+    <div id="realContent" class="scrollableView">
+
+        <h2>Event Data</h2>
+
+        <div id="eventData">
+        </div>
+    </div>
 </div>
 <%
     var phases = [1,2,3,4,5,6];
