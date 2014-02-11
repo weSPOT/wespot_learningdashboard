@@ -74,6 +74,7 @@ app.get(path.join(context,'/inquiries/getById/:inquiryId'), inquiry.getInquiry_R
 app.get(path.join(context,'/inquiries/collectAll'), inquiry.getInquiries_RF);
 app.get(path.join(context,'/inquiries/getByUser/:userAuthId/:userAuthProvider'), inquiry.getInquiriesOfUser_RF);
 app.get(path.join(context,'/user/list'), user.getUsers_RF);
+app.get(path.join(context,'/inquiryMiniDashboard/:inquiryId/:userAuthId/:userAuthProvider'), inquiryDashboard.inquiryMiniDashboard);
 
 
 //web pages

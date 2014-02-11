@@ -62,7 +62,7 @@
   font-family: elysium;
   src: url(Exo-Light.otf);
 }
-body {
+#mainBody {
   background-color: #ffffff;
   font-family: Helvetica Neue;
   font-size: 10px;
@@ -71,6 +71,14 @@ body {
   margin: 0px;
   height: 100%;
   min-width: 900px;
+}
+#miniBody {
+  background-color: #ffffff;
+  font-family: Helvetica Neue;
+  font-size: 10px;
+  color: #383838;
+  font-weight: normal;
+  margin: 0px;
 }
 /* TITLE */
 .navbar-default {
@@ -263,8 +271,44 @@ body {
 /* miniDashboard */
 #userData {
   font-style: italic;
-  width: 100%;
+  width: 90%;
   padding: 10px;
+}
+.miniDashboard_title_phase1 {
+  color: #33FF99;
+}
+.miniDashboard_title_phase2 {
+  color: #33CCFF;
+}
+.miniDashboard_title_phase3 {
+  color: #CCFF33;
+}
+.miniDashboard_title_phase4 {
+  color: #FF0066;
+}
+.miniDashboard_title_phase5 {
+  color: #CCFFFF;
+}
+.miniDashboard_title_phase6 {
+  color: #FF66CC;
+}
+.miniDashboard_title {
+  color: #616161;
+  padding-top: 10px;
+  font-size: 14px;
+}
+#miniDashboard_link {
+  padding: 5px;
+}
+#miniDashboard_link a {
+  color: #ccccff;
+  cursor: pointer;
+  text-decoration: none;
+}
+#miniDashboard_link a:hover {
+  color: #ccccff;
+  cursor: pointer;
+  border-bottom: solid 1px #ccccff;
 }
 .vis_circle {
   margin-left: 2px;

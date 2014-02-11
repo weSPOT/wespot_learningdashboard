@@ -38,8 +38,10 @@
 
             var table = d3.select("#userData");
             var trTitle = table
-                    .append("tr")
-                    .attr("class","miniDashboard_title")
+                    .append("tr");
+            trTitle
+                    .append("td")
+                    .attr("class","miniDashboard_title miniDashboard_title_phase" + phase)
                     .text(titles[phase-1]);
             var tr = table
                     .append("tr");
@@ -55,12 +57,12 @@
                     .enter()
                     .append("svg")
                     .attr("class", "vis_circle")
-                    .attr("height", 16)
-                    .attr("width",16)
+                    .attr("height", 10)
+                    .attr("width",10)
                     .append("circle")
-                    .attr("cx", 8)
-                    .attr("cy", 8)
-                    .attr("r", 8)
+                    .attr("cx", 5)
+                    .attr("cy", 5)
+                    .attr("r", 5)
 
                     .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
                     .attr("fill", function(d){
@@ -77,35 +79,38 @@
     </script>
     <link rel="stylesheet" href="/wespot/static/stylesheets/style.css">
 </head>
-<body  id="mainBody">
+<body  id="miniBody">
 <table id="userData">
 
-    <script type="application/javascript">
 
-        var userEvent = <%- JSON.stringify(events) %>;
-
-        if(userEvent != undefined) {
-
-            var authId;
-            var providerId;
-            var split = userEvent.username.split("_");
-            providerId = split[0];
-            authId = split[1];
-            urlLARA = "http://ariadne.cs.kuleuven.be/wespot/inquiryDashboard/" + <%- inquiryId %> +  "/" +providerId + "/" + authId + "/"
-            for(var i=1;i<=6;i++)
-            {
-            var user_events = userEvent[i];
-            if(user_events == undefined) continue;
-            drawPhase(userEvent[i], userEvent.username,i,providerId,authId);
-            }
-        }
-
-    </script>
 
 
 
 </table>
+<div id="miniDashboard_link"><a id="miniDashboard_link_a" href="#">Go to Learning Analytics Dashboard</a></div>
 
 
+<script type="application/javascript">
+
+    var userEvent = <%- JSON.stringify(events) %>;
+
+    if(userEvent != undefined) {
+
+        var authId;
+        var providerId;
+        var split = userEvent.username.split("_");
+        providerId = split[0];
+        authId = split[1];
+        urlLARA = "http://ariadne.cs.kuleuven.be/wespot/inquiryDashboard/" + <%- inquiryId %> +  "/" +providerId + "/" + authId + "/"
+        $("#miniDashboard_link_a").attr("href",urlLARA);
+        for(var i=1;i<=6;i++)
+        {
+            var user_events = userEvent[i];
+            if(user_events == undefined) continue;
+            drawPhase(userEvent[i], userEvent.username,i,providerId,authId);
+        }
+    }
+
+</script>
 </body>
 </html>
