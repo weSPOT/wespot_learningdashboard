@@ -1,0 +1,111 @@
+<html>
+<head>
+
+    <title>LARAe.weSPOT</title>
+
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="/wespot/static/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.css" />
+    <script type="text/javascript" src="/wespot/static/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.js"></script>
+    <script type="text/javascript" src="/wespot/static/javascripts/3rdParty/crossfilter.js"></script>
+    <script type="application/javascript">
+
+        var colors =           ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC","#99CC66","#9999FF","#FFCC66", "#FF9966"];
+        var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
+
+
+
+        var titles =  ["Question / Hypothesis","Operationalisation","Data Collection","Data Analysis","Interpretation","Communication"];
+
+        var heighestNumberOfEvents_ForAPhase = 50;
+        var sizeOfBox = 10;
+        var width = 120;
+        var spacingBetweenSquares = 2;
+        var columns  = parseInt(width / (sizeOfBox + spacingBetweenSquares));  //parseInt(Math.sqrt(heighestNumberOfEvents_ForAPhase));
+        //$('.visualization').width();
+
+        //var sizeOfBox = (width / columns);
+
+        var numberOfRows = (heighestNumberOfEvents_ForAPhase / columns);
+        var height = numberOfRows *  (sizeOfBox + spacingBetweenSquares);
+
+        var urlLARA;
+
+        function drawPhase(data, username,phase, providerId,AuthId)
+        {
+
+            var table = d3.select("#userData");
+            var trTitle = table
+                    .append("tr")
+                    .attr("class","miniDashboard_title")
+                    .text(titles[phase-1]);
+            var tr = table
+                    .append("tr");
+            var svgCollection = tr
+                    .append("td")
+                    .attr("class","miniDashboard_visualization vis_phase" + phase)
+
+
+                    .html("&nbsp;");
+
+            svgCollection.selectAll("svg")
+                    .data(data)
+                    .enter()
+                    .append("svg")
+                    .attr("class", "vis_circle")
+                    .attr("height", 16)
+                    .attr("width",16)
+                    .append("circle")
+                    .attr("cx", 8)
+                    .attr("cy", 8)
+                    .attr("r", 8)
+
+                    .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
+                    .attr("fill", function(d){
+                        if(!d.today)
+                            return colors_dark[d.phase-1];
+                        else
+                            return colors[d.phase-1];
+                    })
+                    .on("click",function(d){ window.open(urlLARA); });
+                   ;
+        }
+
+
+    </script>
+    <link rel="stylesheet" href="/wespot/static/stylesheets/style.css">
+</head>
+<body  id="mainBody">
+<table id="userData">
+
+    <script type="application/javascript">
+
+        var userEvent = <%- JSON.stringify(events) %>;
+
+        if(userEvent != undefined) {
+
+            var authId;
+            var providerId;
+            var split = userEvent.username.split("_");
+            providerId = split[0];
+            authId = split[1];
+            urlLARA = "http://ariadne.cs.kuleuven.be/wespot/inquiryDashboard/" + <%- inquiryId %> +  "/" +providerId + "/" + authId + "/"
+            for(var i=1;i<=6;i++)
+            {
+            var user_events = userEvent[i];
+            if(user_events == undefined) continue;
+            drawPhase(userEvent[i], userEvent.username,i,providerId,authId);
+            }
+        }
+
+    </script>
+
+
+
+</table>
+
+
+</body>
+</html>

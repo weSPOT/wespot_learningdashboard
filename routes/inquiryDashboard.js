@@ -155,3 +155,21 @@ exports.inquiryDashboard = function(req, res){
     res.render('inquiryDashboard.html', {widgetsPerPhase:parsedData.widgetsPerPhase,users: user.users, events: parsedData.events, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});}
   );
 };
+
+exports.inquiryMiniDashboard = function(req, res){
+    var userAuthId = req.params.userAuthId;
+    var userAuthProvider = req.params.userAuthProvider;
+    var inquiryId = req.params.inquiryId;
+    inquiry.getInquiry(inquiryId, function(d){
+            //order the events by user
+
+            var parsedData = convertToEventsByUsersAndEventId(d);
+
+        res.render('MiniDashboard.html', { events: parsedData.events[(userAuthProvider + "_" + userAuthId).toLowerCase()],
+            userAuthId:req.params.userAuthId,
+            userAuthProvider: req.params.userAuthProvider,
+            inquiryId: inquiryId});
+    });
+
+
+};

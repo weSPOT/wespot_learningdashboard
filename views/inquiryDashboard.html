@@ -9,15 +9,22 @@
 
       <link type="text/css" rel="stylesheet" href="/wespot/static/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.css" />
       <script type="text/javascript" src="/wespot/static/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.js"></script>
-
+      <script type="text/javascript" src="/wespot/static/javascripts/3rdParty/crossfilter.js"></script>
      <script type="application/javascript">
 
          var colors =           ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC","#99CC66","#9999FF","#FFCC66", "#FF9966"];
          var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
-        function loadContent(data)
+        function loadContent(data, username)
         {
-            /*$("#realContent_wrapper").height($("body").height());
-            $("#realContent_wrapper").show();*/
+            var allData = <%- JSON.stringify(events) %>;
+
+            var xdata = crossfilter(allData);
+            var xdata_userDimension = xdata.dimension(function (f){ return f.username});
+            xdata_userDimension.filterFunction(
+                    function (f) {
+                        if(f.username == username) return true; else return false;
+                    });
+            var tmp = xdata_userDimension.top(Infinity);
             $("#eventData").html(data.html);
         }
 
@@ -82,7 +89,7 @@
                      .attr("cy", 8)
                      .attr("r", 8)
 
-                     .attr("class", function(d){ return "eventSquare widget_" + d.subphase ;})
+                     .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
                      .attr("fill", function(d){
                          if(!d.today)
                             return colors_dark[d.phase-1];
@@ -90,7 +97,7 @@
                             return colors[d.phase-1];
                           })
 
-                     .on("click",function(d){ loadContent(d); });
+                     .on("click",function(d){ loadContent(d, username); });
          }
 
 

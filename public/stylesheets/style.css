@@ -234,12 +234,16 @@ body {
 #userList {
   width: 100%;
   margin: 0px;
+  padding: 0px;
   display: inline-block;
 }
 /* visualization */
-.visualization {
+.visualization,
+.miniDashboard_visualization {
   border-bottom: solid 5px #f4f4f4;
   background-color: #f9f9f9;
+  border-radius: 5px;
+  min-height: 10px;
 }
 .studentName {
   overflow: hidden;
@@ -247,12 +251,20 @@ body {
   font-size: 10px;
 }
 .studentName,
-.visualization {
+.visualization,
+.miniDashboard_visualization {
   margin: 0;
-  padding: 0;
-  height: auto;
   width: 13%;
   vertical-align: top;
+}
+.miniDashboard_visualization {
+  width: 90%;
+}
+/* miniDashboard */
+#userData {
+  font-style: italic;
+  width: 100%;
+  padding: 10px;
 }
 .vis_circle {
   margin-left: 2px;

@@ -340,6 +340,7 @@ body
 
   width: 100%;
   margin:0px;
+  padding:0px;
   display:inline-block;
 
 }
@@ -348,7 +349,7 @@ body
 
 
 /* visualization */
-.visualization
+.visualization, .miniDashboard_visualization
 {
 
 
@@ -356,11 +357,14 @@ body
 
     border-bottom:solid 5px @visualisation_bottombar_color;
     background-color: @visualisation_background_color;
-
+  border-radius: 5px;
+  min-height:10px;
 
 
 
 }
+
+
 
 .studentName
 {
@@ -369,14 +373,9 @@ body
   font-size:10px;
 }
 
-.studentName, .visualization
+.studentName, .visualization, .miniDashboard_visualization
 {
  margin:0;
-  padding:0;
-  height:auto;
-
-
-
 
     width:13%;
   vertical-align: top;
@@ -384,6 +383,17 @@ body
 
 }
 
+.miniDashboard_visualization
+{
+  width:90%;
+}
+
+/* miniDashboard */
+#userData {
+  font-style:italic;
+  width:100%;
+  padding:10px;
+}
 
 .vis_circle
 {
