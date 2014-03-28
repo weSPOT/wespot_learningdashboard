@@ -386,3 +386,16 @@
   float: right;
   width: 40%;
 }
+#eventData ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+#eventData li.oneEvent {
+  border-bottom: solid 1px #f4f4f4;
+  padding: 5px;
+  background-color: #f9f9f9;
+}
+#eventData li.oneEvent:hover {
+  background-color: #f4f4f4;
+}

@@ -48,7 +48,7 @@ function convertEventData(rawEvent) {
     event.inquiryId = context.course;
     event.phase = context.phase;
     event.subphase = context.subphase;
-
+    event.object = rawEvent.object;
     try {
         event.originalRequest = rawEvent.originalrequest;// JSON.parse(rawEvent.originalrequest)
 
@@ -68,6 +68,8 @@ function convertEventData(rawEvent) {
             }
             if(rawEvent.originalrequest.responseValue.text != undefined)
                 event.html = rawEvent.originalrequest.responseValue.text;
+            if(rawEvent.originalrequest.value != undefined && rawEvent.originalrequest.value.tags != undefined)
+                event.tags = rawEvent.originalrequest.value.tags;
 
             return event;
         }
@@ -76,6 +78,9 @@ function convertEventData(rawEvent) {
             || rawEvent.verb == "create"
             || rawEvent.verb == "rated") //ELGG
         {
+            if(rawEvent.verb == "like" || rawEvent.verb == "rated")
+                return null;
+
             var htmlData = "";
             if(rawEvent.originalrequest.value && rawEvent.originalrequest.value.title != undefined)
             {
@@ -86,6 +91,8 @@ function convertEventData(rawEvent) {
                 htmlData = rawEvent.originalrequest.value;
             }
             event.html = event.subphase + " / " + rawEvent.verb + "<br/>"+ htmlData  + "<br/>[<a href='" + rawEvent.object + "'>source</a>]";
+            if(rawEvent.originalrequest.value && rawEvent.originalrequest.value.tags != undefined)
+                event.tags = rawEvent.originalrequest.value.tags;
             return event;
         }
 

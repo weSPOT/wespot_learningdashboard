@@ -16,16 +16,64 @@
          var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
         function loadContent(data, username)
         {
-            var allData = <%- JSON.stringify(events) %>;
+            /*var allData = <%- JSON.stringify(events) %>;
 
             var xdata = crossfilter(allData);
-            var xdata_userDimension = xdata.dimension(function (f){ return f.username});
+            var xdata_userDimension = xdata.dimension(function (f){ return f.tag});
             xdata_userDimension.filterFunction(
                     function (f) {
-                        if(f.username == username) return true; else return false;
+                        if(f.tags == data.tags) return true; else return false;
                     });
-            var tmp = xdata_userDimension.top(Infinity);
-            $("#eventData").html(data.html);
+            var tmp = xdata_userDimension.top(Infinity);*/
+            $("#eventData").html("");
+            var list = document.createElement('ul');
+            $(list).appendTo("#eventData");
+
+            //get all the data for the thread
+            var toAdd = [];
+            d3.selectAll("circle").attr("stroke","none");
+            var relatedItems = d3.selectAll('[tags="' + data.tags + '"],[object="' + data.object + '"]');
+            relatedItems[0].forEach(function(d){
+                toAdd.push(d.__data__);
+
+                //meanwhile indicate which ones are related in the visualisation
+                $(d).attr("stroke", "black")
+                        .attr("stroke-width", "3px");
+
+            });
+            var byPhaseByObjectByTime = {};
+            toAdd.forEach(function(d){
+                if(byPhaseByObjectByTime[d.phase] == undefined)
+                    byPhaseByObjectByTime[d.phase] = {};
+                if(byPhaseByObjectByTime[d.phase][d.object] == undefined)
+                    byPhaseByObjectByTime[d.phase][d.object] = [];
+                byPhaseByObjectByTime[d.phase][d.object].push(d);
+
+            });
+            var sortByTime = function(a,b)
+            {
+                if(a.startTime < b.startTime) return -1;
+                if(a.startTime > b.startTime) return -1;
+                return 0;
+            }
+            Object.keys(byPhaseByObjectByTime).forEach(function(d){
+                Object.keys(byPhaseByObjectByTime[d]).forEach(function(e){
+                    byPhaseByObjectByTime[d][e].sort(sortByTime);
+                    byPhaseByObjectByTime[d][e].forEach(function(f){
+                        var listItem = document.createElement('li');
+                        listItem.setAttribute("class", "oneEvent");
+
+                        $(listItem).html(f.html).appendTo(list);
+                    });
+
+                });
+
+
+
+
+            });
+
+
         }
 
          function hideRealContent()
@@ -96,7 +144,8 @@
                          else
                             return colors[d.phase-1];
                           })
-
+                     .attr("tags", function(d){return d.tags;})
+                     .attr("object", function(d){return d.object;})
                      .on("click",function(d){ loadContent(d, username); });
          }
 
