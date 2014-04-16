@@ -399,3 +399,50 @@
 #eventData li.oneEvent:hover {
   background-color: #f4f4f4;
 }
+.oneEvent h3 {
+  height: 20px;
+  color: white;
+  padding: 5px;
+  padding-bottom: 3px;
+  margin-bottom: 2px;
+}
+.oneEvent span {
+  display: block;
+  width: 100%;
+}
+.oneEvent h3.phase1 {
+  background-color: #197F4C;
+}
+.oneEvent span.phase1 {
+  border-bottom: solid 2px #197F4C;
+}
+.oneEvent h3.phase2 {
+  background-color: #19667F;
+}
+.oneEvent span.phase2 {
+  border-bottom: solid 2px #19667F;
+}
+.oneEvent h3.phase3 {
+  background-color: #667F19;
+}
+.oneEvent span.phase3 {
+  border-bottom: solid 2px #667F19;
+}
+.oneEvent h3.phase4 {
+  background-color: #7F0033;
+}
+.oneEvent span.phase4 {
+  border-bottom: solid 2px #7F0033;
+}
+.oneEvent h3.phase5 {
+  background-color: #667F7F;
+}
+.oneEvent span.phase5 {
+  border-bottom: solid 2px #667F7F;
+}
+.oneEvent h3.phase6 {
+  background-color: #7F3366;
+}
+.oneEvent span.phase6 {
+  border-bottom: solid 2px #7F3366;
+}

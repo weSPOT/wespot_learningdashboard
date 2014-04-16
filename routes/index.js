@@ -25,6 +25,12 @@ exports.index = function(req,res)
         authProvider = "linkedin";
         authId = userSplit[1];
     }
+    if(activeUser.indexOf("Wespot") != -1)
+    {
+        var userSplit = activeUser.split("#");
+        authProvider = "wespot";
+        authId = userSplit[1];
+    }
     //TODO: add other accounts
 
     req.session["activeUser"] = authProvider + "_" + authId;
