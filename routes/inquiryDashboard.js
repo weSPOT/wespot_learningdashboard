@@ -105,6 +105,11 @@ function convertEventData(rawEvent) {
             if(rawEvent.originalrequest.value && rawEvent.originalrequest.value.title != undefined)
             {
                 htmlTitle =  "<h3 class='phase"+ event.phase+ "'>" + rawEvent.originalrequest.value.title + "</h3>"
+
+            }
+            if(rawEvent.originalrequest.value && rawEvent.originalrequest.value.description != undefined)
+            {
+
                 htmlData = "<p>"+rawEvent.originalrequest.value.description  + "</p>"
             }
             else

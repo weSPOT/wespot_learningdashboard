@@ -1,0 +1,17 @@
+<html>
+<head>
+
+    <title>LARAe.weSPOT</title>
+<script src="/wespot/static/javascripts/3rdParty/processing.min.js"></script>
+    <script type="application/javascript">
+        var events = <%- JSON.stringify(events) %>;
+        var users = <%- JSON.stringify(users) %>;
+    </script>
+    </head>
+<body>
+
+
+<canvas data-processing-sources="/wespot/static/processing/dashboard.pde"></canvas>
+
+</body>
+</html>

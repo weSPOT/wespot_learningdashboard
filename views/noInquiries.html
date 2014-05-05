@@ -34,16 +34,16 @@
 <div class="container">
     <table class="table table-hover">
 
-    <% inquiries.forEach(function(inquiry){ %>
+
         <tr>
             <td>
-                <a href="/wespot/inquiryDashboard/<%= inquiry.inquiryId %>/<%= userAuthId %>/<%= userAuthProvider %>"><%= inquiry.title %></a>
+                No inquiries found
             </td>
             <td>
-                <%- inquiry.description %>
+               Visit <a href="http://inquiry.wespot.net">Inquiry.weSPOT.net</a> to jon an inquiry!
             </td>
         </tr>
-<% }); %>
+
     </table>
 </div>
 </body>

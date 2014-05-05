@@ -2,7 +2,11 @@
   <head>
 
      <title>LARAe.weSPOT</title>
+    <%
+      if(users[(userAuthProvider + "_" + userAuthId).toLowerCase()] == null)
+        users[(userAuthProvider + "_" + userAuthId).toLowerCase()] = {name:"###",icon:""};
 
+      %>
 
      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
      <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -144,11 +148,11 @@
                      })
 
                      .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
-                     .attr("fill", "white")
-                     .attr("stroke", function(d){
-                         if(!d.today)
-                            return colors_dark[d.phase-1];
-                         else
+                     .attr("stroke", "#595959")
+                     .attr("fill", function(d){
+                        // if(!d.today)
+                        //    return colors_dark[d.phase-1];
+                        // else
                             return colors[d.phase-1];
                           })
                      .attr("stroke-width", "2px")
@@ -184,11 +188,35 @@
     <span id="title">LARAe</span><span id="subtitle">.wespot</span>
     <div id="subsections">
         <ul>
-            <li class="title_subsection active">Inquiry Activity Overview</li>
+            <!-- <li class="title_subsection active">Inquiry Activity Overview</li>
             <li class="title_subsection disabled">Dashboard #2 (coming soon)</li>
-            <li class="title_subsection disabled">Dashboard #3 (coming soon)</li>
+            <li class="title_subsection disabled">Dashboard #3 (coming soon)</li> -->
         </ul>
     </div>
+
+    <table id="legend">
+        <tbody><tr>
+            <td>
+                Star rating 1-5
+            </td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="3" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="4" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="5" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="6" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="7" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+
+        </tr>
+        </tbody></table>
     <div id="user"><img class="img-circle" style="height:20px" src='<%= users[userAuthProvider + "_" + userAuthId].icon %>'><%= users[userAuthProvider + "_" + userAuthId].name %></div>
 
 </div>
@@ -201,20 +229,21 @@
     });
 </script>
 <div id="leftInterface">
-<table id="phases">
-<tr >
+    <table id="phases">
+        <tr >
 
-        <th class="title_student"><a href="#" data-dropdown="#dropdown-phase1">Name</a></th>
-        <th class="title_phase1"><a href="#" data-dropdown="#dropdown-phase1">Question / Hypothesis</a></th>
-        <th class="title_phase2"><a href="#" data-dropdown="#dropdown-phase2">Operationalisation</a></th>
-        <th class="title_phase3"><a href="#" data-dropdown="#dropdown-phase3">Data Collection</a></th>
-        <th class="title_phase4"><a href="#" data-dropdown="#dropdown-phase4">Data Analysis</a></th>
-        <th class="title_phase5"><a href="#" data-dropdown="#dropdown-phase5">Interpretation</a></th>
-        <th class="title_phase6"><a href="#" data-dropdown="#dropdown-phase6">Communication</a></th>
+            <th class="title_student">Name</th>
+            <th class="title_phase1"><a href="#" data-dropdown="#dropdown-phase1">Question / Hypothesis</a></th>
+            <th class="title_phase2"><a href="#" data-dropdown="#dropdown-phase2">Operationalisation</a></th>
+            <th class="title_phase3"><a href="#" data-dropdown="#dropdown-phase3">Data Collection</a></th>
+            <th class="title_phase4"><a href="#" data-dropdown="#dropdown-phase4">Data Analysis</a></th>
+            <th class="title_phase5"><a href="#" data-dropdown="#dropdown-phase5">Interpretation</a></th>
+            <th class="title_phase6"><a href="#" data-dropdown="#dropdown-phase6">Communication</a></th>
 
-</tr>
-</table>
+        </tr>
+    </table>
 <div id="userList" class="scrollableView">
+
 <table>
 <% var userEvent = events[(userAuthProvider + "_" + userAuthId).toLowerCase()];
 

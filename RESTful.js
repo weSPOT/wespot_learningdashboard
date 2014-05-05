@@ -54,6 +54,8 @@ exports.doGET = function(host, path, callback) {
         path: path,
         method: 'GET'
     };
+    console.log(host);
+    console.log(path);
     var lastChunk = "";
     var totalData = [];
     var dataPerPage = "";
@@ -68,6 +70,7 @@ exports.doGET = function(host, path, callback) {
 
         });
         result.on('end', function () {
+            //console.log(dataPerPage);
             totalData = totalData.concat(JSON.parse(dataPerPage));
             callback(totalData);
 
