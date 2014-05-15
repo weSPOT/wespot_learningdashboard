@@ -5,31 +5,27 @@ var user = require('./user.js');
 
 exports.index = function(req,res)
 {
-    var activeUser = req.session["cas_user"];
+    var provider = req.params.provider;
+    var activeUser = req.session.passport.user;
     var authProvider = "";
-    if(activeUser.indexOf("Google") != -1)
+    if(provider == "google")
     {
-        var userSplit = activeUser.split("#");
+
         authProvider = "google";
-        authId = userSplit[1];
+        authId = activeUser.id;
     }
-    if(activeUser.indexOf("Facebook") != -1)
+    if(provider == "facebook")
     {
-        var userSplit = activeUser.split("#");
-        authProvider = "facebook";
-        authId = userSplit[1];
+
+        authProvider = provider;
+        authId = activeUser.id;
     }
-    if(activeUser.indexOf("LinkedInProfile") != -1)
+
+    if(provider == "wespot")
     {
-        var userSplit = activeUser.split("#");
-        authProvider = "linkedin";
-        authId = userSplit[1];
-    }
-    if(activeUser.indexOf("Wespot") != -1)
-    {
-        var userSplit = activeUser.split("#");
+
         authProvider = "wespot";
-        authId = userSplit[1];
+        authId = activeUser.id;
     }
     //TODO: add other accounts
 

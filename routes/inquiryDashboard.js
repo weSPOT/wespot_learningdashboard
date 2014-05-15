@@ -223,6 +223,7 @@ exports.inquiryMiniDashboard = function(req, res){
             var parsedData = convertToEventsByUsersAndEventId(d);
 
         res.render('MiniDashboard.html', { events: parsedData.events[(userAuthProvider + "_" + userAuthId).toLowerCase()],
+            ratings:parsedData.ratings,
             userAuthId:req.params.userAuthId,
             userAuthProvider: req.params.userAuthProvider,
             inquiryId: inquiryId});

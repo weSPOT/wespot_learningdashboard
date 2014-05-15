@@ -54,7 +54,7 @@ cas.configure({
     casPath: "/cas",                  // your cas login route (defaults to "/cas")
     ssl: false,                        // is the cas url https? defaults to false
     casPort: 7070,                        // defaults to 80 if ssl false, 443 if ssl true
-    service: "http://localhost:3015/wespot/", // your site
+    service: "http://ariadne.cs.kuleuven.be/wespot/", // your site
     sessionName: "cas_user",          // the cas user_name will be at req.session.cas_user (this is the default)
     renew: false,                     // true or false, false is the default
     gateway: false,                   // true or false, false is the default

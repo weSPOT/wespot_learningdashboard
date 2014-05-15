@@ -14,7 +14,7 @@
 
         var colors =           ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC","#99CC66","#9999FF","#FFCC66", "#FF9966"];
         var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
-
+        var ratings = <%- JSON.stringify(ratings) %>;
 
 
         var titles =  ["Question / Hypothesis","Operationalisation","Data Collection","Data Analysis","Interpretation","Communication"];
@@ -57,20 +57,26 @@
                     .enter()
                     .append("svg")
                     .attr("class", "vis_circle")
-                    .attr("height", 10)
-                    .attr("width",10)
+                    .attr("height", 20)
+                    .attr("width",20)
                     .append("circle")
-                    .attr("cx", 5)
-                    .attr("cy", 5)
-                    .attr("r", 5)
+                    .attr("cx", 10)
+                    .attr("cy", 10)
+                    .attr("r", function(d) {
+                        if(ratings[d.object]!= undefined && ratings[d.object].ratingCount != 0)
+                            return ((ratings[d.object].rating/ratings[d.object].ratingCount)/5)*7 +2;
+                        return 4;
+                    })
 
                     .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
+                    .attr("stroke", "#595959")
                     .attr("fill", function(d){
-                        if(!d.today)
-                            return colors_dark[d.phase-1];
-                        else
-                            return colors[d.phase-1];
+                        // if(!d.today)
+                        //    return colors_dark[d.phase-1];
+                        // else
+                        return colors[d.phase-1];
                     })
+                    .attr("stroke-width", "2px")
                     .on("click",function(d){ window.open(urlLARA); });
                    ;
         }

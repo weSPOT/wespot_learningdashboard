@@ -461,3 +461,10 @@
   padding-left: 10px;
   padding-right: 10px;
 }
+#login {
+  width: 500px;
+}
+#login img {
+  display: block;
+  margin: 10px;
+}
