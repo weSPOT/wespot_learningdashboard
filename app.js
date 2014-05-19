@@ -67,7 +67,7 @@ if ('development' == app.get('env')) {
 
 
 passport.use('wespot_provider', new OAuth2Strategy({
-        authorizationURL: 'https://wespot-arlearn.appspot.com/Login.html',
+        authorizationURL: 'https://wespot-arlearn.appspot.com/oauth/auth',
         tokenURL: url + '/wespot/oauthConverter',
         clientID: 'LARAe',
         clientSecret: 'thisiswespot',
