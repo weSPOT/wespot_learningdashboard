@@ -3,9 +3,9 @@
  * Module dependencies.
  */
 //DEV
-//var url = "http://localhost:3015";
+var url = "http://localhost:3015";
 //PROD
-var url = "http://ariadne.cs.kuleuven.be"
+//var url = "http://ariadne.cs.kuleuven.be"
 
 var express = require('express')
     , routes = require('./routes')
