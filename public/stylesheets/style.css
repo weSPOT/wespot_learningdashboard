@@ -129,7 +129,6 @@
   display: none;
 }
 #subsections {
-  position: absolute;
   display: inline-block;
   left: 400px;
 }

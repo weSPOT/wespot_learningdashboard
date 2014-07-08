@@ -1,0 +1,140 @@
+<html>
+  <head>
+
+     <title>LARAe.weSPOT</title>
+     <%
+      if(users[(userAuthProvider + "_" + userAuthId).toLowerCase()] == null)
+        users[(userAuthProvider + "_" + userAuthId).toLowerCase()] = {name:"###",icon:""};
+
+
+      //let's play with one inquiry atm
+      //widgetsPerPhase:parsedData.widgetsPerPhase, ratings:parsedData.ratings, users: user.users, events: parsedData.event
+      var widgetsPerPhase = data["26368"].data.widgetsPerPhase;
+      var ratings = data["26368"].data.ratings;
+      var events = data["26368"].data.events;
+
+      %>
+      <script type="application/javascript">
+      var colors =           ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC","#99CC66","#9999FF","#FFCC66", "#FF9966"];
+      var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
+
+      var ratings = <%- JSON.stringify(ratings) %>;
+      var dataPerInquiry = <%- JSON.stringify(data) %>;
+      var activeInquiry = [];
+          var userAuthProvider = "<%= userAuthProvider %>";
+          var userAuthId = "<%= userAuthId %>";
+          var users = <%- JSON.stringify(users) %>;
+      </script>
+     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+      <link type="text/css" rel="stylesheet" href="/wespot/static/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.css" />
+      <script type="text/javascript" src="/wespot/static/javascripts/3rdParty/jquery-dropdown/jquery.dropdown.js"></script>
+      <script type="text/javascript" src="/wespot/static/javascripts/3rdParty/crossfilter.js"></script>
+      <script type="text/javascript" src="/wespot/static/javascripts/dashboard_logic.js"></script>
+
+      <link rel="stylesheet" href="/wespot/static/stylesheets/style.css">
+</head>
+<body  id="mainBody">
+<div id="titleField">
+    <img id="wespot_logo" src="/wespot/static/images/wespot_logo.png"/>
+    <span id="wespot_title">Learning Analytics Reflection & Awareness environment</span>
+    <span id="title">LARAe</span><span id="subtitle">.wespot</span>
+
+
+    <table id="legend">
+        <tbody><tr>
+            <td>
+                Star rating 1-5
+            </td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="3" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="4" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="5" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="6" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+            <td><svg style="vertical-align: bottom" width="20" height="20">
+                <circle cx="10" cy="10" r="7" class="eventSquare widget_hypothesis" stroke="#595959" fill="white" stroke-width="2px"></circle>
+            </svg></td>
+
+        </tr>
+        </tbody></table>
+    <div id="subsections">
+        <select multiple id="inquirySelection" size="3" onchange="javascript:inquirySelectionChanged()">
+            <% Object.keys(data).forEach(function(inq){ %>
+            <option value="<%=inq%>"><%=data[inq].inquiry.title%></option>
+            <% });%>
+        </select>
+        <select multiple id="studentSelection" size="3" onchange="javascript:studentSelectionChanged()">
+
+        </select>
+    </div>
+    <div id="user"><img class="img-circle" style="height:20px" src='<%= users[userAuthProvider + "_" + userAuthId].icon %>'><%= users[userAuthProvider + "_" + userAuthId].name %></div>
+
+</div>
+
+<div id="leftInterface">
+    <table id="phases">
+        <tr >
+
+            <th class="title_student">Name</th>
+            <th class="title_phase1"><a href="#" data-dropdown="#dropdown-phase1">Question / Hypothesis</a></th>
+            <th class="title_phase2"><a href="#" data-dropdown="#dropdown-phase2">Operationalisation</a></th>
+            <th class="title_phase3"><a href="#" data-dropdown="#dropdown-phase3">Data Collection</a></th>
+            <th class="title_phase4"><a href="#" data-dropdown="#dropdown-phase4">Data Analysis</a></th>
+            <th class="title_phase5"><a href="#" data-dropdown="#dropdown-phase5">Interpretation</a></th>
+            <th class="title_phase6"><a href="#" data-dropdown="#dropdown-phase6">Communication</a></th>
+
+        </tr>
+    </table>
+<div id="userList" class="scrollableView">
+
+
+<table id="mainTable">
+    <script type="application/javascript">
+        regenerate();
+        </script>
+
+</table>
+</div>
+</div>
+<div id="rightInterface">
+    <div id="realContent" class="scrollableView">
+
+        <h2>Event Data</h2>
+
+        <div id="eventData">
+        </div>
+    </div>
+</div>
+<%
+    var phases = [1,2,3,4,5,6];
+    phases.forEach(function(p)
+    {
+%>
+
+    <div id="dropdown-phase<%= p %>" class="dropdown dropdown-tip">
+        <ul class="dropdown-menu">
+            <li><a id="dropdown-phase<%= p %>_" href="#" class="dd_selected" onClick="javascript:filter(<%= p %>,'')">all</a></li>
+<%
+        if(widgetsPerPhase[p] != undefined)
+        {
+            widgetsPerPhase[p].forEach(function(d){ %>
+            <li><a id="dropdown-phase<%= p %>_<%= d %>" href="#" onClick="javascript:filter(<%= p %>, '<%= d %>')"><%= d %></a></li>
+<%          });
+        }
+%>
+        </ul>
+    </div>
+<%
+    });
+%>
+
+</body>
+</html>

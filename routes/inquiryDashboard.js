@@ -209,7 +209,7 @@ exports.inquiryDashboard = function(req, res){
     //order the events by user
 
     var parsedData = convertToEventsByUsersAndEventId(d);
-    res.render('inquiryDashboard.html', {widgetsPerPhase:parsedData.widgetsPerPhase, ratings:parsedData.ratings, users: user.users, events: parsedData.events, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});}
+    res.render('dashboard_v2.html', {widgetsPerPhase:parsedData.widgetsPerPhase, ratings:parsedData.ratings, users: user.users, events: parsedData.events, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});}
   );
 };
 
@@ -230,4 +230,43 @@ exports.inquiryMiniDashboard = function(req, res){
     });
 
 
+
 };
+
+exports.dashboard_v2 = function(req, res)
+{
+    var userAuthId = req.params.userAuthId;
+    var userAuthProvider = req.params.userAuthProvider;
+    inquiry.getInquiriesOfUser(userAuthId, userAuthProvider, function(d){
+            if(user.users[(userAuthProvider + "_" + userAuthId).toLowerCase()] != undefined)
+            {
+
+                //load all inquiries of the user! (might wanna do some caching here and there at some point)
+                var dataPerInquiry = {};
+                var inquiries = d[0].result;
+                var nrOfInquiries = d[0].result.length;
+                inquiries.forEach(function(inq){
+                    inquiry.getInquiry(inq.inquiryId, function(d){
+                        //order the events by user
+                        var parsedData = convertToEventsByUsersAndEventId(d);
+                        dataPerInquiry[inq.inquiryId] = {};
+                        dataPerInquiry[inq.inquiryId].inquiry = inq;
+                        dataPerInquiry[inq.inquiryId].data = parsedData;
+                        dashboard_render_yesno(dataPerInquiry, nrOfInquiries,req, res);
+                });});
+
+
+            }
+
+            else
+                res.render('noInquiries.html', {users: user.users, inquiries: d[0].result, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider });}
+    );
+}
+
+function dashboard_render_yesno(data, total,req, res)
+{
+    if(Object.keys(data).length >= total)
+     res.render('dashboard_v2.html', {data:data, users: user.users, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});
+    else
+        console.log("still loading");
+}
