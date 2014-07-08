@@ -3,9 +3,9 @@
  * Module dependencies.
  */
 //DEV
-var url = "http://localhost:3015";
+//var url = "http://localhost:3015";
 //PROD
-//var url = "http://ariadne.cs.kuleuven.be"
+var url = "http://ariadne.cs.kuleuven.be"
 
 var express = require('express')
     , routes = require('./routes')
@@ -195,7 +195,7 @@ app.all('*', function(req,res,next){
 });
 
 //web pages
-app.get(path.join(context,'/userInquiryList/:userAuthId/:userAuthProvider') , userInquiryList.userInquiryList);
+app.get(path.join(context,'/userInquiryList/:userAuthId/:userAuthProvider') , inquiryDashboard.dashboard_v2);
 app.get(path.join(context,'/inquiryDashboard/:inquiryId/:userAuthId/:userAuthProvider'),  inquiryDashboard.inquiryDashboard);
 app.get(path.join(context,'/dashboard_v2/:userAuthId/:userAuthProvider'),  inquiryDashboard.dashboard_v2);
 

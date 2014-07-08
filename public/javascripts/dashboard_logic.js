@@ -202,7 +202,7 @@ function generateInquiry(selectedInquiry)
         usersOfSelectedInquiries.push({user:user_phases.username, name: displayUser});
 
         $("#mainTable").append("<tr id='box_" +  user_phases.username + "_" + selectedInquiry.inquiry.inquiryId + "' class='box_vis'><td class='studentName'>" + displayUser
-            + "[" + selectedInquiry.inquiry.title +"]</td></tr>");;
+            + "<span>[" + selectedInquiry.inquiry.title +"]</span></td></tr>");;
         for(var i=1;i<=6;i++)
         {
             var user_events = user_phases[i]

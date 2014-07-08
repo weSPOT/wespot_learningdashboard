@@ -45,7 +45,7 @@ exports.index = function(req,res)
             }
         });
 
-        res.redirect("/wespot/userInquiryList/"+authId+"/"+authProvider);
+        res.redirect("/wespot/dashboard_v2/"+authId+"/"+authProvider);
     });
 
 }
