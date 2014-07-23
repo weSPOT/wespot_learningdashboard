@@ -151,18 +151,29 @@ function convertToEventsByUsersAndEventId(data)
             {
                 if(ratingsPerEvent[event.source] == undefined)
                 {
-                    ratingsPerEvent[event.source] = {rating: 0, ratingCount: 0, liked:0};
+                    ratingsPerEvent[event.source] = {rating: 0, ratingCount: 0, liked:0, usersWhoRated:{}};
+
 
                 }
-                ratingsPerEvent[event.source].rating += event.rating;
-                ratingsPerEvent[event.source].ratingCount++;
+                //store the fact that this person rated, and from when that rating was
+                if(Object.keys(ratingsPerEvent[event.source].usersWhoRated).indexOf(username) < 0)
+                {
+                    ratingsPerEvent[event.source].usersWhoRated[username] = {date: new Date(event.data.starttime).getTime(), rating: event.rating};
+                }
+                //compare if this person's rating is his latest rating
+                if(ratingsPerEvent[event.source].usersWhoRated[username].date < new Date(event.data.starttime).getTime())
+                {
+                    ratingsPerEvent[event.source].usersWhoRated[username] = {date: new Date(event.data.starttime).getTime(), rating: event.rating};
+                }
+
+
                 return;
             }
             if(event.liked != null)
             {
                 if(ratingsPerEvent[event.source] == undefined)
                 {
-                    ratingsPerEvent[event.source] = {rating: 0, ratingCount: 0, liked:0};
+                    ratingsPerEvent[event.source] = {rating: 0, ratingCount: 0, liked:0, usersWhoRated:[]};
 
                 }
                 ratingsPerEvent[event.source].liked++;
@@ -199,7 +210,17 @@ function convertToEventsByUsersAndEventId(data)
         }
     );
 
-    return {events: orderedData, widgetsPerPhase: widgetsPerPhase, ratings:ratingsPerEvent};
+    //sort the rating out
+   if(Object.keys(ratingsPerEvent).length > 0)
+   {
+       Object.keys(ratingsPerEvent).forEach(function(d){
+           Object.keys(ratingsPerEvent[d].usersWhoRated).forEach(function(e){
+            ratingsPerEvent[d].rating += ratingsPerEvent[d].usersWhoRated[e].rating;
+            ratingsPerEvent[d].ratingCount++;
+        })
+    });
+   }
+   return {events: orderedData, widgetsPerPhase: widgetsPerPhase, ratings:ratingsPerEvent};
 
 }
 

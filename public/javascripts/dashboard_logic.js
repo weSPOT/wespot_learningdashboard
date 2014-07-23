@@ -93,7 +93,7 @@ $("#eventData").html("");
 
 
         }
-        function drawPhase(data, username,phase)
+        function drawPhase(data, username,phase, ratings)
          {
 
              var tr = d3.select("#box_"+username);
@@ -193,7 +193,7 @@ function generateInquiry(selectedInquiry)
     for(var user_phases_key in events)
     {
         var user_phases = events[user_phases_key];
-        if(user_phases.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue;
+        //if(user_phases.username.toLowerCase() == (userAuthProvider + "_" + userAuthId).toLowerCase()) continue;
         var displayUser = "";
         if(users[user_phases.username] != undefined)
             displayUser= users[user_phases.username].name;
@@ -208,7 +208,7 @@ function generateInquiry(selectedInquiry)
             var user_events = user_phases[i]
             if(user_events == undefined) continue;
             var d = user_events;
-            drawPhase(d, user_phases.username+ "_" + selectedInquiry.inquiry.inquiryId,i);
+            drawPhase(d, user_phases.username+ "_" + selectedInquiry.inquiry.inquiryId,i, selectedInquiry.data.ratings);
         }
     }
 }

@@ -10,15 +10,14 @@
       //let's play with one inquiry atm
       //widgetsPerPhase:parsedData.widgetsPerPhase, ratings:parsedData.ratings, users: user.users, events: parsedData.event
       var widgetsPerPhase = data["26368"].data.widgetsPerPhase;
-      var ratings = data["26368"].data.ratings;
-      var events = data["26368"].data.events;
+
 
       %>
       <script type="application/javascript">
       var colors =           ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC","#99CC66","#9999FF","#FFCC66", "#FF9966"];
       var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
 
-      var ratings = <%- JSON.stringify(ratings) %>;
+
       var dataPerInquiry = <%- JSON.stringify(data) %>;
       var activeInquiry = [];
           var userAuthProvider = "<%= userAuthProvider %>";

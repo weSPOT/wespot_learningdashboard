@@ -3,9 +3,9 @@
  * Module dependencies.
  */
 //DEV
-//var url = "http://localhost:3015";
+var url = "http://localhost:3015";
 //PROD
-var url = "http://ariadne.cs.kuleuven.be"
+//var url = "http://ariadne.cs.kuleuven.be"
 
 var express = require('express')
     , routes = require('./routes')
@@ -188,7 +188,7 @@ function ensureAuthenticated(req, res, next) {
 
 app.all('*', function(req,res,next){
     if (req.params[0] == path.join(context,'/') ||  req.params[0] == path.join(context,'/logout')
-        || req.params[0].indexOf('/static/') != -1 )
+        || req.params[0].indexOf('/static/') != -1 || req.params[0].indexOf('/dashboard_v2/') != -1 )
         next();
     else
         ensureAuthenticated(req,res,next);
@@ -198,7 +198,7 @@ app.all('*', function(req,res,next){
 app.get(path.join(context,'/userInquiryList/:userAuthId/:userAuthProvider') , inquiryDashboard.dashboard_v2);
 app.get(path.join(context,'/inquiryDashboard/:inquiryId/:userAuthId/:userAuthProvider'),  inquiryDashboard.inquiryDashboard);
 app.get(path.join(context,'/dashboard_v2/:userAuthId/:userAuthProvider'),  inquiryDashboard.dashboard_v2);
-
+app.get(path.join(context,'/inquiryDashboard/:inquiryId/'), inquiryDashboard.inquiryDashboard);
 
 
 
