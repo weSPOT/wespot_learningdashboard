@@ -1,0 +1,28 @@
+body
+{
+    margin:0;
+    padding:0;
+    /*background: url("../img/background_tile.png") repeat;*/
+    /*background-size: cover;*/
+    background-color: #231f20;
+    font-family: elysium;
+}
+
+.ActivityGraphAxis path,
+.ActivityGraphAxis line {
+    fill: none;
+    stroke: white;
+    shape-rendering: crispEdges;
+}
+
+.ActivityGraphAxis text {
+    font-family: elysium;
+    font-size: 9px;
+    fill: white;
+}
+
+.ActivityGraphTitle {
+    font-family: elysium;
+    font-size: 14px;
+
+}

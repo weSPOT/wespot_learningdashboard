@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>LARAe.TT</title>
+    <script type="text/javascript" src="../3rdParty/crossfilter.js"></script>
+    <script type="text/javascript" src="../3rdParty/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../3rdParty/d3.min.js"></script>
+    <script type="text/javascript" src="../data/load.js"></script>
+
+    <script type="text/javascript" src="barchart.js"></script>
+    <script type="text/javascript" src="eventflow.js"></script>
+    <script type="text/javascript" src="eventrelation.js"></script>
+    <script type="text/javascript" src="cluster.js"></script>
+
+    <link rel="stylesheet" href="barchart.css">
+
+    <script type="application/javascript">
+
+
+
+        function loadWidgets(data)
+        {
+            //barchart_init(data);
+            //eventflow_init(data);
+            eventRelation.eventrelation_init(data, "er");
+            //cluster.init(data,"cl");
+        }
+
+    </script>
+</head>
+<body onload="javascript:load(loadWidgets);">
+</body>
+</html>
