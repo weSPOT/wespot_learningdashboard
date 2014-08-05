@@ -17,8 +17,8 @@ var eventRelation = function(){
     var eventrelation_variableMinDate = {};
     var eventrelation_variableMaxDate = {};
 
-    var eventrelation_svgW = 1200;//1200;
-    var eventrelation_svgH = 800;
+    var eventrelation_svgW = 3200;//1200;
+    var eventrelation_svgH = 1500;
 
 
     var eventrelation_graphPadding = 38;
@@ -28,6 +28,7 @@ var eventRelation = function(){
     var eventrelation_axisY = {};
     var eventrelation_graphDays = 0;
 
+    var id;
 
 
     var old_eventrelation_preprocess = function(data)
@@ -53,11 +54,19 @@ var eventRelation = function(){
         ).order(function(d){return -d.date;}).top(Infinity);
     }
 
-    var preprocess = function(data)
+    var preprocess_nodes = function(data)
     {
         var xf = crossfilter(data);
         var dim = xf.dimension(function(f){return f.event_id;});
         return dim.bottom(Infinity);
+    }
+
+    var preprocess_links = function(data)
+    {
+        var xf = crossfilter(data);
+        var dim = xf.dimension(function(f){return f.object;});
+        return dim.top(Infinity);
+        //SHOULD WE SORT BY DATE? //MAYBE NOT .. nodes visualized are already sorted
     }
 
 
@@ -122,89 +131,86 @@ var eventRelation = function(){
 
     }
 
-    this.eventrelation_drawGraph_old = function(data, id, color)
+    var drawLines = function(nodes,type,root,nodeRadius)
     {
+        var line = {x1:0,y1:0,x2:0,y2:0};
+        var i = 0;
 
-        var svg = d3.select("#"+id);
-        var mainBars = svg.select(".mainCircles");
+        nodes.each(function(e){
 
-        eventrelation_graphDays = 1+ Math.floor((eventrelation_variableMaxDate.getTime() - eventrelation_variableMinDate.getTime()) / (1000 * 60 * 60 * 24));
-        eventrelation_graphTransformX[id].domain([0, data.length]);
+            if(i > 0)
+            {
 
-        d3.select("#axis"+id).call(eventrelation_axisX[id]);
-
-
-
-        var g = mainBars
-                .selectAll("g")
-                .data(data)
-                .attr("index", function(d,i){return i;})
-           ;
-
-        g
-                .enter()
-                .append("g")
-              .attr("index", function(d,i){return i;})
-            ;
-
-        g.exit().remove();
-
-
-        var circles = g.selectAll("circle")
-            .data(function(d){
-
-                d.value.actualEvents.sort(
-                    function(a,b){
-                        if(a.starttime > b.starttime) return 1;
-                        if(a.starttime < b.starttime) return -1;
-                        return 0;
-                    }
-                );
-                return d.value.actualEvents;})
-
-            .attr("cx", function (d,i) {
-                return eventrelation_graphTransformX[id](this.parentNode.getAttribute("index"));
-            })
-            .attr("cy", function (d,i) { return eventrelation_graphTransformY[id](i);})
-            .attr("r", 5)
-            .attr("fill","white")
-            .on('mouseover', function(d){
-                var nodeSelection = d3.select(this).style({opacity:'0.8'});
-                nodeSelection.append("text").text("test");
-            });
-
-
-
-        circles
-            .enter()
-            .append("circle")
-            .attr("cx", function (d,i) {
-                return eventrelation_graphTransformX[id](this.parentNode.getAttribute("index"));
-            })
-            .attr("cy", function (d,i) { return eventrelation_graphTransformY[id](i);})
-            .attr("r", 2)
-            .attr("fill", function(d) {
-                if(d.username == "facebook_696307806")
-                    return "red";
+                line.x2 = this.getAttribute("cx");
+                line.y2 = this.getAttribute("cy");
+                if(type != "user")
+                {
+                    root.append("line")
+                        .attr("hover",function(d){if(type == "hover") return true; else return false;})
+                        .attr("x1",line.x1)
+                        .attr("y1",function(d){ if(line.y1 < 0) return line.y1+nodeRadius*2; else return line.y1;})
+                        .attr("x2",line.x1)
+                        .attr("y2",line.y2)
+                        .attr("stroke","white")
+                        .style("stroke-opacity", function(d){
+                         if(type == "relation") return .02;
+                         else 1.0;
+                     });
+                    root.append("line")
+                        .attr("hover",function(d){if(type == "hover") return true; else return false;})
+                        .attr("x1",line.x1)
+                        .attr("y1",line.y2)
+                        .attr("x2",line.x2-nodeRadius*2)
+                        .attr("y2",line.y2)
+                        .attr("stroke","white")
+                        .style("stroke-opacity", function(d){
+                            if(type == "relation") return .02;
+                            else 1.0;
+                        });
+                }
                 else
-                    return "white";
+                {
+                    root.append("line")
 
-            })
-            .append('svg:title')
-            .text( function(d){
-                return d.object + " " + d.starttime + " " + d.verb;
-            })
-        ;
+                        .attr("x1",line.x1)
+                        .attr("y1",function(d){ if(line.y1 < 0) return line.y1+nodeRadius*2; else return line.y1;})
+                        .attr("x2",line.x2)
+                        .attr("y2",line.y2)
+                        .attr("stroke","#c9ffae")
+                        .attr("stroke-width",2)
+                        ;
+                }
 
-        circles
-            .exit()
-            .remove();
-
-
-
+                line.x1 = this.getAttribute("cx");
+                line.y1 = this.getAttribute("cy");
+            }
+            else
+            {
+                line.x1 = this.getAttribute("cx");
+                line.y1 = this.getAttribute("cy");
+            }
+            i++;
+        })
     }
 
-    this.eventrelation_drawGraph = function(data, id, color)
+    var drawHoverLine = function(d,type)
+    {
+        //draw lines for this thread
+        var relatedEvents = d3.selectAll("[e='"+ d.object + "']");
+        var svg = d3.select("#"+id);
+        var mainBars = svg.select(".mainCircles");
+        drawLines(relatedEvents,type,mainBars,1.5);
+    }
+
+    var isDataCollection = function(d)
+    {
+        if(d.verb == "read" || d.verb == "answer_given" || d.verb == "startRun" || d.verb == "response")
+        return true;
+        else return false;
+    }
+
+
+    this.eventrelation_drawGraph = function(data, links, id, color)
     {
 
         var svg = d3.select("#"+id);
@@ -215,7 +221,7 @@ var eventRelation = function(){
 
         d3.select("#axis"+id).call(eventrelation_axisX[id]);
 
-        var globalVariables = {eventVsPosition:{},farthestEvent:undefined};
+        var globalVariables = {eventVsPosition:{},farthestEvent:undefined, lastEvent:undefined};
 
 
         var g = mainBars
@@ -248,20 +254,25 @@ var eventRelation = function(){
         circles
             .enter()
             .append("circle")
-            .attr("eventRootObject" , function(d){
-                return d.object;})
+            .attr("e" , function(d){
+                if(isDataCollection(d)) return "datacollection"; else return d.object;})
+
             .attr("cx", function (d,i) {
 
                 //get global vars
                 var eventVsPosition = this.parentNode.__data__.eventVsPosition;
                 var farthestEvent = this.parentNode.__data__.farthestEvent;
                 var x;
+
+                var structureIdentifier = d.object;
+                if(isDataCollection(d)) structureIdentifier = "datacollection";
+
                 // start of the cycle, reset all
                 if(farthestEvent == undefined)
                 {
                     x = 0;
 
-                    this.parentNode.__data__.eventVsPosition[d.object] = {x:0, y:0};
+                    this.parentNode.__data__.eventVsPosition[structureIdentifier] = {x:0, y:0};
 
                     this.parentNode.__data__.farthestEvent = {event:d, x:0, y:0};
                     //console.log("we're still initializing");
@@ -269,35 +280,51 @@ var eventRelation = function(){
 
                 }
                 //we're in an existing thread, so either go to it if farthest thread, otherwise, start new column
-                if(eventVsPosition[d.object] != undefined)
+                if(eventVsPosition[structureIdentifier] != undefined)
                 {
+
+
                     //we are the last thread
-                    if(this.parentNode.__data__.farthestEvent.event.object == d.object)
+                    if(this.parentNode.__data__.farthestEvent.event.object == d.object
+                        || (isDataCollection(d) && isDataCollection(this.parentNode.__data__.farthestEvent.event)))
                     {
-                        x = eventVsPosition[d.object].x;
-                        this.parentNode.__data__.eventVsPosition[d.object].x = x;
+                        x = eventVsPosition[structureIdentifier].x;
+                        this.parentNode.__data__.eventVsPosition[structureIdentifier].x = x;
                         //console.log("we're still in the last thread");
+
                     }
                     //no we're not
                     else
                     {
                         x = farthestEvent.x + 2;
-                        this.parentNode.__data__.eventVsPosition[d.object] = {x: x, y:0};
-                        this.parentNode.__data__.farthestEvent = {event:d, x:x, y:0};
+                        this.parentNode.__data__.eventVsPosition[structureIdentifier] = {x: x, y:eventVsPosition[structureIdentifier].y};
+                        this.parentNode.__data__.farthestEvent = {event:d, x:x, y:eventVsPosition[structureIdentifier].y};
+
+                        if(isDataCollection(d))
+                        {
+                            this.parentNode.__data__.eventVsPosition[structureIdentifier].y = 0;
+                            this.parentNode.__data__.farthestEvent.y = 0;
+                            console.log("resetting Y");
+                        }
+
                         //console.log("we should be moving to a new column in same thread");
+
+
                     }
+
 
                     return eventrelation_graphTransformX[id](x);
 
                 }
                 //we discovered a new thread, so go to the next column
-                if(eventVsPosition[d.object] == undefined)
+                if(eventVsPosition[structureIdentifier] == undefined)
                 {
 
                     x =  farthestEvent.x + 2;
-                    this.parentNode.__data__.eventVsPosition[d.object]=  {x: x, y:0}
+                    this.parentNode.__data__.eventVsPosition[structureIdentifier]=  {x: x, y:0}
 
                     this.parentNode.__data__.farthestEvent = {event:d, x:x, y:0};
+
 
                     return eventrelation_graphTransformX[id](x);
                 }
@@ -312,25 +339,33 @@ var eventRelation = function(){
 
                 var y;
 
+                var structureIdentifier = d.object;
+                if(isDataCollection(d)) structureIdentifier = "datacollection";
+                if(this.parentNode.__data__.lastEvent == undefined)
+                    this.parentNode.__data__.lastEvent = d;
+
                 //we're in an existing thread, so either go to it if farthest thread, otherwise, start new column
-                if(eventVsPosition[d.object] != undefined)
+                if(eventVsPosition[structureIdentifier] != undefined)
                 {
+                    y = eventVsPosition[structureIdentifier].y + 2;
+                    if(isDataCollection(d) && !isDataCollection(this.parentNode.__data__.lastEvent))
+                    {
+                        y=2;
+                    }
 
-                    y = eventVsPosition[d.object].y + 2;
-                    this.parentNode.__data__.eventVsPosition[d.object].y = y;
 
-
+                    this.parentNode.__data__.eventVsPosition[structureIdentifier].y = y;
+                    this.parentNode.__data__.lastEvent = d;
                     return eventrelation_graphTransformY[id](y);
 
                 }
                 //we discovered a new thread, so go to the next column
-                if(eventVsPosition[d.object] == undefined)
+                if(eventVsPosition[structureIdentifier] == undefined)
                 {
                     y =  0;
-                    this.parentNode.__data__.eventVsPosition[d.object].y = y;
+                    this.parentNode.__data__.eventVsPosition[structureIdentifier].y = y;
 
-
-
+                    this.parentNode.__data__.lastEvent = d;
                     return eventrelation_graphTransformY[id](y);
                 }
                 console.log("ERROR: we missed a case!");
@@ -339,9 +374,10 @@ var eventRelation = function(){
             })
             .attr("r", function(d)
             {
-                if(d.username == "Google_109002798505335212351")
-                 return 3;
-                else return 2;
+               // if(d.username == "Google_109002798505335212351")
+                 //return 3;
+                //else return 2;
+                return 3;
             })
             .attr("fill", function(d) {
                 if(d.verb == "create")
@@ -349,19 +385,32 @@ var eventRelation = function(){
                 if(d.verb == "comment" || d.verb == "answer")
                     return "#a68aff";
                 if(d.verb == "like")
-                    return "#8aff9d";
+                    return "#e5ff8a";
                 if(d.verb == "rated" || d.verb == "rating_updated")
                     return "#e5ff8a";
                 if(d.verb == "edit")
                     return "#ffa08a";
                 if(d.verb == "read" || d.verb == "answer_given" || d.verb == "startRun")
-                    return "#ffb98a";
+                    return "red";
                 if(d.verb == "response")
-                    return "#b7b99e";
+                    return "red";
                 if(d.verb == "delete_like" || d.verb == "delete_comment")
                     return "#e6009d"
                 return "white";
 
+            })
+            .on("mouseover", function(d){drawHoverLine(d,"hover");})
+            .on("mouseleave",function(d){
+                d3.selectAll("line[hover='true']").remove();
+
+            })
+            .attr("isRoot", function(d){
+                if(this.parentNode.__data__.eventVsPosition[d.object] == undefined)
+                    return true;
+                else return false;
+            })
+            .attr("username", function(d){
+                return d.username;
             })
             .append('svg:title')
             .text( function(d){
@@ -374,16 +423,31 @@ var eventRelation = function(){
             .remove();
 
 
+        //draw lines
+        links.forEach(function(l)
+        {
+            var nodes = d3.selectAll("[e='"+ l.object + "']");
+            var svg = d3.select("#"+id);
+            var mainBars = svg.select(".mainCircles");
+            drawLines(nodes,"relation",mainBars,1.5);
+        });
+        //let's highlight a user
+        var nodes = d3.selectAll("[username='Google_109002798505335212351']");
+        var svg = d3.select("#"+id);
+        var mainBars = svg.select(".mainCircles");
+        drawLines(nodes,"user",mainBars,1.5);
+
 
     }
 
     return {
         "eventrelation_init" : function(data, identifier)
         {
-
-            var d = preprocess(data);
-            eventrelation_addGraph(d,identifier,identifier,"#008293");
-            eventrelation_drawGraph(d, identifier, "#008293");
+            id = identifier;
+            var n = preprocess_nodes(data);
+            var l = preprocess_links(data);
+            eventrelation_addGraph(n,identifier,identifier,"#008293");
+            eventrelation_drawGraph(n,l, identifier, "#008293");
 
         }
     }
