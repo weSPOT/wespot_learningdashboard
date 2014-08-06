@@ -17,7 +17,7 @@ var eventRelation = function(){
     var eventrelation_variableMinDate = {};
     var eventrelation_variableMaxDate = {};
 
-    var eventrelation_svgW = 3200;//1200;
+    var eventrelation_svgW = 5200;//1200;
     var eventrelation_svgH = 1500;
 
 
@@ -57,8 +57,13 @@ var eventRelation = function(){
     var preprocess_nodes = function(data)
     {
         var xf = crossfilter(data);
-        var dim = xf.dimension(function(f){return f.event_id;});
-        return dim.bottom(Infinity);
+        var byEvents = xf.dimension(function(f){return f.event_id;});
+        var byVerb =  xf.dimension(function(f){return f.verb;});
+        byVerb.filter(function(d){
+            if(d != "read" && d != "answer_given" && d != "startRun" && d != "like" && d != "delete_like")
+                return d;
+        });
+        return byEvents.bottom(Infinity);
     }
 
     var preprocess_links = function(data)
@@ -67,6 +72,21 @@ var eventRelation = function(){
         var dim = xf.dimension(function(f){return f.object;});
         return dim.top(Infinity);
         //SHOULD WE SORT BY DATE? //MAYBE NOT .. nodes visualized are already sorted
+    }
+
+    var preprocess_users = function(data)
+    {
+        var xf = crossfilter(data);
+        var dim = xf.dimension(function(f){return f.username.toLowerCase();});
+        return dim.group().reduce(
+            function(p,v){
+                p.count++;return p;
+
+            },
+            function(p,v){
+                p.count--;return p;},
+            function(){return {count:0};}
+        ).top(Infinity);
     }
 
 
@@ -90,7 +110,7 @@ var eventRelation = function(){
             .domain([0, 20000])
             .range([eventrelation_graphPadding, w - eventrelation_graphPadding * 2]);
         var yMax = d3.max(data, function (d) {
-            return (300)});
+            return (100)});
         var yScale = d3.scale.linear()
             .domain([0, yMax])
             .range([eventrelation_graphPadding, h+eventrelation_graphPadding]);
@@ -131,7 +151,7 @@ var eventRelation = function(){
 
     }
 
-    var drawLines = function(nodes,type,root,nodeRadius)
+    var drawLines = function(nodes,type,root,nodeRadius,color)
     {
         var line = {x1:0,y1:0,x2:0,y2:0};
         var i = 0;
@@ -152,6 +172,7 @@ var eventRelation = function(){
                         .attr("x2",line.x1)
                         .attr("y2",line.y2)
                         .attr("stroke","white")
+                        .attr("stroke-width",4)
                         .style("stroke-opacity", function(d){
                          if(type == "relation") return .02;
                          else 1.0;
@@ -163,6 +184,7 @@ var eventRelation = function(){
                         .attr("x2",line.x2-nodeRadius*2)
                         .attr("y2",line.y2)
                         .attr("stroke","white")
+                        .attr("stroke-width",4)
                         .style("stroke-opacity", function(d){
                             if(type == "relation") return .02;
                             else 1.0;
@@ -176,8 +198,8 @@ var eventRelation = function(){
                         .attr("y1",function(d){ if(line.y1 < 0) return line.y1+nodeRadius*2; else return line.y1;})
                         .attr("x2",line.x2)
                         .attr("y2",line.y2)
-                        .attr("stroke","#c9ffae")
-                        .attr("stroke-width",2)
+                        .attr("stroke",color)
+                        .attr("stroke-width",4)
                         ;
                 }
 
@@ -199,7 +221,7 @@ var eventRelation = function(){
         var relatedEvents = d3.selectAll("[e='"+ d.object + "']");
         var svg = d3.select("#"+id);
         var mainBars = svg.select(".mainCircles");
-        drawLines(relatedEvents,type,mainBars,1.5);
+        drawLines(relatedEvents,type,mainBars,3);
     }
 
     var isDataCollection = function(d)
@@ -210,7 +232,7 @@ var eventRelation = function(){
     }
 
 
-    this.eventrelation_drawGraph = function(data, links, id, color)
+    this.eventrelation_drawGraph = function(data, links, users, id, color)
     {
 
         var svg = d3.select("#"+id);
@@ -233,7 +255,7 @@ var eventRelation = function(){
 
 
 
-        var circles = g.selectAll("circle")
+        var circles = g.selectAll("g")
             .data(data)
             .attr("eventId" , function(d){
                     return d;})
@@ -253,10 +275,11 @@ var eventRelation = function(){
 
         circles
             .enter()
-            .append("circle")
+            .append("g")
+            .attr("vis", true)
             .attr("e" , function(d){
                 if(isDataCollection(d)) return "datacollection"; else return d.object;})
-
+            .attr("verb", function(d){ return d.verb;})
             .attr("cx", function (d,i) {
 
                 //get global vars
@@ -270,13 +293,13 @@ var eventRelation = function(){
                 // start of the cycle, reset all
                 if(farthestEvent == undefined)
                 {
-                    x = 0;
+                    x = 30;
 
-                    this.parentNode.__data__.eventVsPosition[structureIdentifier] = {x:0, y:0};
+                    this.parentNode.__data__.eventVsPosition[structureIdentifier] = {x:x, y:0};
 
-                    this.parentNode.__data__.farthestEvent = {event:d, x:0, y:0};
+                    this.parentNode.__data__.farthestEvent = {event:d, x:x, y:0};
                     //console.log("we're still initializing");
-                    return eventrelation_graphTransformX[id](x);
+                    return x;//eventrelation_graphTransformX[id](x);
 
                 }
                 //we're in an existing thread, so either go to it if farthest thread, otherwise, start new column
@@ -296,7 +319,8 @@ var eventRelation = function(){
                     //no we're not
                     else
                     {
-                        x = farthestEvent.x + 2;
+                        this.setAttribute("column", true);
+                        x = farthestEvent.x + 30;
                         this.parentNode.__data__.eventVsPosition[structureIdentifier] = {x: x, y:eventVsPosition[structureIdentifier].y};
                         this.parentNode.__data__.farthestEvent = {event:d, x:x, y:eventVsPosition[structureIdentifier].y};
 
@@ -313,20 +337,20 @@ var eventRelation = function(){
                     }
 
 
-                    return eventrelation_graphTransformX[id](x);
+                    return x;// eventrelation_graphTransformX[id](x);
 
                 }
                 //we discovered a new thread, so go to the next column
                 if(eventVsPosition[structureIdentifier] == undefined)
                 {
-
-                    x =  farthestEvent.x + 2;
+                    this.setAttribute("column", true);
+                    x =  farthestEvent.x + 30;
                     this.parentNode.__data__.eventVsPosition[structureIdentifier]=  {x: x, y:0}
 
                     this.parentNode.__data__.farthestEvent = {event:d, x:x, y:0};
 
 
-                    return eventrelation_graphTransformX[id](x);
+                    return x;//eventrelation_graphTransformX[id](x);
                 }
                 console.log("ERROR: we missed a case!");
 
@@ -377,7 +401,7 @@ var eventRelation = function(){
                // if(d.username == "Google_109002798505335212351")
                  //return 3;
                 //else return 2;
-                return 3;
+                return 6;
             })
             .attr("fill", function(d) {
                 if(d.verb == "create")
@@ -385,17 +409,17 @@ var eventRelation = function(){
                 if(d.verb == "comment" || d.verb == "answer")
                     return "#a68aff";
                 if(d.verb == "like")
-                    return "#e5ff8a";
+                    return "#feff90";
                 if(d.verb == "rated" || d.verb == "rating_updated")
-                    return "#e5ff8a";
+                    return "#feff90";
                 if(d.verb == "edit")
-                    return "#ffa08a";
+                    return "#8accff";
                 if(d.verb == "read" || d.verb == "answer_given" || d.verb == "startRun")
-                    return "red";
+                    return "#fd6cff";
                 if(d.verb == "response")
-                    return "red";
+                    return "#fd6cff";
                 if(d.verb == "delete_like" || d.verb == "delete_comment")
-                    return "#e6009d"
+                    return "red"
                 return "white";
 
             })
@@ -410,7 +434,7 @@ var eventRelation = function(){
                 else return false;
             })
             .attr("username", function(d){
-                return d.username;
+                return d.username.toLowerCase();
             })
             .append('svg:title')
             .text( function(d){
@@ -429,14 +453,81 @@ var eventRelation = function(){
             var nodes = d3.selectAll("[e='"+ l.object + "']");
             var svg = d3.select("#"+id);
             var mainBars = svg.select(".mainCircles");
-            drawLines(nodes,"relation",mainBars,1.5);
+            drawLines(nodes,"relation",mainBars,3);
         });
-        //let's highlight a user
-        var nodes = d3.selectAll("[username='Google_109002798505335212351']");
+       /* //let's highlight a user
+        var nodes = d3.selectAll("[username='google_105939139551108473521']");
         var svg = d3.select("#"+id);
         var mainBars = svg.select(".mainCircles");
-        drawLines(nodes,"user",mainBars,1.5);
+        drawLines(nodes,"user",mainBars,3);
+*/
+        //let's highlight ALL users :D
+        /*users.forEach(function(u){
+            var nodes = d3.selectAll("[username='"+ u.key +"']");
+            var svg = d3.select("#"+id);
+            var mainBars = svg.select(".mainCircles");
+            drawLines(nodes,"user",mainBars,3, "#c9ffae");
+            console.log("user " + u.key);
+        });*/
+        var phase_colors = ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC"];
+        mainBars.selectAll("g[column='true']")
+            .append("rect")
+            .attr("width",30)
+            .attr("height",25)
+            .attr("fill",function(d)
+            {
+                return phase_colors[d.context.phase-1];
+            })
+            .attr("fill-opacity",.9)
+            .attr("transform", function(d){
+                var x = this.parentNode.attributes.cx.value-15;
+                var y = 10;
+                return "translate(" + x + "," + y + ")";
+            });
 
+        mainBars
+            .selectAll("g[e='datacollection']")
+            .append("polygon")
+            .attr("points","0,10, 5,0, 10,10")
+            .attr("transform", function(d){
+                var x = this.parentNode.attributes.cx.value - 5;
+                var y = this.parentNode.attributes.cy.value - 5;
+                return "translate(" + x + "," + y + ")";
+            })
+            .attr("fill",function(d){return this.parentNode.attributes.fill.value;})
+
+            ;
+
+        mainBars
+            .selectAll("g[verb='create']")
+            .append("rect")
+            .attr("width",10)
+            .attr("height",10)
+
+            .attr("x",
+            function(d){
+                return this.parentNode.attributes.cx.value-5;
+            })
+            .attr("fill",function(d){return this.parentNode.attributes.fill.value;})
+            .attr("y",
+            function(d){
+                return this.parentNode.attributes.cy.value-5;
+            });
+
+        mainBars
+            .selectAll("g[vis]:not([verb='create']):not([e='datacollection'])")
+            .append("circle")
+            .attr("r",6)
+
+            .attr("fill",function(d){return this.parentNode.attributes.fill.value;})
+            .attr("cx",
+            function(d){
+                return this.parentNode.attributes.cx.value;
+            })
+            .attr("cy",
+            function(d){
+                return this.parentNode.attributes.cy.value;
+            });
 
     }
 
@@ -446,8 +537,9 @@ var eventRelation = function(){
             id = identifier;
             var n = preprocess_nodes(data);
             var l = preprocess_links(data);
+            var users = preprocess_users(data);
             eventrelation_addGraph(n,identifier,identifier,"#008293");
-            eventrelation_drawGraph(n,l, identifier, "#008293");
+            eventrelation_drawGraph(n,l,users, identifier, "#008293");
 
         }
     }

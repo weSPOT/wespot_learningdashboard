@@ -19,9 +19,25 @@
 
         function loadWidgets(data)
         {
+
+            //filter it
+            var xf = crossfilter(data);
+            var byUser = xf.dimension(function(d){return d.username.toLowerCase();});
+            var byPhase = xf.dimension(function(d){return d.context.phase;});
+
+            byPhase.filter(2);
+            eventRelation.eventrelation_init(byUser.top("Infinity"), "Total");
+
+            byUser.filter("google_105939139551108473521");
+            var newData=  byUser.top("Infinity");
+
             //barchart_init(data);
             //eventflow_init(data);
-            eventRelation.eventrelation_init(data, "er");
+            eventRelation.eventrelation_init(newData, "George");
+
+            byUser.filter("facebook_696307806");
+            newData=  byUser.top("Infinity");
+            eventRelation.eventrelation_init(newData, "Geoff");
             //cluster.init(data,"cl");
         }
 
