@@ -26,3 +26,42 @@ body
     font-size: 14px;
 
 }
+
+
+#mainVisualization {
+    overflow-x: auto;
+    overflow-y: auto;
+    padding-bottom: 15px;
+    max-width: 75%;
+    float:left;
+}
+
+#userVisualizations {
+    overflow-x: auto;
+    overflow-y: auto;
+    padding-bottom: 15px;
+    max-width: 25%;
+}
+
+#userVisualizations svg {
+    display:block;
+}
+
+#filters
+{
+    clear:both;
+}
+
+#filters li{
+    display:inline-block;
+    color:white;
+    border:solid 1px white;
+}
+
+
+#filters li.selected{
+    display:inline-block;
+    color:black;
+    background-color: white;
+    border:solid 1px white;
+}

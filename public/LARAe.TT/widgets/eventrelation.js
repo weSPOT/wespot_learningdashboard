@@ -92,11 +92,11 @@ var eventRelation = function(){
 
 
 
-    this.eventrelation_addGraph = function(data, id, title, color) {
+    var eventrelation_addGraph = function(data, id, title, color,div) {
 
         var w = eventrelation_svgW;
         var h = eventrelation_svgH;
-        var svg = d3.select("body")
+        var svg = d3.select(div)
             .append("svg")
             .attr("id", id )
             .attr("width", w)   // <-- Here
@@ -200,6 +200,7 @@ var eventRelation = function(){
                         .attr("y2",line.y2)
                         .attr("stroke",color)
                         .attr("stroke-width",4)
+                        .attr("line", "userLine")
                         ;
                 }
 
@@ -232,7 +233,7 @@ var eventRelation = function(){
     }
 
 
-    this.eventrelation_drawGraph = function(data, links, users, id, color)
+    var eventrelation_drawGraph = function(data, links, users, id, color)
     {
 
         var svg = d3.select("#"+id);
@@ -243,13 +244,14 @@ var eventRelation = function(){
 
         d3.select("#axis"+id).call(eventrelation_axisX[id]);
 
-        var globalVariables = {eventVsPosition:{},farthestEvent:undefined, lastEvent:undefined};
+        var globalVariables = {eventVsPosition:{},farthestEvent:undefined, lastEvent:undefined, highestX:0, highestY:0};
 
 
         var g = mainBars
 
                 .append("g")
                 .data([globalVariables])
+                .attr("id",id+"_root")
 
             ;
 
@@ -293,11 +295,13 @@ var eventRelation = function(){
                 // start of the cycle, reset all
                 if(farthestEvent == undefined)
                 {
+                    this.setAttribute("column", true);
                     x = 30;
 
-                    this.parentNode.__data__.eventVsPosition[structureIdentifier] = {x:x, y:0};
+                    this.parentNode.__data__.eventVsPosition[structureIdentifier] = {x:x, y:40};
 
-                    this.parentNode.__data__.farthestEvent = {event:d, x:x, y:0};
+                    this.parentNode.__data__.farthestEvent = {event:d, x:x, y:40};
+                    this.parentNode.__data__.highestX = x;
                     //console.log("we're still initializing");
                     return x;//eventrelation_graphTransformX[id](x);
 
@@ -326,8 +330,8 @@ var eventRelation = function(){
 
                         if(isDataCollection(d))
                         {
-                            this.parentNode.__data__.eventVsPosition[structureIdentifier].y = 0;
-                            this.parentNode.__data__.farthestEvent.y = 0;
+                            this.parentNode.__data__.eventVsPosition[structureIdentifier].y = 40;
+                            this.parentNode.__data__.farthestEvent.y = 40;
                             console.log("resetting Y");
                         }
 
@@ -336,7 +340,7 @@ var eventRelation = function(){
 
                     }
 
-
+                    if(x > this.parentNode.__data__.highestX) this.parentNode.__data__.highestX = x;
                     return x;// eventrelation_graphTransformX[id](x);
 
                 }
@@ -345,9 +349,9 @@ var eventRelation = function(){
                 {
                     this.setAttribute("column", true);
                     x =  farthestEvent.x + 30;
-                    this.parentNode.__data__.eventVsPosition[structureIdentifier]=  {x: x, y:0}
+                    this.parentNode.__data__.eventVsPosition[structureIdentifier]=  {x: x, y:40}
 
-                    this.parentNode.__data__.farthestEvent = {event:d, x:x, y:0};
+                    this.parentNode.__data__.farthestEvent = {event:d, x:x, y:40};
 
 
                     return x;//eventrelation_graphTransformX[id](x);
@@ -371,26 +375,27 @@ var eventRelation = function(){
                 //we're in an existing thread, so either go to it if farthest thread, otherwise, start new column
                 if(eventVsPosition[structureIdentifier] != undefined)
                 {
-                    y = eventVsPosition[structureIdentifier].y + 2;
+                    y = eventVsPosition[structureIdentifier].y + 15;
                     if(isDataCollection(d) && !isDataCollection(this.parentNode.__data__.lastEvent))
                     {
-                        y=2;
+                        y=40;
                     }
 
 
                     this.parentNode.__data__.eventVsPosition[structureIdentifier].y = y;
                     this.parentNode.__data__.lastEvent = d;
-                    return eventrelation_graphTransformY[id](y);
+                    if(y > this.parentNode.__data__.highestY) this.parentNode.__data__.highestY = y;
+                    return y;//eventrelation_graphTransformY[id](y);
 
                 }
                 //we discovered a new thread, so go to the next column
                 if(eventVsPosition[structureIdentifier] == undefined)
                 {
-                    y =  0;
+                    y =  40;
                     this.parentNode.__data__.eventVsPosition[structureIdentifier].y = y;
 
                     this.parentNode.__data__.lastEvent = d;
-                    return eventrelation_graphTransformY[id](y);
+                    return y;//eventrelation_graphTransformY[id](y);
                 }
                 console.log("ERROR: we missed a case!");
 
@@ -450,8 +455,9 @@ var eventRelation = function(){
         //draw lines
         links.forEach(function(l)
         {
-            var nodes = d3.selectAll("[e='"+ l.object + "']");
+
             var svg = d3.select("#"+id);
+            var nodes = svg.selectAll("[e='"+ l.object + "']");
             var mainBars = svg.select(".mainCircles");
             drawLines(nodes,"relation",mainBars,3);
         });
@@ -528,19 +534,40 @@ var eventRelation = function(){
             function(d){
                 return this.parentNode.attributes.cy.value;
             });
+            //resize SVG;
+
+            svg
+                .attr("width",svg.select("[id='" + id + "_root']")[0][0].__data__.highestX+15)
+                .attr("height",svg.select("[id='" + id + "_root']")[0][0].__data__.highestY+15);
+
 
     }
 
     return {
-        "eventrelation_init" : function(data, identifier)
+        "highlightUsers" : function(filter)
+        {
+            var svg = d3.select("#"+id);
+            //if(filter.length == 0)
+            {
+                svg.selectAll("line[line='userLine']").remove();
+                return;
+            }
+            filter.forEach(function(f){
+                var nodes = svg.selectAll("[username='"+f+"']");
+                var mainBars = svg.select(".mainCircles");
+                drawLines(nodes,"user",mainBars,3,"#c9ffae");
+            });
+
+        },
+        "eventrelation_init" : function(data, identifier, div)
         {
             id = identifier;
             var n = preprocess_nodes(data);
             var l = preprocess_links(data);
             var users = preprocess_users(data);
-            eventrelation_addGraph(n,identifier,identifier,"#008293");
+            eventrelation_addGraph(n,identifier,identifier,"#008293",div);
             eventrelation_drawGraph(n,l,users, identifier, "#008293");
 
         }
     }
-}();
+};

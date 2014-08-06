@@ -10,10 +10,13 @@
     <script type="text/javascript" src="eventflow.js"></script>
     <script type="text/javascript" src="eventrelation.js"></script>
     <script type="text/javascript" src="cluster.js"></script>
-
+    <script type="text/javascript" src="userList.js"></script>
+    <script type="text/javascript" src="filter.js"></script>
+    <script type="text/javascript" src="userGraphs.js"></script>
     <link rel="stylesheet" href="barchart.css">
 
     <script type="application/javascript">
+
 
 
 
@@ -25,24 +28,32 @@
             var byUser = xf.dimension(function(d){return d.username.toLowerCase();});
             var byPhase = xf.dimension(function(d){return d.context.phase;});
 
-            byPhase.filter(2);
-            eventRelation.eventrelation_init(byUser.top("Infinity"), "Total");
+            //byPhase.filter(1);
+            var main =  new eventRelation();
+            main.eventrelation_init(byUser.top("Infinity"), "Total","#mainVisualization");
 
-            byUser.filter("google_105939139551108473521");
-            var newData=  byUser.top("Infinity");
 
-            //barchart_init(data);
-            //eventflow_init(data);
-            eventRelation.eventrelation_init(newData, "George");
 
-            byUser.filter("facebook_696307806");
-            newData=  byUser.top("Infinity");
-            eventRelation.eventrelation_init(newData, "Geoff");
-            //cluster.init(data,"cl");
+            userList.init(data, "users", "#filters",filter);
+            userGraphs.init(data, "#userVisualizations");
+
+            filter.addListener(main, "user","highlight");
+            filter.addListener(userGraphs, "user","select");
+
         }
 
     </script>
 </head>
 <body onload="javascript:load(loadWidgets);">
+<div id="mainVisualization">
+
+</div>
+<div id="userVisualizations">
+
+</div>
+<div id="filters">
+
+
+</div>
 </body>
 </html>
