@@ -13,6 +13,7 @@
     <script type="text/javascript" src="userList.js"></script>
     <script type="text/javascript" src="filter.js"></script>
     <script type="text/javascript" src="userGraphs.js"></script>
+    <script type="application/javascript" src="phaseList.js"></script>
     <link rel="stylesheet" href="barchart.css">
 
     <script type="application/javascript">
@@ -20,11 +21,11 @@
 
 
 
-        function loadWidgets(data)
+        function loadWidgets()
         {
 
             //filter it
-            var xf = crossfilter(data);
+            var xf = crossfilter(__data);
             var byUser = xf.dimension(function(d){return d.username.toLowerCase();});
             var byPhase = xf.dimension(function(d){return d.context.phase;});
 
@@ -34,9 +35,9 @@
 
 
 
-            userList.init(data, "users", "#filters",filter);
-            userGraphs.init(data, "#userVisualizations",filter);
-
+            userList.init(__data, __users,"users", "#filters",filter);
+            userGraphs.init(__data, __users,"#userVisualizations",filter);
+            phaseList.init(__data, "phases", "#filters",filter);
             filter.addListener(main, "user","highlight");
             filter.addListener(userGraphs, "user","select");
 

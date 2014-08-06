@@ -1,29 +1,29 @@
 /**
  * Created by svenc on 06/08/14.
  */
-var userList = function(){
+var phaseList = function(){
 
-    var _users;
-    var drawUsers = function(data,identifier, div,filterClass)
+
+    var drawPhases = function(phases,identifier, div,filterClass)
     {
         var g = d3.select(div)
             .append("ul")
             .attr("id",identifier + "_root" );
-        var spans = g.selectAll("span")
-            .data(data);
+        var spans = g.selectAll("li")
+            .data(phases);
         spans.enter()
             .append("li")
             .attr("selected",false)
             .on("mousedown",function(d){
                 if(this.attributes.selected.value == "false")
                 {
-                    filterClass.select(d.key,"user");
+                    filterClass.filter(d.key,"phase");
                     //filterClass.highlight(d.key,"user");
                     this.setAttribute("selected",true);
                     this.setAttribute("class","selected");
                 }
                 else{
-                    filterClass.deselect(d.key,"user");
+                    filterClass.unfilter(d.key,"phase");
                     //filterClass.unhighlight(d.key,"user");
                     this.setAttribute("selected",false);
                     this.setAttribute("class","unselected");
@@ -32,16 +32,21 @@ var userList = function(){
 
 
             })
+            .attr("style","display:block;")
             .text(function(d){
-                if(_users[d.key] != undefined)
-                    return _users[d.key].name;
-                return d.key;
-            });
+                return "phase " + d.key
+            })
+            .append("span")
+            .attr("style",function(d){
+                var phase_colors = ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC"];
+                return "margin-left:10px;height:10px;width:" + d.value.count + "px;display:inline-block; background-color: " + phase_colors[d.key-1];
+            })
+           ;
     }
     var preprocess = function(data)
     {
         var xf = crossfilter(data);
-        var dim = xf.dimension(function(f){return f.username.toLowerCase();});
+        var dim = xf.dimension(function(f){return f.context.phase;});
         return dim.group().reduce(
             function(p,v){
                 p.count++;return p;
@@ -53,11 +58,10 @@ var userList = function(){
         ).top(Infinity);
     }
     return {
-        "init" : function(data,allUsers, identifier, div,filterClass)
+        "init" : function(data, identifier, div,filterClass)
         {
-            _users = allUsers;
-            var users = preprocess(data);
-            drawUsers(users,identifier,div,filterClass);
+            var phases = preprocess(data);
+            drawPhases(phases,identifier,div,filterClass);
         }
     }
 }();

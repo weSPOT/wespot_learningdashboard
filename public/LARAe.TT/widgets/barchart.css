@@ -1,11 +1,19 @@
+
+@font-face
+{
+    font-family: elysium;
+    src: url(Exo-Light.otf);
+}
+
 body
 {
     margin:0;
     padding:0;
-    /*background: url("../img/background_tile.png") repeat;*/
-    /*background-size: cover;*/
+    font-family: "Helvetica Neue Light", "Lucida Grande", "Calibri", "Arial", sans-serif;
+    font-weight:lighter;
+    font-size: 14px;
     background-color: #231f20;
-    font-family: elysium;
+    /*font-family: elysium;*/
 }
 
 .ActivityGraphAxis path,
@@ -40,33 +48,55 @@ body
     overflow-x: auto;
     overflow-y: auto;
     padding-bottom: 15px;
-    max-width: 25%;
+    max-width: 22%;
+    margin-left:80%;
+    height:80%;
+
 }
 
-#userVisualizations svg {
+#userVisualizations > div {
     display:block;
+    border:solid 1px #80cff4;
+    overflow-x: auto;
+
+    width:90%;
 }
 
-#userVisualizations div.selected {
+#userVisualizations > div > h2{
+    margin:0;
+    background-color: #405f6d;
+    color:#80cff4;
+}
+
+#userVisualizations > div.selected {
     display:block;
-    background-color: dimgrey;
+    background-color: #80cff4;
 }
 
 #filters
 {
     clear:both;
+    width:100%;
+}
+
+#filters ul
+{
+    width:40%;
+    display:inline-block;
 }
 
 #filters li{
     display:inline-block;
-    color:white;
-    border:solid 1px white;
+    color:#80cff4;
+    padding:2px;
+    margin:2px;
+    border:solid 1px #80cff4;
 }
 
 
 #filters li.selected{
     display:inline-block;
     color:black;
-    background-color: white;
-    border:solid 1px white;
+    background-color: #80cff4;
+    border:solid 1px #80cff4;
 }

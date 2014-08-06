@@ -128,13 +128,13 @@ var eventRelation = function(){
         eventrelation_graphTransformX[id] = xScale;
         eventrelation_graphTransformY[id] = yScale;
 
-        svg.append("text")
+        /*svg.append("text")
             .attr("class", "ActivityGraphTitle")
             .attr("x", 35)
             .attr("y", 20)
             .attr("fill","white")
             .text(title);
-
+*/
 
         /*svg.append("g")
             .attr("id", "axis" + id)
@@ -172,7 +172,7 @@ var eventRelation = function(){
                         .attr("x2",line.x1)
                         .attr("y2",line.y2)
                         .attr("stroke","white")
-                        .attr("stroke-width",4)
+                        .attr("stroke-width",2)
                         .style("stroke-opacity", function(d){
                          if(type == "relation") return .02;
                          else 1.0;
@@ -184,7 +184,7 @@ var eventRelation = function(){
                         .attr("x2",line.x2-nodeRadius*2)
                         .attr("y2",line.y2)
                         .attr("stroke","white")
-                        .attr("stroke-width",4)
+                        .attr("stroke-width",2)
                         .style("stroke-opacity", function(d){
                             if(type == "relation") return .02;
                             else 1.0;
@@ -199,7 +199,7 @@ var eventRelation = function(){
                         .attr("x2",line.x2)
                         .attr("y2",line.y2)
                         .attr("stroke",color)
-                        .attr("stroke-width",4)
+                        .attr("stroke-width",2)
                         .attr("line", "userLine")
                         ;
                 }
@@ -219,8 +219,9 @@ var eventRelation = function(){
     var drawHoverLine = function(d,type)
     {
         //draw lines for this thread
-        var relatedEvents = d3.selectAll("[e='"+ d.object + "']");
         var svg = d3.select("#"+id);
+        var relatedEvents = svg.selectAll("[e='"+ d.object + "']");
+
         var mainBars = svg.select(".mainCircles");
         drawLines(relatedEvents,type,mainBars,3);
     }
@@ -479,7 +480,7 @@ var eventRelation = function(){
         mainBars.selectAll("g[column='true']")
             .append("rect")
             .attr("width",30)
-            .attr("height",25)
+            .attr("height",5)
             .attr("fill",function(d)
             {
                 return phase_colors[d.context.phase-1];
@@ -521,7 +522,7 @@ var eventRelation = function(){
             });
 
         mainBars
-            .selectAll("g[vis]:not([verb='create']):not([e='datacollection'])")
+            .selectAll("g[vis]:not([verb='create']):not([e='datacollection']):not([verb='rated']):not([verb='rating_updated']")
             .append("circle")
             .attr("r",6)
 
@@ -535,6 +536,17 @@ var eventRelation = function(){
                 return this.parentNode.attributes.cy.value;
             });
             //resize SVG;
+
+        mainBars
+            .selectAll("g[vis][verb='rated'],g[vis][verb='rating_updated']")
+            .append("path")
+            .attr("d","M0,-7 C1.2360679774997896,-3.804226065180614 0.7115741913664252,-4.949107209404657 1.7633557568774194,-2.427050983124842 C4.486992143456786,-2.2061055062161032 3.236067977499789,-2.351141009169893 6.657395614066075,-2.1631189606246317 C4,0 4.926769179238459,-0.8526109631631175 2.8531695488854605,0.9270509831248421 C3.484687843276462,3.585659023794813 3.23606797749979,2.3511410091698917 4.114496766047312,5.663118960624631 C1.2360679774997896,3.804226065180614 2.333336616128365,4.422164654989066 0,3 C-2.3333366161283657,4.422164654989065 -1.2360679774997885,3.8042260651806146 -4.114496766047311,5.663118960624631 C-3.236067977499789,2.351141009169893 -3.484687843276462,3.5856590237948134 -2.8531695488854605,0.9270509831248421 C-4.926769179238459,-0.8526109631631178 -4,4.898587195273712e-16 -6.657395614066075,-2.163118960624631 C-3.2360679774997894,-2.351141009169892 -4.486992143456786,-2.206105506216103 -1.7633557568774196,-2.4270509831248415 C-0.7115741913664252,-4.949107209404657 -1.2360679774997902,-3.8042260651806137 -1.2858791373117834e-15,-7  ")
+            .attr("fill","yellow")
+            .attr("transform", function(d){
+                var x = this.parentNode.attributes.cx.value;
+                var y = this.parentNode.attributes.cy.value;
+                return "translate(" + x + "," + y + ")";
+            })
 
             svg
                 .attr("width",svg.select("[id='" + id + "_root']")[0][0].__data__.highestX+15)

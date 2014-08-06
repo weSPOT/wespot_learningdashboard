@@ -6,6 +6,7 @@ var userGraphs = function(){
     var _data = undefined;
     var _div = undefined;
     var _filterClass = undefined;
+    var _users = undefined;
 
     var addGraph = function(name)
     {
@@ -35,7 +36,13 @@ var userGraphs = function(){
                 }
 
 
-            })
+            });
+        div.append("h2")
+            .text(function(d){
+                if(_users[name] != undefined)
+                    return _users[name].name;
+                return name;
+        });
         graph.eventrelation_init(userData, name, "#userGraph_" + name);
 
         drawnGraphs[name] = graph;
@@ -44,8 +51,9 @@ var userGraphs = function(){
     }
 
     return {
-        "init" : function(data,div,filterClass)
+        "init" : function(data,users,div,filterClass)
         {
+            _users = users;
             _data = data;
             _div = div;
             _filterClass = filterClass;
@@ -59,6 +67,7 @@ var userGraphs = function(){
                     if(drawnGraphs[g] == undefined) return;
                     drawnGraphs[g].delete();
                     drawnGraphs[g] = undefined;
+                    d3.select("#userGraph_"+g).remove();
 
                 }
             });
