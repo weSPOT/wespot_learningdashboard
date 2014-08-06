@@ -4,6 +4,9 @@
 var userGraphs = function(){
     var drawnGraphs = {};
     var _data = undefined;
+    var _div = undefined;
+    var _filterClass = undefined;
+
     var addGraph = function(name)
     {
         var xf = crossfilter(_data);
@@ -12,7 +15,28 @@ var userGraphs = function(){
         var userData=  byUser.top("Infinity");
 
         var graph = new eventRelation();
-        graph.eventrelation_init(userData, name, _div);
+        var div = d3.select(_div).append("div")
+            .attr("id","userGraph_" + name)
+            .attr("selected","false")
+            .on("mousedown",function(d){
+                if(this.attributes.selected.value == "false")
+                {
+                    _filterClass.highlight(name,"user");
+
+                    this.setAttribute("selected",true);
+                    this.setAttribute("class","selected");
+                }
+                else{
+                    _filterClass.unhighlight(name,"user");
+
+                    this.setAttribute("selected",false);
+                    this.setAttribute("class","unselected");
+
+                }
+
+
+            })
+        graph.eventrelation_init(userData, name, "#userGraph_" + name);
 
         drawnGraphs[name] = graph;
 
@@ -20,10 +44,11 @@ var userGraphs = function(){
     }
 
     return {
-        "init" : function(data,div)
+        "init" : function(data,div,filterClass)
         {
             _data = data;
             _div = div;
+            _filterClass = filterClass;
         },
         "selectUsers" : function(users)
         {
@@ -31,12 +56,14 @@ var userGraphs = function(){
             Object.keys(drawnGraphs).forEach(function(g){
                 if(users.indexOf(g) < 0)
                 {
-                    //graph.delete;
-                    drawnGraphs.splice(users.indexOf(g),1);
+                    if(drawnGraphs[g] == undefined) return;
+                    drawnGraphs[g].delete();
+                    drawnGraphs[g] = undefined;
+
                 }
             });
             users.forEach(function(u){
-                if(Object.keys(drawnGraphs).indexOf(u) >= 0)
+                if(Object.keys(drawnGraphs).indexOf(u) >= 0 && drawnGraphs[u] != undefined)
                 {
                     return;
                 }

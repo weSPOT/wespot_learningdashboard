@@ -17,11 +17,13 @@ var userList = function(){
                 if(this.attributes.selected.value == "false")
                 {
                     filterClass.select(d.key,"user");
+                    //filterClass.highlight(d.key,"user");
                     this.setAttribute("selected",true);
                     this.setAttribute("class","selected");
                 }
                 else{
-                    filterClass.select(d.key,"user");
+                    filterClass.deselect(d.key,"user");
+                    //filterClass.unhighlight(d.key,"user");
                     this.setAttribute("selected",false);
                     this.setAttribute("class","unselected");
 

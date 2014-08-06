@@ -550,7 +550,7 @@ var eventRelation = function(){
             //if(filter.length == 0)
             {
                 svg.selectAll("line[line='userLine']").remove();
-                return;
+               // return;
             }
             filter.forEach(function(f){
                 var nodes = svg.selectAll("[username='"+f+"']");
@@ -568,6 +568,11 @@ var eventRelation = function(){
             eventrelation_addGraph(n,identifier,identifier,"#008293",div);
             eventrelation_drawGraph(n,l,users, identifier, "#008293");
 
+        },
+        "delete" : function()
+        {
+            d3.select("#"+id).remove();
         }
+
     }
 };

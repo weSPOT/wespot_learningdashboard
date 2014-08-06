@@ -47,6 +47,11 @@ body
     display:block;
 }
 
+#userVisualizations div.selected {
+    display:block;
+    background-color: dimgrey;
+}
+
 #filters
 {
     clear:both;

@@ -106,6 +106,18 @@ var filter = function(){
             }
 
         },
+        "deselect" : function(filter, type)
+        {
+            if(type == "user")
+            {
+                selectedUsers.splice(selectedUsers.indexOf(filter),1);
+                listenersForUserSelect.forEach(function(f){
+                    f.selectUsers(selectedUsers);
+                });
+                return;
+            }
+
+        },
         "filter" : function(filter, type)
         {
             //todo (crossfilter etc)
