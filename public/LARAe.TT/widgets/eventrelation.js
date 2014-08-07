@@ -584,6 +584,16 @@ var eventRelation = function(){
         "delete" : function()
         {
             d3.select("#"+id).remove();
+        },
+        "dataUpdated" : function(data)
+        {
+            var n = preprocess_nodes(data);
+            var l = preprocess_links(data);
+            var users = preprocess_users(data);
+            var svg = d3.select("#"+id);
+            var mainBars = svg.select(".mainCircles").select("g").remove();
+            svg.selectAll("line").remove();
+            eventrelation_drawGraph(n,l,users, id, "#008293");
         }
 
     }

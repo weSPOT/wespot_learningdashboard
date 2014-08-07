@@ -41,6 +41,7 @@ body
     overflow-y: auto;
     padding-bottom: 15px;
     max-width: 75%;
+    height:70%;
     float:left;
 }
 
@@ -50,7 +51,7 @@ body
     padding-bottom: 15px;
     max-width: 22%;
     margin-left:80%;
-    height:80%;
+    height:70%;
 
 }
 

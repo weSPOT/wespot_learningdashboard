@@ -34,12 +34,14 @@
             main.eventrelation_init(byUser.top("Infinity"), "Total","#mainVisualization");
 
 
-
+            filter.init(__data);
             userList.init(__data, __users,"users", "#filters",filter);
             userGraphs.init(__data, __users,"#userVisualizations",filter);
             phaseList.init(__data, "phases", "#filters",filter);
             filter.addListener(main, "user","highlight");
             filter.addListener(userGraphs, "user","select");
+            filter.addListener(main, "phase","filter");
+            filter.addListener(userGraphs, "phase","filter");
 
         }
 

@@ -23,7 +23,7 @@ var filter = function(){
     var filteredUsers = [];
     var listenersForUserFilter = [];
 
-    var selectedFilter = []
+    var filteredPhases = []
     var listenersForPhaseFilter = [];
 
 
@@ -44,7 +44,8 @@ var filter = function(){
           }
           if(type == "phase")
           {
-              listenersForPhaseEvents.push(object);
+              if(action == "filter")
+                listenersForPhaseFilter.push(object);
               return;
           }
 
@@ -120,7 +121,46 @@ var filter = function(){
         },
         "filter" : function(filter, type)
         {
-            //todo (crossfilter etc)
+            if(type == "phase")
+            {
+                filteredPhases.push(filter);
+
+                var xf = crossfilter(_data);
+                var byPhase = xf.dimension(function(p){return p.context.phase;});
+                byPhase.filterFunction(function(f)
+                {
+                    return (filteredPhases.indexOf(f) >= 0);
+                });
+
+                listenersForPhaseFilter.forEach(function(f){
+                    f.dataUpdated(byPhase.top(Infinity));
+                });
+                return;
+            }
+        },
+        "unfilter" : function(filter, type)
+        {
+            if(type == "phase")
+            {
+
+                filteredPhases.splice(filteredPhases.indexOf(filter),1);
+
+                var xf = crossfilter(_data);
+                var byPhase = xf.dimension(function(p){return p.context.phase;});
+
+                if(filteredPhases.length > 0)
+                    byPhase.filterFunction(function(f) {
+                        return (filteredPhases.indexOf(f) >= 0);
+                    });
+                else
+                    byPhase.filterAll();
+
+
+                listenersForPhaseFilter.forEach(function(f){
+                    f.dataUpdated(byPhase.top(Infinity));
+                });
+                return;
+            }
         }
 
 

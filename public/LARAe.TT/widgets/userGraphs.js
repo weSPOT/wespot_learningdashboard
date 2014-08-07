@@ -78,6 +78,18 @@ var userGraphs = function(){
                 }
                 addGraph(u);
             });
+        },
+        "dataUpdated" : function(data)
+        {
+            _data = data;
+            Object.keys(drawnGraphs).forEach(function(g){
+                if(drawnGraphs[g] == undefined) return;
+                var xf = crossfilter(_data);
+                var byUser = xf.dimension(function(d){return d.username.toLowerCase()});
+                byUser.filter(g);
+                var userData=  byUser.top("Infinity");
+                drawnGraphs[g].dataUpdated(userData);
+            });
         }
 
     }
