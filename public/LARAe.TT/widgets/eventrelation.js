@@ -252,6 +252,7 @@ var eventRelation = function(){
 
     var drawHoverLine = function(d,type)
     {
+        console.log("hovering");
         //draw lines for this thread
         var svg = d3.select("#"+id);
         var relatedEvents = svg.selectAll("[e='"+ d.object + "']");
@@ -463,11 +464,7 @@ var eventRelation = function(){
                 return "white";
 
             })
-            .on("mouseover", function(d){drawHoverLine(d,"hover");})
-            .on("mouseleave",function(d){
-                d3.selectAll("line[hover='true']").remove();
-
-            })
+            
             .attr("isRoot", function(d){
                 if(this.parentNode.__data__.eventVsPosition[d.object] == undefined)
                     return true;
@@ -896,6 +893,11 @@ var eventRelation = function(){
                 .html( function(d){
                     return "<h2>" + d2.originalrequest.value.title + "</h2>" + "<em>" + _users[d2.username.toLowerCase()].name + "</em></br> " + d2.originalrequest.value.description ;
                 });
+            })
+             .on("mouseover", function(d){drawHoverLine(this.parentNode.__data__,"hover");})
+            .on("mouseleave",function(d){
+                d3.selectAll("line[hover='true']").remove();
+
             });
 
         mainBars
@@ -922,6 +924,11 @@ var eventRelation = function(){
                 .html( function(d){
                     return "<em>" + _users[d2.username.toLowerCase()].name + " commented:</em></br> " + d2.originalrequest.value;
                 });
+            })
+             .on("mouseover", function(d){drawHoverLine(this.parentNode.__data__,"hover");})
+            .on("mouseleave",function(d){
+                d3.selectAll("line[hover='true']").remove();
+
             });;
             //resize SVG;
 
@@ -945,7 +952,12 @@ var eventRelation = function(){
                 .html( function(d){
                     return "<em>" + _users[d2.username.toLowerCase()].name + " rated with</em> "+ d2.originalrequest.value + " stars" ;
                 });
-            });;
+            })
+             .on("mouseover", function(d){drawHoverLine(this.parentNode.__data__,"hover");})
+            .on("mouseleave",function(d){
+                d3.selectAll("line[hover='true']").remove();
+
+            });
 
         /* svg
                 .attr("width",svg.select("[id='" + id + "_root']")[0][0].__data__.highestX+15)
