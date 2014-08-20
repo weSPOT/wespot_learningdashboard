@@ -12,7 +12,7 @@ body
     font-family: "Helvetica Neue Light", "Lucida Grande", "Calibri", "Arial", sans-serif;
     font-weight:lighter;
     font-size: 14px;
-    background-color: #231f20;
+    background-color:#e2e2e2;
     /*font-family: elysium;*/
 }
 
@@ -26,7 +26,7 @@ body
 .ActivityGraphAxis text {
     font-family: elysium;
     font-size: 9px;
-    fill: white;
+    fill: black;
 }
 
 .ActivityGraphTitle {
@@ -37,53 +37,99 @@ body
 
 
 #mainVisualization {
-    overflow-x: auto;
-    overflow-y: auto;
-    padding-bottom: 15px;
-    max-width: 75%;
-    height:70%;
-    float:left;
+    border: solid 1px grey;
+    width:70%;
+    overflow:hidden;
+    display:inline-block;
+    background-color:white;
+    margin-top:5px;
 }
 
 #userVisualizations {
-    overflow-x: auto;
-    overflow-y: auto;
-    padding-bottom: 15px;
-    max-width: 27%;
-    margin-left:73%;
-    height:70%;
+   
+  display:inline-block;
+  border: solid 1px grey;
+  background-color: white;
 
 }
 
-#userVisualizations > div {
-    display:block;
-    border:solid 1px #80cff4;
-    overflow-x: auto;
-
-    width:90%;
+#userVisualizations .user_text{
+    color:white;
 }
 
-#userVisualizations > div > h2{
-    margin:0;
-    background-color: #405f6d;
-    color:#80cff4;
+#userVisualizations .user_rect_button2,#userVisualizations .user_rect_button1, #userVisualizations .user_surrounding_rect{
+    fill:#bbbbbb;
+    stroke:white;
 }
 
-#userVisualizations > div.selected {
-    display:block;
-    background-color: #80cff4;
+#userVisualizations  rect.selected
+{
+    fill:#505050;
+     stroke:white;
+}
+
+#userVisualizations  rect.unselected
+{
+    fill:#bbbbbb;
+     stroke:white;
+}
+
+
+
+
+
+
+
+
+#content
+{
+     color:black;
+     background-color: white;
+    border: solid 1px grey;
+    width:1142px;
+    
+    float:left;
+    min-height: 100px;
+    margin-left:5px;
+    padding-left:10px;
+     padding-top:10px;
+}
+
+#content .content_data
+{
+   
+}
+
+#content .content_data img
+{
+   float:left;
+   margin-right:10px;
+   max-height: 250px;
+}
+
+#content .content_data video
+{
+   float:left;
+   margin-right:10px;
+   max-height: 250px;
 }
 
 #filters
 {
-    clear:both;
-    width:100%;
+   
+   margin-left:1164px;
+   width:350px;
+   
+    border: solid 1px grey;
+  background-color: white;
 }
 
 #filters ul
 {
-    width:40%;
-    display:inline-block;
+    display:inline;
+    padding:0;
+
+    
 }
 
 #filters li{
@@ -102,7 +148,3 @@ body
     border:solid 1px #80cff4;
 }
 
-#userVisualizations  rect.selected
-{
-    fill:purple;
-}

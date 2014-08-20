@@ -11,7 +11,7 @@ var userList = function(){
             .append("svg")
             .attr("id",identifier + "_root" )
             .attr("width", 350)
-            .attr("height", 500);
+            .attr("height", 600);
         var rootG = svg.append("g")
         .attr("id", identifier + "_root_g");
         var g = rootG.selectAll("g")
@@ -23,22 +23,23 @@ var userList = function(){
         //surrounding rect  
          g
             .append("rect")
+            .attr("class","user_surrounding_rect")
             .attr("x", 0)
             .attr("y", function(d,i){return i * 40 -15;})
             .attr("width", 250)
             .attr("height" ,40)
-            .attr("stroke", "white")
-            .attr("fill", "none");
+            
+            ;
             
         //button 1
         g
             .append("rect")
+            .attr("class","user_rect_button1")
             .attr("x", 250)
             .attr("y", function(d,i){return i * 40 -15;})
             .attr("width", 35)
             .attr("height" ,40)
-            .attr("stroke", "white")
-            .attr("fill", "black")
+            
             .attr("selected",false)
             .on("touchstart",function(d){
                 if(this.attributes.selected.value == "false")
@@ -76,12 +77,12 @@ var userList = function(){
             });
          g
             .append("rect")
+            .attr("class","user_rect_button2")
             .attr("x", 285)
             .attr("y", function(d,i){return i * 40 -15;})
             .attr("width", 35)
             .attr("height" ,40)
-            .attr("stroke", "white")
-            .attr("fill", "black")
+           
             .attr("selected",false)
             .on("touchstart",function(d){
                if(this.attributes.selected.value == "false")
@@ -121,7 +122,7 @@ var userList = function(){
        
             .append("text")
             
-            .attr("fill", "white")
+            .attr("class","user_text")
            
             .attr("x", 10)
             .attr("y", function(d,i){return i * 40;})
@@ -134,6 +135,7 @@ var userList = function(){
                 return key;
             });
             var phase_colors = ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC"];
+             var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
             for(var k = 1;k < 7;k++)
             {
                 g.append("text")

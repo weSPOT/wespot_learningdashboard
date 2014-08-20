@@ -14,11 +14,13 @@
 
 var eventRelation = function(){
 
+    var _users;
+    var _content;
     var eventrelation_variableMinDate = {};
     var eventrelation_variableMaxDate = {};
 
     var eventrelation_svgW = 1200;//1200;
-    var eventrelation_svgH = 500;
+    var eventrelation_svgH = 600;
 
 
     var eventrelation_graphPadding = 38;
@@ -149,7 +151,7 @@ var eventRelation = function(){
         var mainBars = svg.append("g").attr("class","mainCircles");
 
         var zoom = d3.behavior.zoom()
-            .scaleExtent([1, 10])
+            .scaleExtent([.1, 10])
             .on("zoom", er_zoomed);
 
         
@@ -496,6 +498,7 @@ var eventRelation = function(){
             console.log("user " + u.key);
         });*/
         var phase_colors = ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC"];
+
         mainBars.selectAll("g[column='true']")
             .append("rect")
             .attr("width",30)
@@ -572,6 +575,34 @@ var eventRelation = function(){
                 .attr("height",svg.select("[id='" + id + "_root']")[0][0].__data__.highestY+15);
 
 
+    }
+
+    var getDataCollectionHTML = function(d)
+    {
+       var html = "";
+        if(d.originalrequest.responseValue.imageUrl != undefined)
+        {
+            html = "<img src='" + d.originalrequest.responseValue.imageUrl.replace(/\\/g, "") + "'></img>";
+            
+        }
+        if(d.originalrequest.responseValue.audioUrl != undefined)
+        {
+            html = "<audio controls> <source src='" + d.originalrequest.responseValue.audioUrl.replace(/\\/g, "") + "'> Your browser does not support the audio tag.</audio>";
+            html += "<br/>[<a  target='_blank' href='" + d.originalrequest.responseValue.audioUrl.replace(/\\/g, "") + "'>source</a>]";
+            
+        }    //
+        if(d.originalrequest.responseValue.videoUrl != undefined)
+        {
+            html = "<video controls> <source src='" + d.originalrequest.responseValue.videoUrl.replace(/\\/g, "") + "' type='video/mp4'> Your browser does not support the video tag.</video>";
+            html += "<br/>[<a  target='_blank' href='" + d.originalrequest.responseValue.videoUrl.replace(/\\/g, "") + "'>source</a>]";
+            
+        }
+        if(d.originalrequest.responseValue.text != undefined)
+        {
+            html = d.originalrequest.responseValue.text;
+            
+        }
+        return html;
     }
 
     var eventrelation_drawGraph_horizontal = function(data, links, users, id, color)
@@ -733,6 +764,7 @@ var eventRelation = function(){
                 return d.username.toLowerCase();
             })
             .append('svg:title')
+            
             .text( function(d){
                 return d.object + " " + d.starttime + " " + d.verb;
             })
@@ -767,7 +799,23 @@ var eventRelation = function(){
             console.log("user " + u.key);
         });*/
         var phase_colors = ["#33FF99","#33CCFF","#CCFF33","#FF0066","#CCFFFF","#FF66CC"];
+        var colors_dark = ["#197F4C","#19667F","#667F19", "#7F0033","#667F7F","#7F3366" ];
+       
         mainBars.selectAll("g[column='true']")
+        .append("rect")
+        .attr("width",30)
+        .attr("height",svg.select("[id='" + id + "_root']")[0][0].__data__.highestY+15)
+        .attr("fill",function(d)
+        {
+            return colors_dark[d.context.phase-1];
+        })
+        .attr("fill-opacity",.9)
+        .attr("transform", function(d){
+            var x = this.parentNode.attributes.cx.value-15;
+            var y = 10;
+            return "translate(" + x + "," + y + ")";
+        });
+         mainBars.selectAll("g[column='true']")
             .append("rect")
             .attr("width",30)
             .attr("height",10)
@@ -775,26 +823,12 @@ var eventRelation = function(){
             {
                 return phase_colors[d.context.phase-1];
             })
-            .attr("fill-opacity",.9)
+            .attr("fill-opacity",1)
             .attr("transform", function(d){
                 var x = this.parentNode.attributes.cx.value-15;
                 var y = 10;
                 return "translate(" + x + "," + y + ")";
             });
-        mainBars.selectAll("g[column='true']")
-        .append("rect")
-        .attr("width",30)
-        .attr("height",svg.select("[id='" + id + "_root']")[0][0].__data__.highestY+15)
-        .attr("fill",function(d)
-        {
-            return phase_colors[d.context.phase-1];
-        })
-        .attr("fill-opacity",.4)
-        .attr("transform", function(d){
-            var x = this.parentNode.attributes.cx.value-15;
-            var y = 10;
-            return "translate(" + x + "," + y + ")";
-        });
 
         mainBars
             .selectAll("g[e='datacollection']")
@@ -811,6 +845,17 @@ var eventRelation = function(){
                 d3.selectAll("line[hover='true']").remove();
 
             })
+            .on("mousedown",function(d){
+                var d2 = this.parentNode.__data__;
+                var div = d3.select(_content);
+                div.selectAll("div").remove();
+                div
+                .append("div")
+                .attr("class","content_data")
+                .html( function(d){
+                    return getDataCollectionHTML(d2);
+                });
+            });;
             ;
 
         mainBars
@@ -827,6 +872,17 @@ var eventRelation = function(){
             .attr("y",
             function(d){
                 return this.parentNode.attributes.cy.value-5;
+            })
+            .on("mousedown",function(d){
+                var d2 = this.parentNode.__data__;
+                var div = d3.select(_content);
+                div.selectAll("div").remove();
+                div
+                .append("div")
+                .attr("class","content_data")
+                .html( function(d){
+                    return "<h2>" + d2.originalrequest.value.title + "</h2>" + "<em>" + _users[d2.username.toLowerCase()].name + "</em></br> " + d2.originalrequest.value.description ;
+                });
             });
 
         mainBars
@@ -842,7 +898,18 @@ var eventRelation = function(){
             .attr("cy",
             function(d){
                 return this.parentNode.attributes.cy.value;
-            });
+            })
+            .on("mousedown",function(d){
+                var d2 = this.parentNode.__data__;
+                var div = d3.select(_content);
+                div.selectAll("div").remove();
+                div
+                .append("div")
+                .attr("class","content_data")
+                .html( function(d){
+                    return "<em>" + _users[d2.username.toLowerCase()].name + " commented:</em></br> " + d2.originalrequest.value;
+                });
+            });;
             //resize SVG;
 
         mainBars
@@ -855,6 +922,17 @@ var eventRelation = function(){
                 var y = this.parentNode.attributes.cy.value;
                 return "translate(" + x + "," + y + ")";
             })
+            .on("mousedown",function(d){
+                var d2 = this.parentNode.__data__;
+                var div = d3.select(_content);
+                div.selectAll("div").remove();
+                div
+                .append("div")
+                .attr("class","content_data")
+                .html( function(d){
+                    return "<em>" + _users[d2.username.toLowerCase()].name + " rated with</em> "+ d2.originalrequest.value + " stars" ;
+                });
+            });;
 
         /* svg
                 .attr("width",svg.select("[id='" + id + "_root']")[0][0].__data__.highestX+15)
@@ -879,9 +957,11 @@ var eventRelation = function(){
             });
 
         },
-        "eventrelation_init" : function(data, identifier, div)
+        "eventrelation_init" : function(data, identifier, div, contentDiv,allUsers)
         {
             id = identifier;
+            _content = contentDiv;
+            _users = allUsers;
             var n = preprocess_nodes(data);
             var l = preprocess_links(data);
             var users = preprocess_users(data);

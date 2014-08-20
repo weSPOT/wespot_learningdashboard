@@ -4,7 +4,9 @@
 var filter = function(){
 
     var _data = undefined;
-
+    var xf = undefined;
+    var byPhase = undefined;
+    var byUser = undefined;
     //selection
     var selectedUsers = [];
     var listenersForUserSelect = [];
@@ -31,6 +33,10 @@ var filter = function(){
         "init" : function(data)
         {
             _data = data;
+            xf = crossfilter(_data);
+             byPhase = xf.dimension(function(p){return p.context.phase;});
+             byUser = xf.dimension(function(p){return p.username.toLowerCase();});
+
         },
         "addListener" : function(object, type, action)
         {
@@ -127,8 +133,8 @@ var filter = function(){
             {
                 filteredPhases.push(filter);
 
-                var xf = crossfilter(_data);
-                var byPhase = xf.dimension(function(p){return p.context.phase;});
+               
+                
                 byPhase.filterFunction(function(f)
                 {
                     return (filteredPhases.indexOf(f) >= 0);
@@ -143,8 +149,8 @@ var filter = function(){
             {
                 filteredUsers.push(filter);
 
-                var xf = crossfilter(_data);
-                var byUser = xf.dimension(function(p){return p.username.toLowerCase();});
+                
+               
                 byUser.filterFunction(function(f)
                 {
                     return (filteredUsers.indexOf(f) >= 0);
@@ -163,8 +169,8 @@ var filter = function(){
 
                 filteredPhases.splice(filteredPhases.indexOf(filter),1);
 
-                var xf = crossfilter(_data);
-                var byPhase = xf.dimension(function(p){return p.context.phase;});
+                
+                
 
                 if(filteredPhases.length > 0)
                     byPhase.filterFunction(function(f) {
@@ -184,8 +190,8 @@ var filter = function(){
 
                 filteredUsers.splice(filteredUsers.indexOf(filter),1);
 
-                var xf = crossfilter(_data);
-                var byUser = xf.dimension(function(p){return p.username.toLowerCase();});
+                
+                
 
                 if(filteredUsers.length > 0)
                     byUser.filterFunction(function(f) {
