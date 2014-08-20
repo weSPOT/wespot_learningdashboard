@@ -6,6 +6,13 @@ var phaseList = function(){
 
     var drawPhases = function(phases,identifier, div,filterClass)
     {
+        phases.sort(function(a,b) 
+            {
+                if(a.key < b.key) return -1;
+                if(a.key > b.key) return 1;
+                return 0;
+            }
+            )
         var g = d3.select(div)
             .append("ul")
             .attr("id",identifier + "_root" );

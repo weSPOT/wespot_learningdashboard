@@ -975,7 +975,7 @@ var eventRelation = function(){
                 svg.selectAll("line[line='userLine']").remove();
                // return;
             }
-            var colors_for_users = ["c9ffae","#f2ff87","#ff98ab","#a4d1ff" ];
+            var colors_for_users = ["#c9ffae","#f2ff87","#ff98ab","#a4d1ff" ];
             var t = 0;
             filter.forEach(function(f){
                 var nodes = svg.selectAll("[username='"+f+"']");
