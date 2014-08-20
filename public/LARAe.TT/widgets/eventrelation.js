@@ -186,7 +186,7 @@ var eventRelation = function(){
                 line.y2 = this.getAttribute("cy");
                 if(type != "user")
                 {
-                    root.append("line")
+                    /*root.append("line")
                         .attr("hover",function(d){if(type == "hover") return true; else return false;})
                         .attr("x1",line.x1)
                         .attr("y1",function(d){ if(line.y1 < 0) return line.y1+nodeRadius*2; else return line.y1;})
@@ -210,6 +210,19 @@ var eventRelation = function(){
                             if(type == "relation") return .02;
                             else 1.0;
                         });
+*/
+                    root.append("line")
+                        .attr("hover",function(d){if(type == "hover") return true; else return false;})
+                        .attr("x1",line.x1)
+                        .attr("y1",line.y1)
+                        .attr("x2",line.x2)
+                        .attr("y2",line.y2)
+                        .attr("stroke","white")
+                        .attr("stroke-width",2)
+                        .style("stroke-opacity", function(d){
+                         if(type == "relation") return .05;
+                         else 1.0;
+                     });
                 }
                 else
                 {
@@ -950,10 +963,13 @@ var eventRelation = function(){
                 svg.selectAll("line[line='userLine']").remove();
                // return;
             }
+            var colors_for_users = ["c9ffae","#f2ff87","#ff98ab","#a4d1ff" ];
+            var t = 0;
             filter.forEach(function(f){
                 var nodes = svg.selectAll("[username='"+f+"']");
                 var mainBars = svg.select(".mainCircles");
-                drawLines(nodes,"user",mainBars,3,"#c9ffae");
+                drawLines(nodes,"user",mainBars,3,colors_for_users[t%4]);
+                t++;
             });
 
         },

@@ -17,7 +17,7 @@ function loadData()
 {
 
     if(debug == false)
-        $.getJSON('/wespot/inquiries/getById/5824/', data_loading_done, "json");
+        $.getJSON('/wespot/inquiries/getById/39569/', data_loading_done, "json");
     else
         $.getJSON('/wespot/static/LARAe.TT/data/offlineData.json', data_loading_done, "json");
 }
