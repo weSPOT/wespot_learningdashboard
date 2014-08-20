@@ -23,7 +23,15 @@ exports.doPOST_Jose_Query = function(host, path, callback)
 
         });
         result.on('end',function(){
+            try{
             totalData = totalData.concat(JSON.parse(dataPerPage));
+            }
+            catch(e)
+            {
+                console.log(e);
+                callback(null, "Failed to parse learning analytics data for user.")
+                return;
+            }
             dataPerPage = "";
             page++;
             if(lastChunk == "[]")

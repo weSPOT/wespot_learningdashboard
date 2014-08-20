@@ -125,7 +125,8 @@ function convertEventData(rawEvent) {
     }
     catch (exc) {
         console.log(exc.toString());
-        console.log(rawEvent.originalrequest.toString());
+        console.log(JSON.stringify(rawEvent));
+        //console.log(rawEvent.originalrequest.toString());
         return null;
     }
 
@@ -135,6 +136,7 @@ function convertEventData(rawEvent) {
 }
 function convertToEventsByUsersAndEventId(data)
 {
+
     var orderedData = {};
     var widgetsPerPhase = {};
     var ratingsPerEvent = {};
@@ -143,7 +145,8 @@ function convertToEventsByUsersAndEventId(data)
         function(d)
         {
             var username = d.username.toLowerCase();
-
+            //small hack, seems we're getting an odd user
+            username = username.replace(":","_");
 
             var event = convertEventData(d);
             if(event == null) return;
@@ -258,36 +261,61 @@ exports.dashboard_v2 = function(req, res)
 {
     var userAuthId = req.params.userAuthId;
     var userAuthProvider = req.params.userAuthProvider;
-    inquiry.getInquiriesOfUser(userAuthId, userAuthProvider, function(d){
-            if(user.users[(userAuthProvider + "_" + userAuthId).toLowerCase()] != undefined)
-            {
-
-                //load all inquiries of the user! (might wanna do some caching here and there at some point)
-                var dataPerInquiry = {};
-                var inquiries = d[0].result;
-                var nrOfInquiries = d[0].result.length;
-                inquiries.forEach(function(inq){
-                    inquiry.getInquiry(inq.inquiryId, function(d){
-                        //order the events by user
-                        var parsedData = convertToEventsByUsersAndEventId(d);
-                        dataPerInquiry[inq.inquiryId] = {};
-                        dataPerInquiry[inq.inquiryId].inquiry = inq;
-                        dataPerInquiry[inq.inquiryId].data = parsedData;
-                        dashboard_render_yesno(dataPerInquiry, nrOfInquiries,req, res);
-                });});
 
 
+    user.getUsers(function(d){
+        d[0].result.forEach(function(u)
+        {
+            try{
+                //TODO: should not lowercase the ID, quick fix
+                user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name:u.name, icon:u.icon};
             }
+            catch(exc)
+            {
+                console.log(u.oauthProvider);
+            }
+        }
+        );
+        inquiry.getInquiriesOfUser(userAuthId, userAuthProvider, function(d){
+                if(user.users[(userAuthProvider + "_" + userAuthId).toLowerCase()] != undefined)
+                {
 
-            else
-                res.render('noInquiries.html', {users: user.users, inquiries: d[0].result, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider });}
-    );
+                    //load all inquiries of the user! (might wanna do some caching here and there at some point)
+                    var dataPerInquiry = {};
+                    var inquiries = d[0].result;
+                    var nrOfInquiries = d[0].result.length;
+                    inquiries.forEach(function(inq){
+                        inquiry.getInquiry(inq.inquiryId, function(d, errorMessage){
+
+                            if(errorMessage != undefined)
+                            {
+                                res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true });
+                                return;
+                            }
+
+                            //order the events by user
+                            var parsedData = convertToEventsByUsersAndEventId(d);
+                            dataPerInquiry[inq.inquiryId] = {};
+                            dataPerInquiry[inq.inquiryId].inquiry = inq;
+                            dataPerInquiry[inq.inquiryId].data = parsedData;
+                            dashboard_render_yesno(dataPerInquiry, nrOfInquiries,req, res);
+                        });});
+
+
+                }
+
+                else
+                    res.render('noInquiries.html', {users: user.users, inquiries: d[0].result, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true });}
+        );
+    });
+
+
 }
 
 function dashboard_render_yesno(data, total,req, res)
 {
     if(Object.keys(data).length >= total)
-     res.render('dashboard_v2.html', {data:data, users: user.users, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider});
+     res.render('dashboard_v2.html', {data:data, users: user.users, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true});
     else
         console.log("still loading");
 }

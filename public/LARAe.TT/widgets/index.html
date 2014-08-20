@@ -4,6 +4,7 @@
     <script type="text/javascript" src="../3rdParty/crossfilter.js"></script>
     <script type="text/javascript" src="../3rdParty/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="../3rdParty/d3.min.js"></script>
+    <script type="text/javascript" src="../3rdParty/magictouch.js"></script>
     <script type="text/javascript" src="../data/load.js"></script>
 
     <script type="text/javascript" src="barchart.js"></script>
@@ -35,19 +36,24 @@
 
 
             filter.init(__data);
-            userList.init(__data, __users,"users", "#filters",filter);
-            userGraphs.init(__data, __users,"#userVisualizations",filter);
+            userList.init(__data, __users,"users", "#userVisualizations",filter);
+            //userGraphs.init(__data, __users,"#userVisualizations",filter);
             phaseList.init(__data, "phases", "#filters",filter);
             filter.addListener(main, "user","highlight");
-            filter.addListener(userGraphs, "user","select");
+            filter.addListener(main, "user","filter");
+            //filter.addListener(userGraphs, "user","select");
             filter.addListener(main, "phase","filter");
-            filter.addListener(userGraphs, "phase","filter");
+            //filter.addListener(userGraphs, "phase","filter");
 
         }
 
     </script>
 </head>
 <body onload="javascript:load(loadWidgets);">
+<object id="tuio" type="application/x-tuio" style="width: 0px; height: 0px;">
+    Touch input plugin failed to load!
+  </object>
+
 <div id="mainVisualization">
 
 </div>

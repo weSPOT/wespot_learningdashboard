@@ -49,8 +49,8 @@ body
     overflow-x: auto;
     overflow-y: auto;
     padding-bottom: 15px;
-    max-width: 22%;
-    margin-left:80%;
+    max-width: 27%;
+    margin-left:73%;
     height:70%;
 
 }
@@ -100,4 +100,9 @@ body
     color:black;
     background-color: #80cff4;
     border:solid 1px #80cff4;
+}
+
+#userVisualizations  rect.selected
+{
+    fill:purple;
 }

@@ -19,3 +19,28 @@ exports.getUsers_RF = function(req, res) {
         }
     );
 }
+
+exports.userMapping = function(req,res)
+{
+    var users = {};
+    exports.getUsers(function(d){
+        d[0].result.forEach(function(u)
+        {
+            try{
+
+                users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name:u.name, icon:u.icon};
+            }
+            catch(exc)
+            {
+                console.log(u.oauthProvider);
+            }
+        });
+
+
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.write(JSON.stringify(users));
+        res.end();
+        return;
+
+    });
+}

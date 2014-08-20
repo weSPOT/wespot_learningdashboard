@@ -35,7 +35,15 @@
 
         <tr>
             <td>
+                <% if(errorMessage == undefined) { %>
                 No inquiries found
+                <%
+                }
+                else
+                {
+                %>
+                <%= errorMessage %>
+                <% } %>
             </td>
             <td>
                Visit <a href="http://inquiry.wespot.net">Inquiry.weSPOT.net</a> to join an inquiry!

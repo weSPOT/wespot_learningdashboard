@@ -9,7 +9,7 @@
 
       //let's play with one inquiry atm
       //widgetsPerPhase:parsedData.widgetsPerPhase, ratings:parsedData.ratings, users: user.users, events: parsedData.event
-      var widgetsPerPhase = data["26368"].data.widgetsPerPhase;
+      var widgetsPerPhase = data[Object.keys(data)[0]].data.widgetsPerPhase;
 
 
       %>
@@ -23,6 +23,9 @@
           var userAuthProvider = "<%= userAuthProvider %>";
           var userAuthId = "<%= userAuthId %>";
           var users = <%- JSON.stringify(users) %>;
+
+
+
       </script>
      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
      <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -36,7 +39,9 @@
 </head>
 <body  id="mainBody">
 <div id="titleField">
+    <% if(iframe == undefined) {%>
     <img id="wespot_logo" src="/wespot/static/images/wespot_logo.png"/>
+    <%}%>
     <span id="wespot_title">Learning Analytics Reflection & Awareness environment</span>
     <span id="title">LARAe</span><span id="subtitle">.wespot</span>
 
@@ -74,8 +79,9 @@
 
         </select>
     </div>
+    <% if(iframe == undefined) {%>
     <div id="user"><img class="img-circle" style="height:20px" src='<%= users[userAuthProvider + "_" + userAuthId].icon %>'><%= users[userAuthProvider + "_" + userAuthId].name %></div>
-
+    <%}%>
 </div>
 
 <div id="leftInterface">

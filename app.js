@@ -3,9 +3,9 @@
  * Module dependencies.
  */
 //DEV
-var url = "http://localhost:3015";
+//var url = "http://localhost:3015";
 //PROD
-//var url = "http://ariadne.cs.kuleuven.be"
+var url = "http://ariadne.cs.kuleuven.be";
 
 var express = require('express')
     , routes = require('./routes')
@@ -173,6 +173,7 @@ app.get(path.join(context,'/inquiries/getById/:inquiryId'), inquiry.getInquiry_R
 app.get(path.join(context,'/inquiries/collectAll'), inquiry.getInquiries_RF);
 app.get(path.join(context,'/inquiries/getByUser/:userAuthId/:userAuthProvider'), inquiry.getInquiriesOfUser_RF);
 app.get(path.join(context,'/user/list'), user.getUsers_RF);
+app.get(path.join(context,'/user/mapping'), user.userMapping);
 app.get(path.join(context,'/inquiryMiniDashboard/:inquiryId/:userAuthId/:userAuthProvider'), inquiryDashboard.inquiryMiniDashboard);
 
 //POST to REST for oauth
@@ -188,7 +189,7 @@ function ensureAuthenticated(req, res, next) {
 
 app.all('*', function(req,res,next){
     if (req.params[0] == path.join(context,'/') ||  req.params[0] == path.join(context,'/logout')
-        || req.params[0].indexOf('/static/') != -1 || req.params[0].indexOf('/dashboard_v2/') != -1 )
+        || req.params[0].indexOf('/static/') != -1 || req.params[0].indexOf('/dashboard_v2/') != -1 || req.params[0].indexOf('/user/mapping/') != -1)
         next();
     else
         ensureAuthenticated(req,res,next);

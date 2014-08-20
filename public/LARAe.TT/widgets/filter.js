@@ -40,6 +40,8 @@ var filter = function(){
                 listenersForUserHighlight.push(object);
               if(action == "select")
                   listenersForUserSelect.push(object);
+              if(action == "filter")
+                listenersForUserFilter.push(object);
               return;
           }
           if(type == "phase")
@@ -137,6 +139,22 @@ var filter = function(){
                 });
                 return;
             }
+            if(type == "user")
+            {
+                filteredUsers.push(filter);
+
+                var xf = crossfilter(_data);
+                var byUser = xf.dimension(function(p){return p.username.toLowerCase();});
+                byUser.filterFunction(function(f)
+                {
+                    return (filteredUsers.indexOf(f) >= 0);
+                });
+
+                listenersForUserFilter.forEach(function(f){
+                    f.dataUpdated(byUser.top(Infinity));
+                });
+                return;
+            }
         },
         "unfilter" : function(filter, type)
         {
@@ -158,6 +176,27 @@ var filter = function(){
 
                 listenersForPhaseFilter.forEach(function(f){
                     f.dataUpdated(byPhase.top(Infinity));
+                });
+                return;
+            }
+            if(type == "user")
+            {
+
+                filteredUsers.splice(filteredUsers.indexOf(filter),1);
+
+                var xf = crossfilter(_data);
+                var byUser = xf.dimension(function(p){return p.username.toLowerCase();});
+
+                if(filteredUsers.length > 0)
+                    byUser.filterFunction(function(f) {
+                        return (filteredUsers.indexOf(f) >= 0);
+                    });
+                else
+                    byUser.filterAll();
+
+
+                listenersForUserFilter.forEach(function(f){
+                    f.dataUpdated(byUser.top(Infinity));
                 });
                 return;
             }
