@@ -12,7 +12,7 @@ body
     font-family: "Helvetica Neue Light", "Lucida Grande", "Calibri", "Arial", sans-serif;
     font-weight:lighter;
     font-size: 14px;
-    background-color:#231f20;
+    background-color:#e2e2e2;
     /*font-family: elysium;*/
 }
 
@@ -37,53 +37,41 @@ body
 
 
 #mainVisualization {
-    
-    border-bottom: dotted 1px white;
-    padding-bottom:10px;
+    border: solid 1px grey;
     width:70%;
     overflow:hidden;
     display:inline-block;
-    background-color:#231f20;
+    background-color:white;
     margin-top:5px;
 }
 
 #userVisualizations {
    
-   border: dotted 1px white;
-    padding:10px;
   display:inline-block;
-  border: none;
-  background-color: #231f20;
-  color:white;
+  border: solid 1px grey;
+  background-color: white;
 
 }
 
 #userVisualizations .user_text{
-    fill:white;
-    font-size:8px;
+    color:white;
 }
 
-
-
-#userVisualizations text{
-    
-    font-size:8px;
-}
 #userVisualizations .user_rect_button2,#userVisualizations .user_rect_button1, #userVisualizations .user_surrounding_rect{
-    fill:#00495a;
-    stroke:#313131;
+    fill:#bbbbbb;
+    stroke:white;
 }
 
 #userVisualizations  rect.selected
 {
-    fill:#00daee;
-     stroke:#313131;
+    fill:#505050;
+     stroke:white;
 }
 
 #userVisualizations  rect.unselected
 {
-    fill:#00495a;
-     stroke:#313131;
+    fill:#bbbbbb;
+     stroke:white;
 }
 
 
@@ -96,10 +84,9 @@ body
 #content
 {
      color:black;
-     background-color: #505050;
-   font-size:8px;
-    width:200px;
-    color:white;
+     background-color: white;
+    border: solid 1px grey;
+    width:1142px;
     
     float:left;
     min-height: 100px;
@@ -134,26 +121,23 @@ body
    width:350px;
    
     border: solid 1px grey;
-  
+  background-color: white;
 }
 
 #filters ul
 {
     display:inline;
     padding:0;
-    font-size:8px;
 
     
 }
 
 #filters li{
     display:inline-block;
-    color:white;
+    color:#80cff4;
     padding:2px;
     margin:2px;
-    border:solid 1px #313131;
-    background-color:#00495a;
-   
+    border:solid 1px #80cff4;
 }
 
 

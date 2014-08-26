@@ -25,7 +25,7 @@ var userList = function(){
             .append("rect")
             .attr("class","user_surrounding_rect")
             .attr("x", 0)
-            .attr("y", function(d,i){return i * 40 -15;})
+            .attr("y", function(d,i){return i * 20 -15;})
             .attr("width", 250)
             .attr("height" ,40)
             
@@ -36,7 +36,7 @@ var userList = function(){
             .append("rect")
             .attr("class","user_rect_button1")
             .attr("x", 250)
-            .attr("y", function(d,i){return i * 40 -15;})
+            .attr("y", function(d,i){return i * 20 -15;})
             .attr("width", 35)
             .attr("height" ,40)
             
@@ -79,7 +79,7 @@ var userList = function(){
             .append("rect")
             .attr("class","user_rect_button2")
             .attr("x", 285)
-            .attr("y", function(d,i){return i * 40 -15;})
+            .attr("y", function(d,i){return i * 20 -15;})
             .attr("width", 35)
             .attr("height" ,40)
            
@@ -125,7 +125,7 @@ var userList = function(){
             .attr("class","user_text")
            
             .attr("x", 10)
-            .attr("y", function(d,i){return i * 40;})
+            .attr("y", function(d,i){return i * 20;})
             
             
             .text(function(d){
@@ -139,8 +139,8 @@ var userList = function(){
             for(var k = 1;k < 7;k++)
             {
                 g.append("text")
-                    .attr("x", function(d,i){return 10 + (k-1) * 40;})
-                    .attr("y", function(d,i){return i * 40 + 20;})
+                    .attr("x", function(d,i){return 10 + (k-1) * 20 + 120;})
+                    .attr("y", function(d,i){return i * 20;})
                     .attr("fill",phase_colors[k-1])
                     .text(function(d){
                         if(this.parentNode.__data__.value.countByPhase[k] != undefined)
