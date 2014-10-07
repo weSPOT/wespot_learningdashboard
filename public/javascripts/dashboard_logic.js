@@ -29,6 +29,15 @@ var arc5 = d3.svg.arc()
     .startAngle(0 ) //converting from degs to radians
     .endAngle( 5* 72 * (Math.PI/180)) //just radians
 
+
+function scrollToAnchor(aid){
+    var aTag = $("[rightbar_id='"+ aid +"']");
+    $('#realContent').animate({scrollTop: aTag.offset().top},'slow');
+}
+
+
+
+
 function loadContent(data, username)
         {
             /*var allData = <%- JSON.stringify(events) %>;
@@ -92,7 +101,8 @@ $("#eventData").html("");
                     byPhaseByObjectByTime[d][e].forEach(function(f){
                         var listItem = document.createElement('li');
                         listItem.setAttribute("class", "oneEvent");
-
+                        listItem.setAttribute("rightbar_id", f.id);
+                        if(f.id == data.id) listItem.setAttribute("class","oneEvent highlightEvent");
                         $(listItem).html(f.html).appendTo(list);
                     });
 
@@ -102,6 +112,7 @@ $("#eventData").html("");
 
 
             });
+            scrollToAnchor(data.id);
 
 
         }
@@ -123,7 +134,7 @@ $("#eventData").html("");
         {
             //make small the circles that aren't selected
             var svgs = d3.selectAll(".vis_phase" + phase);
-            svgs.selectAll("circle")
+            svgs.selectAll("svg")
                     .attr("visibility", function(){
                         if(widget == "" || this.__data__.subphase == widget)
                                 return "visible"
@@ -144,12 +155,15 @@ $("#eventData").html("");
 
 
              var tr = d3.select("#box_"+username);
+             tr.attr("entries" + phase, data.length);
+
              var svgCollection = tr
                      .append("td")
 
                      .attr("class","visualization vis_phase" + phase)
 
                      .attr("height",height)
+
                      .text("");
 
             data = data.sort(function(a, b){ return d3.ascending(a.startTime, b.startTime); });
@@ -299,4 +313,44 @@ function studentSelectionChanged()
         $('[id*="' + student + '"]').show();
     }
 
+}
+
+
+var sortingDirections = {};
+function sortBy(type)
+{
+
+
+    //set direction
+    if(sortingDirections[type] == undefined)
+        sortingDirections[type] = 1;
+    else sortingDirections[type] = -sortingDirections[type];
+
+
+    switch(type){
+        case "name":
+            $("#mainTable").each(function(i){
+                var trs = $(this).children().children().get();
+                trs.sort(function(a,b){
+
+                    return sortingDirections[type] * $(a).text().localeCompare($(b).text());
+                });
+                $(this).append(trs);
+            });
+            break;
+        default:
+            //it's a verb, sort by verb
+            $("#mainTable").each(function(i){
+                var trs = $($(this).children()[0]).children().get();
+                trs.sort(function(a,b){
+
+                    if(+$(a).attr("entries"+type) < +$(b).attr("entries"+type)) return -1 * sortingDirections[type];
+                    if(+$(a).attr("entries"+type) > +$(b).attr("entries"+type)) return 1 * sortingDirections[type];
+                    if(+$(a).attr("entries"+type) == +$(b).attr("entries"+type)) return 0 * sortingDirections[type];
+                });
+                $(this).append(trs);
+            });
+            break;
+    }
+    ;
 }

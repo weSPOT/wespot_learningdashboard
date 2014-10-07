@@ -272,9 +272,14 @@
 
 }
 
+#phases span
+{
+  cursor: pointer;
+}
+
 #phases th>a::after
 {
-    content: '↓';
+    content: '□';
     margin-left: 2px;
 }
 #phases th a, #phases th a:hover, #phases th a:visited
@@ -595,6 +600,11 @@
   background-color: @visualisation_bottombar_color;
 }
 
+#eventData li.highlightEvent
+{
+  background-color: #BBBBBB;
+}
+
 .oneEvent h3
 {
   height:20px;
@@ -663,6 +673,8 @@
 {
   border-bottom: solid 2px #7F3366;
 }
+
+
 
 #legend
 {

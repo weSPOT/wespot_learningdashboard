@@ -185,8 +185,11 @@
   border-bottom-style: solid;
   border-bottom-width: 2px;
 }
+#phases span {
+  cursor: pointer;
+}
 #phases th > a::after {
-  content: '↓';
+  content: '□';
   margin-left: 2px;
 }
 #phases th a,
@@ -406,6 +409,9 @@
 }
 #eventData li.oneEvent:hover {
   background-color: #f4f4f4;
+}
+#eventData li.highlightEvent {
+  background-color: #BBBBBB;
 }
 .oneEvent h3 {
   height: 20px;
