@@ -1,3 +1,4 @@
+
 var inquiry = require('./inquiry.js');
 var user = require('./user.js');
 /*
@@ -305,7 +306,10 @@ exports.dashboard_v2 = function(req, res)
                 }
 
                 else
-                    res.render('noInquiries.html', {users: user.users, inquiries: d[0].result, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true });}
+                    res.render('noInquiries.html', {users: user.users, inquiries: d[0].result, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true });
+
+            }
+
         );
     });
 

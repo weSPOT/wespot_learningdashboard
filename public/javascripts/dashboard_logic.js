@@ -1,3 +1,33 @@
+var arc0 = d3.svg.arc()
+    .innerRadius(2)
+    .outerRadius(8)
+    .startAngle(0 )
+    .endAngle( 5 * (Math.PI/180)) ;
+var arc1 = d3.svg.arc()
+    .innerRadius(2)
+    .outerRadius(8)
+    .startAngle(0 )
+    .endAngle( 72 * (Math.PI/180)) ;
+var arc2 = d3.svg.arc()
+    .innerRadius(2)
+    .outerRadius(8)
+    .startAngle(0 ) //converting from degs to radians
+    .endAngle( 2* 72 * (Math.PI/180)) //just radians
+var arc3 = d3.svg.arc()
+    .innerRadius(2)
+    .outerRadius(8)
+    .startAngle(0 ) //converting from degs to radians
+    .endAngle( 3* 72 * (Math.PI/180)) //just radians
+var arc4 = d3.svg.arc()
+    .innerRadius(2)
+    .outerRadius(8)
+    .startAngle(0 ) //converting from degs to radians
+    .endAngle( 4* 72 * (Math.PI/180)) //just radians
+var arc5 = d3.svg.arc()
+    .innerRadius(2)
+    .outerRadius(8)
+    .startAngle(0 ) //converting from degs to radians
+    .endAngle( 5* 72 * (Math.PI/180)) //just radians
 
 function loadContent(data, username)
         {
@@ -10,20 +40,35 @@ function (f) {
     if(f.tags == data.tags) return true; else return false;
     });
 var tmp = xdata_userDimension.top(Infinity);*/
+
+
+
+
+
 $("#eventData").html("");
             var list = document.createElement('ul');
             $(list).appendTo("#eventData");
 
             //get all the data for the thread
             var toAdd = [];
-            d3.selectAll("circle").attr("stroke-width","2px");
-            var relatedItems = d3.selectAll('[tags="' + data.tags + '"],[object="' + data.object + '"]');
+            d3.selectAll("circle").attr("fill","#565656");
+            d3.selectAll("path").attr("fill",colors[0]);
+            var relatedItems = d3.selectAll('circle[tags="' + data.tags + '"],circle[object="' + data.object + '"]');
+            relatedItems[0].forEach(function(d){
+
+
+                //meanwhile indicate which ones are related in the visualisation
+                $(d)
+                        .attr("fill",colors[1]);
+
+            });
+            relatedItems = d3.selectAll('path[tags="' + data.tags + '"],path[object="' + data.object + '"]');
             relatedItems[0].forEach(function(d){
                 toAdd.push(d.__data__);
 
                 //meanwhile indicate which ones are related in the visualisation
                 $(d)
-                        .attr("stroke-width", "5px");
+                    .attr("fill","#565656");
 
             });
             var byPhaseByObjectByTime = {};
@@ -95,6 +140,8 @@ $("#eventData").html("");
         }
         function drawPhase(data, username,phase, ratings)
          {
+             /* create 5 arcs for star ratings */
+
 
              var tr = d3.select("#box_"+username);
              var svgCollection = tr
@@ -106,49 +153,55 @@ $("#eventData").html("");
                      .text("");
 
             data = data.sort(function(a, b){ return d3.ascending(a.startTime, b.startTime); });
+
+             svgCollection.selectAll("svg").data(data)
+                 .enter().append("svg")
+                 .attr("height", 20)
+                 .attr("width",20)
+                 .append("circle")
+                 .attr("class", "vis_circle")
+                 .attr("cx", 10)
+                 .attr("cy", 10)
+                 .attr("r", 10)
+                 .attr("fill", "#565656")
+                 .attr("tags", function(d){return d.tags;})
+                 .attr("object", function(d){return d.object;})
+                 .on("click",function(d){ loadContent(d, username); });;
              svgCollection.selectAll("svg")
-                     .data(data)
-                     .enter()
-                     .append("svg")
-                     .attr("class", "vis_circle")
-                     .attr("height", 20)
-                     .attr("width",20)
-                     .append("circle")
-                     .attr("cx", 10)
-                     .attr("cy", 10)
-                     .attr("r", function(d) {
-                         if(ratings[d.object]!= undefined && ratings[d.object].ratingCount != 0)
-                             return ((ratings[d.object].rating/ratings[d.object].ratingCount)/5)*7 +2;
-                         return 4;
-                     })
 
-                     .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
-                     .attr("stroke", "#595959")
-.attr("fill", function(d){
-                        // if(!d.today)
-                        //    return colors_dark[d.phase-1];
-                        // else
-                            return colors[d.phase-1];
-                          })
-                     .attr("stroke-width", "2px")
-                     .attr("tags", function(d){return d.tags;})
-                     .attr("object", function(d){return d.object;})
-                     .on("click",function(d){ loadContent(d, username); });
-             /*svgCollection.selectAll("svg")
-                     .data(data)
+                 .append("path")
+                 .attr("class", "vis_circle")
 
-                     .append("text")
-                     .attr("fill","white")
-                     .attr("font-size","10px")
-                     .attr("x", 8)
-                     .attr("y", 11)
-                     //.attr("class","unselectable eventSquare")
-                     .attr("text-anchor","middle")
-                     .on("click",function(d){ loadContent(d, username); })
-                     .text(function(d) {
-                        if(ratings[d.object]!= undefined && ratings[d.object].ratingCount != 0)
-                         return ratings[d.object].rating/ratings[d.object].ratingCount;
-                     });*/
+                 .attr("d", function(d) {
+                     if(ratings[d.object]!= undefined && ratings[d.object].ratingCount != 0) {
+                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 1)
+                             return arc1();
+                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 2)
+                             return arc2();
+                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 3)
+                             return arc3();
+                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 4)
+                             return arc4();
+                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 5)
+                             return arc5();
+                     }
+
+                     return arc0();})
+                 .attr("stroke", "#595959")
+                 .attr("transform", "translate(10,10)")
+                 .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
+
+                 .attr("fill", function(d){
+                     // if(!d.today)
+                     //    return colors_dark[d.phase-1];
+                     // else
+                     return colors[0];
+                 })
+                 .attr("stroke-width", "0px")
+                 .attr("tags", function(d){return d.tags;})
+                 .attr("object", function(d){return d.object;})
+                 .on("click",function(d){ loadContent(d, username); });
+
          }
 
 var usersOfSelectedInquiries = [];

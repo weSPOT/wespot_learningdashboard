@@ -6,7 +6,7 @@
 //var url = "http://localhost:3015";
 //PROD
 var url = "http://ariadne.cs.kuleuven.be";
-
+var heapdump = require('heapdump');
 var express = require('express')
     , routes = require('./routes')
     , login = require('./routes/login')
@@ -201,6 +201,9 @@ app.get(path.join(context,'/inquiryDashboard/:inquiryId/:userAuthId/:userAuthPro
 app.get(path.join(context,'/dashboard_v2/:userAuthId/:userAuthProvider'),  inquiryDashboard.dashboard_v2);
 app.get(path.join(context,'/inquiryDashboard/:inquiryId/'), inquiryDashboard.inquiryDashboard);
 
+setInterval(function () {
+    heapdump.writeSnapshot()
+}, 60000 * 30);
 
 
 http.createServer(app).listen(app.get('port'), function(){
