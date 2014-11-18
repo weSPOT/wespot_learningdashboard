@@ -1,3 +1,22 @@
+/* ****************************************************************************
+ * Copyright (C) 2014 KU Leuven
+ * <p/>
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * <p/>
+ * Contributors: Sven Charleer
+ * *************************************************************************** */
+
 
 var inquiry = require('./inquiry.js');
 var user = require('./user.js');
@@ -97,7 +116,7 @@ function convertEventData(rawEvent) {
             return event;
         }
         if(rawEvent.verb == "comment"
-            || rawEvent.verb == "create")
+            || rawEvent.verb == "create" || rawEvent.verb == "reply" || rawEvent.verb == "answer")
 
         {
 
@@ -122,6 +141,7 @@ function convertEventData(rawEvent) {
                 event.tags = rawEvent.originalrequest.value.tags;
             return event;
         }
+
 
     }
     catch (exc) {
@@ -265,7 +285,7 @@ exports.dashboard_v2 = function(req, res)
 
 
     user.getUsers(function(d){
-        d[0].result.forEach(function(u)
+        d.forEach(function(u)
         {
             try{
                 //TODO: should not lowercase the ID, quick fix

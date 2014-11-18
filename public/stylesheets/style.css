@@ -178,7 +178,6 @@
   overflow-wrap: break-word;
   margin: 0px;
   padding: 0px;
-  width: 13%;
   padding-bottom: 3px;
   text-align: center;
   font-size: 14px;
@@ -187,6 +186,7 @@
 }
 #phases span {
   cursor: pointer;
+  word-break: break-all;
 }
 #phases th > a::after {
   content: '□';
@@ -236,19 +236,13 @@
 }
 /* user */
 .scrollableView {
-  height: 95%;
   overflow: scroll;
   overflow-style: scrollbar;
-  width: auto;
 }
 #userList {
-  width: 100%;
   margin: 0px;
   padding: 0px;
-  display: inline-block;
-}
-#userlist > table {
-  width: 100%;
+  float: left;
 }
 /* visualization */
 .visualization,
@@ -267,7 +261,7 @@
 .visualization,
 .miniDashboard_visualization {
   margin: 0;
-  width: 13%;
+  word-break: break-all;
   vertical-align: top;
 }
 .studentName span {
@@ -369,11 +363,9 @@
 }
 #eventData {
   text-align: left;
-  width: 100%;
 }
 #eventData img,
 #eventData video {
-  max-width: 90%;
   height: 60%;
   display: block;
   margin-left: auto;

@@ -42,74 +42,73 @@
     <% if(iframe == undefined) {%>
     <img id="wespot_logo" src="/wespot/static/images/wespot_logo.png"/>
     <%}%>
-    <span id="wespot_title">Learning Analytics Reflection & Awareness environment</span>
-    <span id="title">LARAe</span><span id="subtitle">.wespot</span>
 
 
-    <table id="legend">
-        <tbody><tr>
-            <td>
-                Star rating none - 5
-            </td>
-            <td><svg style="vertical-align: bottom" width="20" height="20">
-                <circle cx="10" cy="10" r="10" fill="#565656"></circle>
-                <path class="eventSquare widget_ARLearn" d="M0,-8A8,8 0 0,1 0.6972459419812653,-7.969557584733964L0.17431148549531633,-1.992389396183491A2,2 0 0,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
-            </svg></td>
-            <td><svg style="vertical-align: bottom" width="20" height="20">
-                <circle cx="10" cy="10" r="10" fill="#565656"></circle>
-                <path class="eventSquare widget_hypothesis" d="M0,-8A8,8 0 0,1 7.608452130361228,-2.472135954999579L1.902113032590307,-0.6180339887498948A2,2 0 0,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
-            </svg></td>
-            <td><svg style="vertical-align: bottom" width="20" height="20">
-                <circle cx="10" cy="10" r="10" fill="#565656"></circle>
-                <path class="eventSquare widget_ARLearn" d="M0,-8A8,8 0 0,1 4.702282018339785,6.472135954999579L1.1755705045849463,1.6180339887498947A2,2 0 0,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
-            </svg></td>
-            <td><svg style="vertical-align: bottom" width="20" height="20">
-                <circle cx="10" cy="10" r="10" fill="#565656"></circle>
-                <path class="eventSquare widget_page" d="M0,-8A8,8 0 1,1 -4.702282018339784,6.472135954999579L-1.175570504584946,1.6180339887498947A2,2 0 1,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
-            </svg></td>
-            <td><svg style="vertical-align: bottom" width="20" height="20">
-                <circle cx="10" cy="10" r="10" fill="#565656"></circle>
-                <path class="eventSquare widget_hypothesis" d="M0,-8A8,8 0 1,1 -7.608452130361228,-2.4721359549995783L-1.902113032590307,-0.6180339887498946A2,2 0 1,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
-            </svg></td>
-            <td><svg style="vertical-align: bottom" width="20" height="20">
-                <circle cx="10" cy="10" r="10" fill="#565656"></circle>
-                <path class="eventSquare widget_hypothesis" d="M0,8A8,8 0 1,1 0,-8A8,8 0 1,1 0,8M0,2A2,2 0 1,0 0,-2A2,2 0 1,0 0,2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
-            </svg></td>
 
-        </tr>
-        </tbody></table>
+
     <div id="subsections">
-        <select multiple id="inquirySelection" size="3" onchange="javascript:inquirySelectionChanged()">
+        <select style="min-width: 200px" multiple id="inquirySelection" size="3" onchange="javascript:inquirySelectionChanged()">
             <% Object.keys(data).forEach(function(inq){ %>
             <option value="<%=inq%>"><%=data[inq].inquiry.title%></option>
             <% });%>
         </select>
-        <select multiple id="studentSelection" size="3" onchange="javascript:studentSelectionChanged()">
+        <select style="min-width: 200px" multiple id="studentSelection" size="3" onchange="javascript:studentSelectionChanged()">
 
         </select>
     </div>
-    <% if(iframe == undefined) {%>
-    <div id="user"><img class="img-circle" style="height:20px" src='<%= users[userAuthProvider + "_" + userAuthId].icon %>'><%= users[userAuthProvider + "_" + userAuthId].name %></div>
-    <%}%>
-</div>
-
-<div id="leftInterface">
-    <table id="phases">
-        <tr >
-
-            <th class="title_student"><span onclick="javascript:sortBy('name');">Name</span></th>
-            <th class="title_phase1"><span onclick="javascript:sortBy('1');">Question / Hypothesis</span><a href="#" data-dropdown="#dropdown-phase1"></a></th>
-            <th class="title_phase1"><span onclick="javascript:sortBy('2');">Operationalisation</span><a href="#" data-dropdown="#dropdown-phase2"></a></th>
-            <th class="title_phase1"><span onclick="javascript:sortBy('3');">Data Collection</span><a href="#" data-dropdown="#dropdown-phase3"></a></th>
-            <th class="title_phase1" ><span onclick="javascript:sortBy('4');">Data Analysis</span><a href="#" data-dropdown="#dropdown-phase4"></a></th>
-            <th class="title_phase1"><span onclick="javascript:sortBy('5');">Interpretation</span><a href="#" data-dropdown="#dropdown-phase5"></a></th>
-            <th class="title_phase1"><span onclick="javascript:sortBy('6');">Communication</span><a href="#" data-dropdown="#dropdown-phase6"></a></th>
+    <table id="legend">
+        <tbody><tr>
+        <tr>
+            <td colspan="6">
+                Star rating none - 5
+            </td>
+        </tr>
+        <td><svg style="vertical-align: bottom" width="20" height="20">
+            <circle cx="10" cy="10" r="10" fill="#565656"></circle>
+            <path class="eventSquare widget_ARLearn" d="M0,-8A8,8 0 0,1 0.6972459419812653,-7.969557584733964L0.17431148549531633,-1.992389396183491A2,2 0 0,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
+        </svg></td>
+        <td><svg style="vertical-align: bottom" width="20" height="20">
+            <circle cx="10" cy="10" r="10" fill="#565656"></circle>
+            <path class="eventSquare widget_hypothesis" d="M0,-8A8,8 0 0,1 7.608452130361228,-2.472135954999579L1.902113032590307,-0.6180339887498948A2,2 0 0,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
+        </svg></td>
+        <td><svg style="vertical-align: bottom" width="20" height="20">
+            <circle cx="10" cy="10" r="10" fill="#565656"></circle>
+            <path class="eventSquare widget_ARLearn" d="M0,-8A8,8 0 0,1 4.702282018339785,6.472135954999579L1.1755705045849463,1.6180339887498947A2,2 0 0,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
+        </svg></td>
+        <td><svg style="vertical-align: bottom" width="20" height="20">
+            <circle cx="10" cy="10" r="10" fill="#565656"></circle>
+            <path class="eventSquare widget_page" d="M0,-8A8,8 0 1,1 -4.702282018339784,6.472135954999579L-1.175570504584946,1.6180339887498947A2,2 0 1,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
+        </svg></td>
+        <td><svg style="vertical-align: bottom" width="20" height="20">
+            <circle cx="10" cy="10" r="10" fill="#565656"></circle>
+            <path class="eventSquare widget_hypothesis" d="M0,-8A8,8 0 1,1 -7.608452130361228,-2.4721359549995783L-1.902113032590307,-0.6180339887498946A2,2 0 1,0 0,-2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
+        </svg></td>
+        <td><svg style="vertical-align: bottom" width="20" height="20">
+            <circle cx="10" cy="10" r="10" fill="#565656"></circle>
+            <path class="eventSquare widget_hypothesis" d="M0,8A8,8 0 1,1 0,-8A8,8 0 1,1 0,8M0,2A2,2 0 1,0 0,-2A2,2 0 1,0 0,2Z" stroke="#595959" transform="translate(10,10)" fill="#33FF99" stroke-width="0px"></path>
+        </svg></td>
 
         </tr>
-    </table>
+        </tbody></table>
+</div>
+<table id="phases">
+    <tr id="phases_headers" >
+
+        <th class="title_student"><span onclick="javascript:sortBy('name');">Name</span></th>
+        <th class="title_phase1"><span onclick="javascript:sortBy('1');">Question / Hypothesis</span><a href="#" data-dropdown="#dropdown-phase1"></a></th>
+        <th class="title_phase1"><span onclick="javascript:sortBy('2');">Operationalisation</span><a href="#" data-dropdown="#dropdown-phase2"></a></th>
+        <th class="title_phase1"><span onclick="javascript:sortBy('3');">Data Collection</span><a href="#" data-dropdown="#dropdown-phase3"></a></th>
+        <th class="title_phase1" ><span onclick="javascript:sortBy('4');">Data Analysis</span><a href="#" data-dropdown="#dropdown-phase4"></a></th>
+        <th class="title_phase1"><span onclick="javascript:sortBy('5');">Interpretation</span><a href="#" data-dropdown="#dropdown-phase5"></a></th>
+        <th class="title_phase1"><span onclick="javascript:sortBy('6');">Communication</span><a href="#" data-dropdown="#dropdown-phase6"></a></th>
+        <th class="title_data">Data</th>
+
+    </tr>
+</table>
+
+
+
 <div id="userList" class="scrollableView">
-
-
 <table id="mainTable">
     <script type="application/javascript">
         regenerate();
@@ -117,16 +116,13 @@
 
 </table>
 </div>
-</div>
-<div id="rightInterface">
-    <div id="realContent" class="scrollableView">
 
-        <h2>Event Data</h2>
+<div id="eventData" class="scrollableView">
 
-        <div id="eventData">
-        </div>
-    </div>
 </div>
+
+
+
 <%
     var phases = [1,2,3,4,5,6];
     phases.forEach(function(p)
@@ -151,4 +147,37 @@
 %>
 
 </body>
+
+  <script type="application/javascript">
+
+      function correctSizes()
+      {
+
+
+              var phases = $("#phases_headers").children();
+              phases.each(function (c) {
+                  if (!$(this).hasClass("title_data")) {
+                      $(this).css("width", (2 * ($("#mainBody").width() / 3)) / 7);
+                  }
+              })
+
+
+
+
+              $("#userList").css("width", parseInt((2 * ($("#mainBody").width() / 3))));
+              $("#eventData").css("width", (($("#mainBody").width() / 3)) - 20);
+              $("#eventData").css("margin-left", (2 * ($("#mainBody").width() / 3)));
+              $("#userList").css("height", ($("#mainBody").height()) - $("#userList").position().top);
+              $("#eventData").css("height", $("#userList").css("height"));
+
+          $(".studentName").attr("width", parseInt((2 * ($("#mainBody").width() / 3)) / 7));
+          $(".visualization").attr("width", parseInt((2 * ($("#mainBody").width() / 3)) / 7));
+          console.log("resize");
+
+      }
+      $(document).ready(correctSizes);
+      $(window).resize(correctSizes);
+
+  </script>
+
 </html>

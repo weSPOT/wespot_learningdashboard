@@ -1,3 +1,22 @@
+/* ****************************************************************************
+ * Copyright (C) 2014 KU Leuven
+ * <p/>
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * <p/>
+ * Contributors: Sven Charleer
+ * *************************************************************************** */
+
 var http = require('http');
 var RESTful = require('../RESTful.js');
 
@@ -5,7 +24,7 @@ exports.users = {};
 
 exports.getUsers = function(callback)
 {
-    RESTful.doGET('inquiry.wespot.net','/services/api/rest/json/?method=site.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',callback);
+    RESTful.doGET_many('inquiry.wespot.net','/services/api/rest/json/?method=site.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',callback);
 }
 
 exports.getUsers_RF = function(req, res) {
@@ -24,7 +43,7 @@ exports.userMapping = function(req,res)
 {
     var users = {};
     exports.getUsers(function(d){
-        d[0].result.forEach(function(u)
+        d.forEach(function(u)
         {
             try{
 
