@@ -284,27 +284,17 @@ exports.dashboard_v2 = function(req, res)
     var userAuthProvider = req.params.userAuthProvider;
 
 
-    user.getUsers(function(d){
-        d.forEach(function(u)
-        {
-            try{
-                //TODO: should not lowercase the ID, quick fix
-                user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name:u.name, icon:u.icon};
-            }
-            catch(exc)
-            {
-                console.log(u.oauthProvider);
-            }
-        }
-        );
+
         inquiry.getInquiriesOfUser(userAuthId, userAuthProvider, function(d){
-                if(user.users[(userAuthProvider + "_" + userAuthId).toLowerCase()] != undefined)
-                {
+                console.log("got inquiries: ");
+                console.log(new Date());
 
                     //load all inquiries of the user! (might wanna do some caching here and there at some point)
                     var dataPerInquiry = {};
                     var inquiries = d[0].result;
                     var nrOfInquiries = d[0].result.length;
+                    console.log("getting events: ");
+                    console.log(new Date());
                     inquiries.forEach(function(inq){
                         inquiry.getInquiry(inq.inquiryId, function(d, errorMessage){
 
@@ -319,27 +309,60 @@ exports.dashboard_v2 = function(req, res)
                             dataPerInquiry[inq.inquiryId] = {};
                             dataPerInquiry[inq.inquiryId].inquiry = inq;
                             dataPerInquiry[inq.inquiryId].data = parsedData;
-                            dashboard_render_yesno(dataPerInquiry, nrOfInquiries,req, res);
-                        });});
+                            console.log("starting to get users: ");
+                            console.log(new Date());
+                            user.getUsersPerInquiry(inq.inquiryId, function(d, errorMessage)
+                            {
+
+                                    console.log("got users: ");
+                                    console.log(new Date());
+                                d[0].result.forEach(function(u)
+                                        {
+                                            try {
+                                                user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name: u.name, icon: u.icon};
+                                            }
+                                            catch(exc)
+                                            {
+                                                console.log(u.oauthProvider);
+
+                                            }
+                                        }
+                                    );
+
+                                    dashboard_render_yesno(dataPerInquiry, nrOfInquiries,req, res);
 
 
-                }
 
-                else
-                    res.render('noInquiries.html', {users: user.users, inquiries: d[0].result, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true });
+
+                            });
+
+                        });
+
+
+                    });
+
+
+
+
+
+
+                //    res.render('noInquiries.html', {users: user.users, inquiries: d[0].result, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true });
 
             }
 
         );
-    });
+
 
 
 }
 
 function dashboard_render_yesno(data, total,req, res)
 {
-    if(Object.keys(data).length >= total)
-     res.render('dashboard_v2.html', {data:data, users: user.users, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true});
+    if(Object.keys(data).length >= total) {
+        console.log("got all events: ");
+        console.log(new Date());
+        res.render('dashboard_v2.html', {data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true});
+    }
     else
         console.log("still loading");
 }

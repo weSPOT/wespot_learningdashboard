@@ -71,6 +71,44 @@ exports.doPOST_Jose_Query = function(host, path, callback)
     return;
 }
 
+exports.doGETPORT = function(host,port, path, callback) {
+
+    var options = {
+        host: host,
+        port: port,
+        path: path,
+        method: 'GET'
+    };
+    console.log(host);
+    console.log(path);
+    var lastChunk = "";
+    var totalData = [];
+    var dataPerPage = "";
+
+
+    var fetchRequest = function (result) {
+
+        result.setEncoding('utf8');
+        result.on('data', function (chunk) {
+            dataPerPage += chunk;
+            lastChunk = chunk;
+
+        });
+        result.on('end', function () {
+            //console.log(dataPerPage);
+            totalData = totalData.concat(JSON.parse(dataPerPage));
+            callback(totalData);
+
+
+        });
+    }
+
+    var req = http.request(options, fetchRequest);
+
+
+    req.end();
+    return;
+}
 
 exports.doGET = function(host, path, callback) {
 
