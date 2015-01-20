@@ -110,7 +110,7 @@ exports.doGETPORT = function(host,port, path, callback) {
     return;
 }
 
-exports.doGET = function(host, path, callback) {
+exports.doGET = function(host, path, callback, auth) {
 
     var options = {
         host: host,
@@ -118,6 +118,10 @@ exports.doGET = function(host, path, callback) {
         path: path,
         method: 'GET'
     };
+    if(auth != undefined)
+    {
+        options.headers = {"Authorization": auth};
+    }
     console.log(host);
     console.log(path);
     var lastChunk = "";

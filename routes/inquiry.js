@@ -28,7 +28,7 @@ var RESTful = require('../RESTful.js');
 //---------------
 exports.getInquiry = function(inquiryId, callback)
 {
-    RESTful.doGET('ariadne.cs.kuleuven.be','/wespot-ws/events?context='+ inquiryId , callback);
+    RESTful.doGET('ariadne.cs.kuleuven.be','/wespot-ws/events?context='+ inquiryId , callback, "DDr8yQIDHVaL4ogvV6YP0gtPvA0UnL6e");
 }
 
 exports.getInquiry_RF = function(req, res) {
