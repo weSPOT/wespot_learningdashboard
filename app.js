@@ -198,13 +198,13 @@ app.all('*', function(req,res,next){
 //web pages
 app.get(path.join(context,'/userInquiryList/:userAuthId/:userAuthProvider') , inquiryDashboard.dashboard_v2);
 app.get(path.join(context,'/inquiryDashboard/:inquiryId/:userAuthId/:userAuthProvider'),  inquiryDashboard.inquiryDashboard);
-app.get(path.join(context,'/dashboard_v2/:userAuthId/:userAuthProvider'),  inquiryDashboard.dashboard_v2);
+app.get(path.join(context,'/dashboard_v2/:userAuthId/:userAuthProvider/:inquiryId'),  inquiryDashboard.dashboard_v2);
 app.get(path.join(context,'/inquiryDashboard/:inquiryId/'), inquiryDashboard.inquiryDashboard);
 
-setInterval(function () {
+/*setInterval(function () {
     heapdump.writeSnapshot()
 }, 60000 * 30);
-
+*/
 
 http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));

@@ -140,7 +140,9 @@ exports.doGET = function(host, path, callback, auth) {
         result.on('end', function () {
             //console.log(dataPerPage);
             totalData = totalData.concat(JSON.parse(dataPerPage));
+
             callback(totalData);
+
 
 
         });

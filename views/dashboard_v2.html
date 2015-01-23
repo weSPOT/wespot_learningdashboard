@@ -9,7 +9,7 @@
 
       //let's play with one inquiry atm
       //widgetsPerPhase:parsedData.widgetsPerPhase, ratings:parsedData.ratings, users: user.users, events: parsedData.event
-      var widgetsPerPhase = data[Object.keys(data)[0]].data.widgetsPerPhase;
+      var widgetsPerPhase = data[defaultInquiry].data.widgetsPerPhase;
 
 
       %>
@@ -23,6 +23,7 @@
           var userAuthProvider = "<%= userAuthProvider %>";
           var userAuthId = "<%= userAuthId %>";
           var users = <%- JSON.stringify(users) %>;
+          var defaultInquiry = <%- defaultInquiry %>
 
 
 
@@ -177,6 +178,10 @@
       }
       $(document).ready(correctSizes);
       $(window).resize(correctSizes);
+
+      //select default inq
+      $("#inquirySelection").val(defaultInquiry);
+      inquirySelectionChanged();
 
   </script>
 

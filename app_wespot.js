@@ -73,7 +73,7 @@ passport.use('provider', new OAuth2Strategy({
         tokenURL: 'https://wespot-arlearn.appspot.com/oauth/token',
         clientID: 'LARAe',
         clientSecret: 'thisiswespot',
-        callbackURL: 'http://localhost:3015/wespot/auth/provider/callback'//http://ariadne.cs.kuleuven.be/wespot/'
+        callbackURL: 'http://ariadne.cs.kuleuven.be/wespot/'
     },
     function(accessToken, refreshToken, profile, done) {
         /*User.findOrCreate(..., function(err, user) {

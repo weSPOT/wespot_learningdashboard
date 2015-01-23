@@ -278,90 +278,137 @@ exports.inquiryMiniDashboard = function(req, res){
 
 };
 
-exports.dashboard_v2 = function(req, res)
+function getSubs(inquiryId, parentId, req, res)
 {
-    var userAuthId = req.params.userAuthId;
-    var userAuthProvider = req.params.userAuthProvider;
+    //keep track of all which we have to load
+    var inquiryIds = [];
 
+    var checkForSubId = undefined;
+    if(parentId != undefined) {
+        checkForSubId = parentId;
+        inquiryIds.push(parentId);
+    }
+    else
+        checkForSubId = parseInt(inquiryId);
+    inquiryIds.push(parseInt(inquiryId));
 
+    inquiry.getSubInquiries(checkForSubId, function(data, errorMessage)
+    {
+        if (errorMessage != undefined) {
+            res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
+            return;
+        }
+        //add sub inquiries to list we need to load
+        if (data[0].status != -1) {
+            data[0].result.forEach(function(sub){
+                inquiryIds.push(sub.inquiryId);
+            })
+        }
+        //get inquiries of user
+        inquiry.getInquiriesOfUser(req.params.userAuthId, req.params.userAuthProvider, function (d) {
+            var inquiriesOfUser = d[0].result;
+            var inquiriesToLoad = [];
+            //find inquiries that have been found that are of the user
+            inquiriesOfUser.forEach(function (inq) {
+                if(inquiryIds.indexOf(inq.inquiryId) >= 0)
+                {
+                    inquiriesToLoad.push(inq);
+                }
+            });
+            //we have all the inquiries we need, now load the events
+            var nrOfInquiries = inquiriesToLoad.length;
+            if (nrOfInquiries == 0) {
+                res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
+                return;
+            }
+            var dataPerInquiry = {};
+            inquiriesToLoad.forEach(function(inq){
+                inquiry.getEvents(inq.inquiryId, function (d, errorMessage) {
 
-        inquiry.getInquiriesOfUser(userAuthId, userAuthProvider, function(d){
-                console.log("got inquiries: ");
-                console.log(new Date());
+                    if (errorMessage != undefined) {
+                        res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
+                        return;
+                    }
 
-                    //load all inquiries of the user! (might wanna do some caching here and there at some point)
-                    var dataPerInquiry = {};
-                    var inquiries = d[0].result;
-                    var nrOfInquiries = d[0].result.length;
-                    console.log("getting events: ");
+                    //order the events by user
+                    var parsedData = convertToEventsByUsersAndEventId(d);
+
+                    dataPerInquiry[inq.inquiryId] = {};
+                    dataPerInquiry[inq.inquiryId].inquiry = inq;
+                    dataPerInquiry[inq.inquiryId].data = parsedData;
+                    console.log("starting to get users: ");
                     console.log(new Date());
-                    inquiries.forEach(function(inq){
-                        inquiry.getInquiry(inq.inquiryId, function(d, errorMessage){
+                    user.getUsersPerInquiry(inq.inquiryId, function (d, errorMessage) {
 
-                            if(errorMessage != undefined)
-                            {
-                                res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true });
-                                return;
+                        if (d[0].status == -1) {
+                            res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
+                            return;
+                        }
+                        console.log("got users: ");
+                        console.log(new Date());
+                        d[0].result.forEach(function (u) {
+                                try {
+                                    user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name: u.name, icon: u.icon};
+                                }
+                                catch (exc) {
+                                    console.log(u.oauthProvider);
+
+                                }
                             }
+                        );
 
-                            //order the events by user
-                            var parsedData = convertToEventsByUsersAndEventId(d);
-                            dataPerInquiry[inq.inquiryId] = {};
-                            dataPerInquiry[inq.inquiryId].inquiry = inq;
-                            dataPerInquiry[inq.inquiryId].data = parsedData;
-                            console.log("starting to get users: ");
-                            console.log(new Date());
-                            user.getUsersPerInquiry(inq.inquiryId, function(d, errorMessage)
-                            {
-
-                                    console.log("got users: ");
-                                    console.log(new Date());
-                                d[0].result.forEach(function(u)
-                                        {
-                                            try {
-                                                user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name: u.name, icon: u.icon};
-                                            }
-                                            catch(exc)
-                                            {
-                                                console.log(u.oauthProvider);
-
-                                            }
-                                        }
-                                    );
-
-                                    dashboard_render_yesno(dataPerInquiry, nrOfInquiries,req, res);
-
-
-
-
-                            });
-
-                        });
-
+                        dashboard_render_yesno(dataPerInquiry, nrOfInquiries, req, res, inquiryId);
+                        console.log("got all events: ");
+                        console.log(new Date());
 
                     });
+             });
+            });
+
+        });
+
+    });
+
+}
+
+exports.dashboard_v2 = function(req, res) {
+    var userAuthId = req.params.userAuthId;
+    var userAuthProvider = req.params.userAuthProvider;
+    var inquiryId = req.params.inquiryId;
+    inquiry.getParentInquiry(inquiryId, function(p, errorMessage) {
+        if (errorMessage != undefined) {
+            res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
+            return;
+        }
+        if (p[0].status == -1 || p[0].result.length == 0) {
+            //no parent
+            //does it have sub inquiries?
+            getSubs(inquiryId, undefined, req, res);
+           // inquiry.getSubInquiries(i.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
+        }
+        else
+        {
+            var parent = p[0].result[0];
+            getSubs(inquiryId, parent.inquiryId, req,res);
+           // inquiry.getSubInquiries(parent.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
+        }
 
 
+    });
 
-
-
-
-                //    res.render('noInquiries.html', {users: user.users, inquiries: d[0].result, userAuthId:req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe:true });
-
-            }
-
-        );
 
 
 
 }
 
-function dashboard_render_yesno(data, total,req, res)
+
+
+function dashboard_render_yesno(data, total,req, res, defaultInquiry)
 {
     if(Object.keys(data).length >= total) {
         console.log("got all events: ");
         console.log(new Date());
-        res.render('dashboard_v2.html', {data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true});
+        res.render('dashboard_v2.html', {data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, defaultInquiry: defaultInquiry});
     }
     else
         console.log("still loading");

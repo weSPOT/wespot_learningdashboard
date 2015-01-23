@@ -26,7 +26,7 @@ var RESTful = require('../RESTful.js');
 //PARAMETERS:
 // - inquiryId
 //---------------
-exports.getInquiry = function(inquiryId, callback)
+exports.getEvents = function(inquiryId, callback)
 {
     RESTful.doGET('ariadne.cs.kuleuven.be','/wespot-ws/events?context='+ inquiryId , callback, "DDr8yQIDHVaL4ogvV6YP0gtPvA0UnL6e");
 }
@@ -55,6 +55,16 @@ exports.getInquiry_RF = function(req, res) {
 exports.getInquiries = function(callback)
 {
     RESTful.doGET('inquiry.wespot.net','/services/api/rest/json/?method=site.inquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',callback);
+}
+
+exports.getSubInquiries = function(inquiryId, callback, inquiry, nrOfInq, req, res)
+{
+    RESTful.doGET('inquiry.wespot.net','/services/api/rest/json/?method=inquiry.subinquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId='+inquiryId,callback);
+}
+
+exports.getParentInquiry = function(inquiryId, callback, inquiry, nrOfInq, req, res)
+{
+    RESTful.doGET('inquiry.wespot.net','/services/api/rest/json/?method=inquiry.parent&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId='+inquiryId,callback);
 }
 
 exports.getInquiries_RF = function(req, res) {
