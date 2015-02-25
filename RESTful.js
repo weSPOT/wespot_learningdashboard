@@ -71,7 +71,7 @@ exports.doPOST_Jose_Query = function(host, path, callback)
     return;
 }
 
-exports.doGETPORT = function(host,port, path, callback) {
+exports.doGETPORT = function(host,port, path, callback,auth) {
 
     var options = {
         host: host,
@@ -79,6 +79,10 @@ exports.doGETPORT = function(host,port, path, callback) {
         path: path,
         method: 'GET'
     };
+    if(auth != undefined)
+    {
+        options.headers = {"Authorization": auth};
+    }
     console.log(host);
     console.log(path);
     var lastChunk = "";

@@ -188,7 +188,16 @@ var tmp = xdata_userDimension.top(Infinity);*/
 
             data = data.sort(function(a, b){ return d3.ascending(a.startTime, b.startTime); });
 
-             svgCollection.selectAll("svg").data(data)
+             var xdata = crossfilter(data);
+             var xdata_skillDimension = xdata.dimension(function (f){ return f.activityId});
+             xdata_skillDimension.filterFunction(
+                 function (f) {
+                     if(activeSkills.length == 0) return true;
+                     if(activeSkills.indexOf(f)>=0) return true; else return false;
+                 });
+             var tmp = xdata_skillDimension.top(Infinity);
+
+             svgCollection.selectAll("svg").data(tmp)
                  .enter().append("svg")
                  .attr("height", 20)
                  .attr("width",20)
@@ -207,19 +216,36 @@ var tmp = xdata_userDimension.top(Infinity);*/
                  .attr("class", "vis_circle")
 
                  .attr("d", function(d) {
-                     if(ratings[d.object]!= undefined && ratings[d.object].ratingCount != 0) {
-                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 1)
-                             return arc1();
-                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 2)
-                             return arc2();
-                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 3)
-                             return arc3();
-                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 4)
-                             return arc4();
-                         if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 5)
-                             return arc5();
+                     if(_showAdminRating)
+                     {
+                         if(ratings[d.object]!= undefined && ratings[d.object].adminRatingCount != 0) {
+                             if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 1)
+                                 return arc1();
+                             if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 2)
+                                 return arc2();
+                             if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 3)
+                                 return arc3();
+                             if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 4)
+                                 return arc4();
+                             if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 5)
+                                 return arc5();
+                         }
                      }
+                     else {
 
+                         if (ratings[d.object] != undefined && ratings[d.object].ratingCount != 0) {
+                             if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 1)
+                                 return arc1();
+                             if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 2)
+                                 return arc2();
+                             if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 3)
+                                 return arc3();
+                             if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 4)
+                                 return arc4();
+                             if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 5)
+                                 return arc5();
+                         }
+                     }
                      return arc0();})
                  .attr("stroke", "#595959")
                  .attr("transform", "translate(10,10)")
@@ -293,17 +319,39 @@ function generateInquiry(selectedInquiry)
 
         $("#mainTable").append("<tr id='box_" +  user_phases.username + "_" + selectedInquiry.inquiry.inquiryId + "' class='box_vis'><td class='studentName'>" + displayUser
             + "<span>[" + selectedInquiry.inquiry.title +"]</span></td></tr>");;
-        for(var i=1;i<=6;i++)
-        {
+
+        phases.forEach(function(i){
             var user_events = user_phases[i]
-            if(user_events == undefined) continue;
+            if(user_events == undefined) return;
             var d = user_events;
             drawPhase(d, user_phases.username+ "_" + selectedInquiry.inquiry.inquiryId,i, selectedInquiry.data.ratings);
-        }
+        });
     }
 }
 
+var activeSkills = [];
+function skillSelectionChanged()
+{
+    var selectedOptions = $("#skillSelection option:selected").toArray();
+    activeSkills = [];
+    for(var s in selectedOptions)
+    {
+        filters[$(selectedOptions[s]).attr("value")].activities.forEach(function(activity){
+            activeSkills.push(activity.activity_id);
+        });
+        //activeSkills.push($(selectedOptions[s]).attr("value"));
+    }
+    /*var newlySelectedInquiry =  $("#inquirySelection option:selected").attr("value");
+     var indexOfNewlySelected = activeInquiry.indexOf(newlySelectedInquiry);
+     if(indexOfNewlySelected < 0)
+     activeInquiry.push(newlySelectedInquiry);
+     else
+     activeInquiry.splice(indexOfNewlySelected, 1);
+     */
 
+
+    regenerate();
+}
 
 function inquirySelectionChanged()
 {
@@ -376,4 +424,13 @@ function sortBy(type)
             break;
     }
     ;
+}
+
+var _showAdminRating = false;
+function adminRatingChanged(){
+    if($("#adminRating").is(':checked'))
+        _showAdminRating =true;
+    else
+        _showAdminRating = false;
+    regenerate();
 }

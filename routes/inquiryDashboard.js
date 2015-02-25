@@ -67,7 +67,12 @@ function convertEventData(rawEvent) {
 
     event.inquiryId = context.course;
     event.phase = context.phase;
-    event.subphase = context.subphase;
+    if(context.subphase != undefined)
+        event.subphase = context.subphase;
+    else
+        event.subphase = context.widget_type;
+    event.activityId = context.activity_id;
+
     event.object = rawEvent.object;
     try {
         event.originalRequest = rawEvent.originalrequest;// JSON.parse(rawEvent.originalrequest)
@@ -173,9 +178,10 @@ function convertToEventsByUsersAndEventId(data)
             if(event == null) return;
             if(event.rating != null)
             {
+
                 if(ratingsPerEvent[event.source] == undefined)
                 {
-                    ratingsPerEvent[event.source] = {rating: 0, ratingCount: 0, liked:0, usersWhoRated:{}};
+                    ratingsPerEvent[event.source] = {rating: 0, adminRating:0, ratingCount: 0, adminRatingCount:0, liked:0, usersWhoRated:{}};
 
 
                 }
@@ -197,7 +203,7 @@ function convertToEventsByUsersAndEventId(data)
             {
                 if(ratingsPerEvent[event.source] == undefined)
                 {
-                    ratingsPerEvent[event.source] = {rating: 0, ratingCount: 0, liked:0, usersWhoRated:[]};
+                    ratingsPerEvent[event.source] = {rating: 0, adminRating:0, ratingCount: 0, adminRatingCount:0, liked:0, usersWhoRated:[]};
 
                 }
                 ratingsPerEvent[event.source].liked++;
@@ -241,6 +247,12 @@ function convertToEventsByUsersAndEventId(data)
            Object.keys(ratingsPerEvent[d].usersWhoRated).forEach(function(e){
             ratingsPerEvent[d].rating += ratingsPerEvent[d].usersWhoRated[e].rating;
             ratingsPerEvent[d].ratingCount++;
+            //separated admin rating
+            if(_admins.indexOf(e) >= 0)
+            {
+                ratingsPerEvent[d].adminRating += ratingsPerEvent[d].usersWhoRated[e].rating;
+                ratingsPerEvent[d].adminRatingCount++;
+            }
         })
     });
    }
@@ -330,7 +342,7 @@ function getSubs(inquiryId, parentId, req, res)
                         return;
                     }
 
-                    //order the events by user
+                    //order the events by userstarting to get users:
                     var parsedData = convertToEventsByUsersAndEventId(d);
 
                     dataPerInquiry[inq.inquiryId] = {};
@@ -341,7 +353,7 @@ function getSubs(inquiryId, parentId, req, res)
                     user.getUsersPerInquiry(inq.inquiryId, function (d, errorMessage) {
 
                         if (d[0].status == -1) {
-                            res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
+                            res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, phases:_phases });
                             return;
                         }
                         console.log("got users: ");
@@ -370,30 +382,45 @@ function getSubs(inquiryId, parentId, req, res)
     });
 
 }
-
+var _phases = [];
+var _skillAndActivities = {};
+var _admins = [];
 exports.dashboard_v2 = function(req, res) {
     var userAuthId = req.params.userAuthId;
     var userAuthProvider = req.params.userAuthProvider;
     var inquiryId = req.params.inquiryId;
-    inquiry.getParentInquiry(inquiryId, function(p, errorMessage) {
-        if (errorMessage != undefined) {
-            res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
-            return;
-        }
-        if (p[0].status == -1 || p[0].result.length == 0) {
-            //no parent
-            //does it have sub inquiries?
-            getSubs(inquiryId, undefined, req, res);
-           // inquiry.getSubInquiries(i.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
-        }
-        else
-        {
-            var parent = p[0].result[0];
-            getSubs(inquiryId, parent.inquiryId, req,res);
-           // inquiry.getSubInquiries(parent.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
-        }
+
+    inquiry.getPhases(inquiryId, function(phases) {
+        _phases = phases;
+        inquiry.getSkillsAndActivities(inquiryId, function (skills) {
+            _skillAndActivities = skills;
+            inquiry.getAdmins(inquiryId, function (admins) {
+                _admins = [];
+                admins.forEach(function(admin){
+                    _admins.push(admin.oauthProvider.toLowerCase() + "_" + admin.oauthId.toLowerCase());
+                });
+
+                inquiry.getParentInquiry(inquiryId, function (p, errorMessage) {
+                    if (errorMessage != undefined) {
+                        res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
+                        return;
+                    }
+                    if (p[0].status == -1 || p[0].result.length == 0) {
+                        //no parent
+                        //does it have sub inquiries?
+                        getSubs(inquiryId, undefined, req, res);
+                        // inquiry.getSubInquiries(i.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
+                    }
+                    else {
+                        var parent = p[0].result[0];
+                        getSubs(inquiryId, parent.inquiryId, req, res);
+                        // inquiry.getSubInquiries(parent.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
+                    }
 
 
+                });
+            });
+        });
     });
 
 
@@ -408,7 +435,8 @@ function dashboard_render_yesno(data, total,req, res, defaultInquiry)
     if(Object.keys(data).length >= total) {
         console.log("got all events: ");
         console.log(new Date());
-        res.render('dashboard_v2.html', {data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, defaultInquiry: defaultInquiry});
+        console.log(_phases);
+        res.render('dashboard_v2.html', { availablePhases: _phases, skillAndActivities: _skillAndActivities, data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, defaultInquiry: defaultInquiry});
     }
     else
         console.log("still loading");

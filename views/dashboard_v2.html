@@ -23,8 +23,9 @@
           var userAuthProvider = "<%= userAuthProvider %>";
           var userAuthId = "<%= userAuthId %>";
           var users = <%- JSON.stringify(users) %>;
-          var defaultInquiry = <%- defaultInquiry %>
-
+          var defaultInquiry = <%- defaultInquiry %>;
+          var phases =[<%-availablePhases%>];
+          var filters = <%- JSON.stringify(skillAndActivities) %>;
 
 
       </script>
@@ -56,6 +57,14 @@
         <select style="min-width: 200px" multiple id="studentSelection" size="3" onchange="javascript:studentSelectionChanged()">
 
         </select>
+        <% if(skillAndActivities != undefined && skillAndActivities != {} && Object.keys(skillAndActivities).length != 0){%>
+        <select style="min-width: 200px" multiple id="skillSelection" size="3" onchange="javascript:skillSelectionChanged()">
+            <% Object.keys(skillAndActivities).forEach(function(skill){ %>
+            <option value="<%=skill%>" selected="true"><%=skillAndActivities[skill].skill%></option>
+            <% });%>
+        </select>
+        <% }%>
+        <input type="checkbox" id="adminRating" onchange="javascript:adminRatingChanged()"/><span style="color:black">Show only admin ratings</span>
     </div>
     <table id="legend">
         <tbody><tr>
@@ -96,12 +105,12 @@
     <tr id="phases_headers" >
 
         <th class="title_student"><span onclick="javascript:sortBy('name');">Name</span></th>
-        <th class="title_phase1"><span onclick="javascript:sortBy('1');">Question / Hypothesis</span><a href="#" data-dropdown="#dropdown-phase1"></a></th>
-        <th class="title_phase1"><span onclick="javascript:sortBy('2');">Operationalisation</span><a href="#" data-dropdown="#dropdown-phase2"></a></th>
-        <th class="title_phase1"><span onclick="javascript:sortBy('3');">Data Collection</span><a href="#" data-dropdown="#dropdown-phase3"></a></th>
-        <th class="title_phase1" ><span onclick="javascript:sortBy('4');">Data Analysis</span><a href="#" data-dropdown="#dropdown-phase4"></a></th>
-        <th class="title_phase1"><span onclick="javascript:sortBy('5');">Interpretation</span><a href="#" data-dropdown="#dropdown-phase5"></a></th>
-        <th class="title_phase1"><span onclick="javascript:sortBy('6');">Communication</span><a href="#" data-dropdown="#dropdown-phase6"></a></th>
+        <% if(availablePhases.indexOf(1) >= 0) { %> <th class="title_phase1"><span onclick="javascript:sortBy('1');">Question / Hypothesis</span><a href="#" data-dropdown="#dropdown-phase1"></a></th> <% } %>
+        <% if(availablePhases.indexOf(2) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('2');">Operationalisation</span><a href="#" data-dropdown="#dropdown-phase2"></a></th><% } %>
+        <% if(availablePhases.indexOf(3) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('3');">Data Collection</span><a href="#" data-dropdown="#dropdown-phase3"></a></th><% } %>
+        <% if(availablePhases.indexOf(4) >= 0) { %><th class="title_phase1" ><span onclick="javascript:sortBy('4');">Data Analysis</span><a href="#" data-dropdown="#dropdown-phase4"></a></th><% } %>
+        <% if(availablePhases.indexOf(5) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('5');">Interpretation</span><a href="#" data-dropdown="#dropdown-phase5"></a></th><% } %>
+        <% if(availablePhases.indexOf(6) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('6');">Communication</span><a href="#" data-dropdown="#dropdown-phase6"></a></th><% } %>
         <th class="title_data">Data</th>
 
     </tr>
@@ -125,7 +134,7 @@
 
 
 <%
-    var phases = [1,2,3,4,5,6];
+    var phases = availablePhases;
     phases.forEach(function(p)
     {
 %>

@@ -19,17 +19,17 @@
 
 var http = require('http');
 var RESTful = require('../RESTful.js');
-
+var DEV_OR_PROD_WESPOT = "inquiry.wespot.net";
 exports.users = {};
 
 exports.getUsers = function(callback)
 {
-    RESTful.doGET_many('inquiry.wespot.net','/services/api/rest/json/?method=site.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',callback);
+    RESTful.doGET_many(DEV_OR_PROD_WESPOT,'/services/api/rest/json/?method=site.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',callback);
 }
 
 exports.getUsersPerInquiry = function(inquiryId, callback)
 {
-    RESTful.doGET('inquiry.wespot.net','/services/api/rest/json/?method=inquiry.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId='+inquiryId,callback);
+    RESTful.doGET(DEV_OR_PROD_WESPOT,'/services/api/rest/json/?method=inquiry.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId='+inquiryId,callback);
 }
 
 exports.getUsers_RF = function(req, res) {
