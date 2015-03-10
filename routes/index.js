@@ -60,7 +60,7 @@ exports.index = function(req,res)
             }
             catch(exc)
             {
-                console.log(u.oauthProvider);
+                //console.log(u.oauthProvider);
             }
         });
 

@@ -49,7 +49,7 @@ exports.list = function(req, res){
             }
             catch(error)
             {
-                console.log("incorrectly formatted json");
+                //console.log("incorrectly formatted json");
             }
             if(json){
                 item.originalrequest = json;
@@ -96,11 +96,11 @@ exports.list = function(req, res){
     };
 
     var fetchRequest = function(result) {
-        console.log('STATUS: ' + result.statusCode);
-        console.log('HEADERS: ' + JSON.stringify(result.headers));
+        //console.log('STATUS: ' + result.statusCode);
+        //console.log('HEADERS: ' + JSON.stringify(result.headers));
         result.setEncoding('utf8');
         result.on('data', function (chunk) {
-            console.log('BODY: ' + chunk);
+            //console.log('BODY: ' + chunk);
             dataPerPage += chunk;
             //res.write((chunk));
             lastChunk = chunk;

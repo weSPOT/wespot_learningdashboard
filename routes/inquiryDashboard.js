@@ -150,9 +150,9 @@ function convertEventData(rawEvent) {
 
     }
     catch (exc) {
-        console.log(exc.toString());
-        console.log(JSON.stringify(rawEvent));
-        //console.log(rawEvent.originalrequest.toString());
+        //console.log(exc.toString());
+        //console.log(JSON.stringify(rawEvent));
+        ////console.log(rawEvent.originalrequest.toString());
         return null;
     }
 
@@ -235,7 +235,7 @@ function convertToEventsByUsersAndEventId(data)
             }
             catch(exc)
             {
-                console.log(event.phase);
+                //console.log(event.phase);
 
             }
         }
@@ -349,30 +349,30 @@ function getSubs(inquiryId, parentId, req, res)
                     dataPerInquiry[inq.inquiryId] = {};
                     dataPerInquiry[inq.inquiryId].inquiry = inq;
                     dataPerInquiry[inq.inquiryId].data = parsedData;
-                    console.log("starting to get users: ");
-                    console.log(new Date());
+                    //console.log("starting to get users: ");
+                    //console.log(new Date());
                     user.getUsersPerInquiry(inq.inquiryId, function (d, errorMessage) {
 
                         if (d[0].status == -1) {
                             res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, phases:_phases });
                             return;
                         }
-                        console.log("got users: ");
-                        console.log(new Date());
+                        //console.log("got users: ");
+                        //console.log(new Date());
                         d[0].result.forEach(function (u) {
                                 try {
                                     user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name: u.name, icon: u.icon};
                                 }
                                 catch (exc) {
-                                    console.log(u.oauthProvider);
+                                    //console.log(u.oauthProvider);
 
                                 }
                             }
                         );
 
                         dashboard_render_yesno(dataPerInquiry, nrOfInquiries, req, res, inquiryId);
-                        console.log("got all events: ");
-                        console.log(new Date());
+                        //console.log("got all events: ");
+                        //console.log(new Date());
 
                     });
              });
@@ -434,9 +434,9 @@ exports.dashboard_v2 = function(req, res) {
 function dashboard_render_yesno(data, total,req, res, defaultInquiry)
 {
     if(Object.keys(data).length >= total) {
-        console.log("got all events: ");
-        console.log(new Date());
-        console.log(_phases);
+        //console.log("got all events: ");
+        //console.log(new Date());
+        //console.log(_phases);
         res.render('dashboard_v2.html', { availablePhases: _phases, skillAndActivities: _skillAndActivities, data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, defaultInquiry: defaultInquiry});
     }
     else

@@ -46,7 +46,7 @@ exports.doPOST_Jose_Query = function(host, path, callback)
             }
             catch(e)
             {
-                console.log(e);
+                //console.log(e);
                 callback(null, "Failed to parse learning analytics data for user.")
                 return;
             }
@@ -83,8 +83,8 @@ exports.doGETPORT = function(host,port, path, callback,auth) {
     {
         options.headers = {"Authorization": auth};
     }
-    console.log(host);
-    console.log(path);
+    //console.log(host);
+    //console.log(path);
     var lastChunk = "";
     var totalData = [];
     var dataPerPage = "";
@@ -99,7 +99,7 @@ exports.doGETPORT = function(host,port, path, callback,auth) {
 
         });
         result.on('end', function () {
-            //console.log(dataPerPage);
+            ////console.log(dataPerPage);
             totalData = totalData.concat(JSON.parse(dataPerPage));
             callback(totalData);
 
@@ -126,8 +126,8 @@ exports.doGET = function(host, path, callback, auth) {
     {
         options.headers = {"Authorization": auth};
     }
-    console.log(host);
-    console.log(path);
+    //console.log(host);
+    //console.log(path);
     var lastChunk = "";
     var totalData = [];
     var dataPerPage = "";
@@ -142,7 +142,7 @@ exports.doGET = function(host, path, callback, auth) {
 
         });
         result.on('end', function () {
-            //console.log(dataPerPage);
+            ////console.log(dataPerPage);
             totalData = totalData.concat(JSON.parse(dataPerPage));
 
             callback(totalData);
@@ -167,8 +167,8 @@ exports.doGET_many = function(host, path, callback) {
         path: path + "&offset=0",
         method: 'GET'
     };
-    console.log(host);
-    console.log(path);
+    //console.log(host);
+    //console.log(path);
     var lastChunk = "";
     var totalData = [];
     var dataPerPage = "";
@@ -183,7 +183,7 @@ exports.doGET_many = function(host, path, callback) {
 
         });
         result.on('end', function () {
-            //console.log(dataPerPage);
+            ////console.log(dataPerPage);
             totalData = totalData.concat(JSON.parse(dataPerPage).result);
             if(JSON.parse(dataPerPage).result.length ==0)
             {

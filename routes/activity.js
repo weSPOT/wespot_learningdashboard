@@ -73,7 +73,7 @@ exports.date = function(req, res){
     var nextday = new Date(parseInt(req.params.date) + 86400000).toISOString();
     var query = verb != null ? {'starttime': {$gte:starttime, $lte: nextday}, 'verb': verb} : {'starttime': {$gte:starttime, $lte: nextday},verb: { $ne: 'awarded'}} ;
 
-    //console.log('Retrieving event: ' + starttime);
+    ////console.log('Retrieving event: ' + starttime);
     db.collection('events', function(err, collection) {
         collection.find(query).toArray(function(err, items) {
             res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
@@ -99,11 +99,11 @@ exports.flatList = function(req, res) {
     res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
 
     var fetchRequest = function(result) {
-       // console.log('STATUS: ' + result.statusCode);
-       // console.log('HEADERS: ' + JSON.stringify(result.headers));
+       // //console.log('STATUS: ' + result.statusCode);
+       // //console.log('HEADERS: ' + JSON.stringify(result.headers));
         result.setEncoding('utf8');
         result.on('data', function (chunk) {
-           // console.log('BODY: ' + chunk);
+           // //console.log('BODY: ' + chunk);
             dataPerPage += chunk;
             //res.write((chunk));
             lastChunk = chunk;

@@ -28,7 +28,7 @@ exports.list = function(req, res){
 
 exports.blogpost = function(req, res){
     var url = decodeURIComponent(req.params.url);
-    console.log('Retrieving blogpost: ' + url);
+    //console.log('Retrieving blogpost: ' + url);
     db.collection('blogs', function(err, collection) {
         collection.findOne({'object': url},function(err, items) {
             res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });

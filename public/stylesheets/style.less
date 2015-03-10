@@ -41,15 +41,15 @@
 @background_color:white;
 @border_color:#383838;
 @title_background_color:white;
-@subsection_background_color: #F9F9F9;
+@subsection_background_color: #909090;
 @subsection_text_color:#616161;
 @subsection_text_disabled_color: #C2C2C2;
 @dropdown_background_color:#FFFFFF;
 @content_background_color:white;
 @link_color:#CCCCFF;
 @text_color:#383838;
-@visualisation_background_color:#F9F9F9;
-@visualisation_bottombar_color:#f4f4f4;
+@visualisation_background_color:#F5F5F5;
+@visualisation_bottombar_color:#E4E1E1;
 @phase_border_size:2px;
 @name_color:#666699;
 @dropdown_text_color: black;
@@ -246,7 +246,7 @@
 
 #phases
 {
-  width: 100%;
+
   overflow:scroll;
 
 }
@@ -254,7 +254,7 @@
 #phases  th
 {
   overflow:hidden;
-  overflow-wrap: break-word;
+
 
     margin:0px;
     padding:0px;
@@ -262,7 +262,8 @@
 
   padding-bottom:3px;
     text-align:center;
-    font-size: 14px;
+    font-size: 12px;
+  font-weight: normal;
     border-bottom-style: solid;
     border-bottom-width:@phase_border_size;
 
@@ -275,8 +276,16 @@
 #phases span
 {
   cursor: pointer;
-  word-break: break-all;
+  display:block;
+  overflow:hidden;
+  width:inherit;
+
+  margin:0px;
+  padding:0px;
+ // -webkit-mask-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 99%);
 }
+
+
 
 #phases th>a::after
 {
@@ -291,7 +300,7 @@
 
 .title_phase1
 {
-    border-color: #33FF99;
+    border-color: #4690D6;
 }
 .title_phase2
 {
@@ -346,7 +355,8 @@
 .scrollableView
 {
 
-  overflow: scroll;
+  overflow-y:scroll;
+  overflow-x:hidden;
   overflow-style: scrollbar;
 
 }
@@ -392,8 +402,8 @@
 .studentName
 {
   overflow:hidden;
-  overflow-wrap: break-word;
-  font-size:14px;
+  //overflow-wrap: break-word;
+  font-size:12px;
 }
 
 .studentName, .visualization, .miniDashboard_visualization
@@ -402,6 +412,9 @@
   word-break: break-all;
 
   vertical-align: top;
+  border:0;
+  padding:0;
+
 
 
 }
@@ -683,7 +696,7 @@
 {
 
   display:inline;
-  font-size:14px;
+  font-size:12px;
 
 }
 

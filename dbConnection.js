@@ -32,10 +32,10 @@ var mongoserver2 = new Server('ensor.cs.kuleuven.be', 27017, {auto_reconnect: tr
 
 db.open(function(err, db) {
     if(!err) {
-        console.log("Connected to 'larae03' database");
+        //console.log("Connected to 'larae03' database");
         db.collection('students_chi13', {strict:true}, function(err, collection) {
             if (err) {
-                console.log("The 'students_chi13' collection doesn't exist");
+                //console.log("The 'students_chi13' collection doesn't exist");
 
             }
         });
@@ -44,10 +44,10 @@ db.open(function(err, db) {
 
 dbBlogs.open(function(err, db) {
     if(!err) {
-        console.log("Connected to 'chikul13blogs' database");
+        //console.log("Connected to 'chikul13blogs' database");
         db.collection('blogs', {strict:true}, function(err, collection) {
             if (err) {
-                console.log("The 'chikul13blogs' collection doesn't exist");
+                //console.log("The 'chikul13blogs' collection doesn't exist");
 
             }
         });

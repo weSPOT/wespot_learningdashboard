@@ -84,7 +84,7 @@ passport.use('wespot_provider', new OAuth2Strategy({
 
             });
             result.on('end',function(){
-                console.log(user);
+                //console.log(user);
                 done(null,JSON.parse(user));
             });
             result.on('error',function(d) {
@@ -103,8 +103,8 @@ passport.use('google_provider',new GoogleStrategy({
     },
     function(token, refreshToken, profile, done)
     {
-        console.log("accesstoken: " + token);
-        console.log(JSON.stringify(profile));
+        //console.log("accesstoken: " + token);
+        //console.log(JSON.stringify(profile));
        /* https.get("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token, function(result){
 
             var user = "";
@@ -113,7 +113,7 @@ passport.use('google_provider',new GoogleStrategy({
 
             });
             result.on('end',function(){
-                console.log(user);
+                //console.log(user);
                 done(null,user);
             });
             result.on('error',function(d) {
@@ -136,12 +136,12 @@ passport.use("facebook_provider",new FacebookStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
-    console.log("serialize user:" + user);
+    //console.log("serialize user:" + user);
     done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-    console.log("deserialize user:" + user);
+    //console.log("deserialize user:" + user);
     done(null, {user: user});
 });
 
@@ -207,6 +207,6 @@ app.get(path.join(context,'/inquiryDashboard/:inquiryId/'), inquiryDashboard.inq
 */
 
 http.createServer(app).listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
+    //console.log('Express server listening on port ' + app.get('port'));
 });
 

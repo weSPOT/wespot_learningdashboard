@@ -17,34 +17,36 @@
  * Contributors: Sven Charleer
  * *************************************************************************** */
 
+var innerR = 0;
+var outerR = 3
 var arc0 = d3.svg.arc()
-    .innerRadius(2)
-    .outerRadius(8)
+    .innerRadius(innerR)
+    .outerRadius(outerR)
     .startAngle(0 )
     .endAngle( 5 * (Math.PI/180)) ;
 var arc1 = d3.svg.arc()
-    .innerRadius(2)
-    .outerRadius(8)
+    .innerRadius(innerR)
+    .outerRadius(outerR)
     .startAngle(0 )
     .endAngle( 72 * (Math.PI/180)) ;
 var arc2 = d3.svg.arc()
-    .innerRadius(2)
-    .outerRadius(8)
+    .innerRadius(innerR)
+    .outerRadius(outerR)
     .startAngle(0 ) //converting from degs to radians
     .endAngle( 2* 72 * (Math.PI/180)) //just radians
 var arc3 = d3.svg.arc()
-    .innerRadius(2)
-    .outerRadius(8)
+    .innerRadius(innerR)
+    .outerRadius(outerR)
     .startAngle(0 ) //converting from degs to radians
     .endAngle( 3* 72 * (Math.PI/180)) //just radians
 var arc4 = d3.svg.arc()
-    .innerRadius(2)
-    .outerRadius(8)
+    .innerRadius(innerR)
+    .outerRadius(outerR)
     .startAngle(0 ) //converting from degs to radians
     .endAngle( 4* 72 * (Math.PI/180)) //just radians
 var arc5 = d3.svg.arc()
-    .innerRadius(2)
-    .outerRadius(8)
+    .innerRadius(innerR)
+    .outerRadius(outerR)
     .startAngle(0 ) //converting from degs to radians
     .endAngle( 5* 72 * (Math.PI/180)) //just radians
 
@@ -88,7 +90,8 @@ var tmp = xdata_userDimension.top(Infinity);*/
 
                 //meanwhile indicate which ones are related in the visualisation
                 $(d)
-                        .attr("fill",colors[1]);
+                        .attr("fill",colors[1])
+                    .attr("stroke",colors[1]);
 
             });
             relatedItems = d3.selectAll('path[tags="' + data.tags + '"],path[object="' + data.object + '"]');
@@ -97,7 +100,8 @@ var tmp = xdata_userDimension.top(Infinity);*/
 
                 //meanwhile indicate which ones are related in the visualisation
                 $(d)
-                    .attr("fill","#565656");
+                    .attr("fill","#565656")
+                    .attr("stroke","none");
 
             });
             var byPhaseByObjectByTime = {};
@@ -208,13 +212,13 @@ var tmp = xdata_userDimension.top(Infinity);*/
 
              svgCollection.selectAll("svg").data(tmp)
                  .enter().append("svg")
-                 .attr("height", 20)
-                 .attr("width",20)
+                 .attr("height", 8)
+                 .attr("width",8)
                  .append("circle")
                  .attr("class", "vis_circle")
-                 .attr("cx", 10)
-                 .attr("cy", 10)
-                 .attr("r", 10)
+                 .attr("cx", 4)
+                 .attr("cy", 4)
+                 .attr("r", 4)
                  .attr("fill", "#565656")
                  .attr("tags", function(d){return d.tags;})
                  .attr("object", function(d){return d.object;})
@@ -241,8 +245,10 @@ var tmp = xdata_userDimension.top(Infinity);*/
                          }
                      }
                      else {
-
-                         if (ratings[d.object] != undefined && ratings[d.object].ratingCount != 0) {
+                         if (ratings[d.object] == undefined || ratings[d.object].ratingCount == 0) {
+                             return arc0();
+                         }
+                         /*if (ratings[d.object] != undefined && ratings[d.object].ratingCount != 0) {
                              if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 1)
                                  return arc1();
                              if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 2)
@@ -253,18 +259,25 @@ var tmp = xdata_userDimension.top(Infinity);*/
                                  return arc4();
                              if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 5)
                                  return arc5();
-                         }
+                         }*/
+                         return arc5();
                      }
                      return arc0();})
                  .attr("stroke", "#595959")
-                 .attr("transform", "translate(10,10)")
+                 .attr("transform", "translate(4,4)")
                  .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
 
                  .attr("fill", function(d){
                      // if(!d.today)
                      //    return colors_dark[d.phase-1];
                      // else
-                     return colors[0];
+                     if (ratings[d.object] != undefined && ratings[d.object].ratingCount != 0) {
+                         var rating = Math.round(ratings[d.object].rating / ratings[d.object].ratingCount);
+
+                         return colors_rating[rating-1];
+                     }
+                     //return "#000000";
+                    // return "#71b9f7";
                  })
                  .attr("stroke-width", "0px")
                  .attr("tags", function(d){return d.tags;})
@@ -306,8 +319,6 @@ function regenerate()
 
     ).appendTo(tbody);
 
-    $(".studentName").attr("width", parseInt((2 * ($("#mainBody").width() / 3)) / 7));
-    $(".visualization").attr("width", parseInt((2 * ($("#mainBody").width() / 3)) / 7));
 
 }
 
@@ -361,6 +372,7 @@ function skillSelectionChanged()
 
 
     regenerate();
+    correctSizes();
     trackData(userAuthProvider + " " + userAuthId, "filter", "skills", defaultInquiry, {"active_skills":activeSkills});
 
 }
@@ -384,6 +396,8 @@ function inquirySelectionChanged()
 
 
     regenerate();
+
+    correctSizes();
     trackData(userAuthProvider + " " + userAuthId, "filter", "inquiry", defaultInquiry, {"active_inquiries":activeInquiry});
 
 }
@@ -455,6 +469,8 @@ function adminRatingChanged(){
     else
         _showAdminRating = false;
     regenerate();
+
+    correctSizes();
     trackData(userAuthProvider + " " + userAuthId, "filter", "adminRating", defaultInquiry, {"show_admin_rating_only":_showAdminRating});
 
 }

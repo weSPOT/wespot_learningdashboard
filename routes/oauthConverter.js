@@ -30,8 +30,8 @@ exports.index = function(req,res)
                     "&grant_type=" + encodeURIComponent(req.body.grant_type) +
                     "&redirect_uri=" + encodeURIComponent(req.body.redirect_uri);
     https.get("https://wespot-arlearn.appspot.com/oauth/token" + parameters, function(result){
-        console.log("statusCode: ", result.statusCode);
-        console.log("headers: ", result.headers);
+        //console.log("statusCode: ", result.statusCode);
+        //console.log("headers: ", result.headers);
             var body = "";
             result.on('data',function(d){
                 body += d;

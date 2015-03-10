@@ -29,7 +29,7 @@ exports.list = function(req, res){
 
 exports.comment = function(req, res){
     var url = decodeURIComponent(req.params.url);
-    console.log('Retrieving comment: ' + url);
+    //console.log('Retrieving comment: ' + url);
     db.collection('comments', function(err, collection) {
         collection.findOne({'object': url},function(err, items) {
             res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });

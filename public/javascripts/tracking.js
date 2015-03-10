@@ -5,7 +5,7 @@ function trackData(username, verb, object, inquiry, originalrequest){
         data = '{"username":"'+username+'","verb":"'+verb+'","object":"'+object+'","starttime":"'+new Date().toISOString()+'",'+context+'}';
     }else{
         //data = '{"username":"'+username+'","verb":"'+verb+'","object":"'+object+'","starttime":"'+new Date().toISOString()+'",'+context+'}';
-        console.log(originalrequest);
+        //console.log(originalrequest);
         data = '{"username":"'+username+'","verb":"'+verb+'","object":"'+object+'","starttime":"'+new Date().toISOString()+'",'+context+', "originalrequest":'+JSON.stringify(originalrequest)+'}';
     }
     $.ajax({
@@ -17,12 +17,12 @@ function trackData(username, verb, object, inquiry, originalrequest){
         dataType: 'json',
         success: function(responseData, textStatus, jqXHR) {
             var value = responseData.someKey;
-            console.log('POST succeed.'+data);
-            console.log('POST succeed.'+JSON.stringify(responseData));
+            //console.log('POST succeed.'+data);
+            //console.log('POST succeed.'+JSON.stringify(responseData));
         },
         error: function (responseData, textStatus, errorThrown) {
             //console.log('POST failed.'+JSON.stringify(responseData));
-            console.log('POST failed.'+errorThrown);
+            //console.log('POST failed.'+errorThrown);
         }
     });
 }
