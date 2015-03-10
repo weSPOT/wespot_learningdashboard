@@ -213,6 +213,7 @@ function convertToEventsByUsersAndEventId(data)
             event.username = username;
             if(widgetsPerPhase[event.phase] == undefined)
                 widgetsPerPhase[event.phase] = [];
+
             if(widgetsPerPhase[event.phase].indexOf(event.subphase) == -1)
                 widgetsPerPhase[event.phase].push(event.subphase);
             if(orderedData[username] == undefined)

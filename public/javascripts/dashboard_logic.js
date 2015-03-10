@@ -59,6 +59,7 @@ function scrollToAnchor(aid){
 
 function loadContent(data, username)
         {
+
             /*var allData = <%- JSON.stringify(events) %>;
 
              var xdata = crossfilter(allData);
@@ -133,7 +134,12 @@ var tmp = xdata_userDimension.top(Infinity);*/
             });
             scrollToAnchor(data.id);
 
+            //add tracking to each anchor
+            $('a').click(function(){
+                trackData(username, "click", "source", defaultInquiry, {"url":$(this).attr('href')});
+            });
 
+            trackData(username, "click", "event", defaultInquiry, {"original_event":data});
         }
 
 
@@ -151,6 +157,7 @@ var tmp = xdata_userDimension.top(Infinity);*/
 
         function filter(phase, widget)
         {
+
             //make small the circles that aren't selected
             var svgs = d3.selectAll(".vis_phase" + phase);
             svgs.selectAll("svg")
@@ -163,6 +170,8 @@ var tmp = xdata_userDimension.top(Infinity);*/
             //select the right dropdown
             $("#dropdown-phase"+phase + " .dd_selected")[0].setAttribute("class","");
             $("#dropdown-phase"+phase + "_" + widget)[0].setAttribute("class","dd_selected");
+            trackData(userAuthProvider + " " + userAuthId, "filter", "widgets", defaultInquiry, {"phase":phase,"widget":widget});
+
 
 
 
@@ -341,6 +350,7 @@ function skillSelectionChanged()
         });
         //activeSkills.push($(selectedOptions[s]).attr("value"));
     }
+
     /*var newlySelectedInquiry =  $("#inquirySelection option:selected").attr("value");
      var indexOfNewlySelected = activeInquiry.indexOf(newlySelectedInquiry);
      if(indexOfNewlySelected < 0)
@@ -351,6 +361,8 @@ function skillSelectionChanged()
 
 
     regenerate();
+    trackData(userAuthProvider + " " + userAuthId, "filter", "skills", defaultInquiry, {"active_skills":activeSkills});
+
 }
 
 function inquirySelectionChanged()
@@ -361,6 +373,7 @@ function inquirySelectionChanged()
     {
         activeInquiry.push($(selectedOptions[s]).attr("value"));
     }
+
     /*var newlySelectedInquiry =  $("#inquirySelection option:selected").attr("value");
     var indexOfNewlySelected = activeInquiry.indexOf(newlySelectedInquiry);
     if(indexOfNewlySelected < 0)
@@ -371,18 +384,23 @@ function inquirySelectionChanged()
 
 
     regenerate();
+    trackData(userAuthProvider + " " + userAuthId, "filter", "inquiry", defaultInquiry, {"active_inquiries":activeInquiry});
+
 }
 
 function studentSelectionChanged()
 {
     var selectedOptions = $("#studentSelection option:selected").toArray();
-
+    var students = [];
     $('[class="box_vis"]').hide();
     for(var s in selectedOptions)
     {
         var student = $(selectedOptions[s]).attr("value");
         $('[id*="' + student + '"]').show();
+        students.push(student);
     }
+    trackData(userAuthProvider + " " + userAuthId, "filter", "student", defaultInquiry, {"active_students":students});
+
 
 }
 
@@ -408,6 +426,8 @@ function sortBy(type)
                 });
                 $(this).append(trs);
             });
+            trackData(userAuthProvider + " " + userAuthId, "sort", "name", defaultInquiry, {"sort_direction":sortingDirections[type]});
+
             break;
         default:
             //it's a verb, sort by verb
@@ -420,6 +440,8 @@ function sortBy(type)
                     if(+$(a).attr("entries"+type) == +$(b).attr("entries"+type)) return 0 * sortingDirections[type];
                 });
                 $(this).append(trs);
+                trackData(userAuthProvider + " " + userAuthId, "sort", "phase"+type, defaultInquiry, {"sort_direction":sortingDirections[type]});
+
             });
             break;
     }
@@ -433,4 +455,6 @@ function adminRatingChanged(){
     else
         _showAdminRating = false;
     regenerate();
+    trackData(userAuthProvider + " " + userAuthId, "filter", "adminRating", defaultInquiry, {"show_admin_rating_only":_showAdminRating});
+
 }
