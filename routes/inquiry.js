@@ -110,10 +110,10 @@ exports.getPhases = function(inquiryId, callback)
 {
     RESTful.doGET(DEV_OR_PROD_WESPOT,'/services/api/rest/json/?method=inquiry.phases&inquiry_id=' + inquiryId + '&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',function(data,errorMessage){
         if (errorMessage != undefined || data[0].status != 0 || data[0].result.phases == null) {
-            callback([1, 2, 3,4,5,6]);
+            callback([[1,"Question / Hypothesis"], [2,"Operationalisation"], [3,"Data Collection"],[4,"Data Analysis"],[5,"Interpretation"],[6,"Communication"]]);
             return;
         }
-        callback(data[0].result.as_array);
+        callback(data[0].result.details);
     });
 }
 

@@ -18,12 +18,12 @@
  * *************************************************************************** */
 
 var innerR = 0;
-var outerR = 3
+var outerR = 5;
 var arc0 = d3.svg.arc()
     .innerRadius(innerR)
     .outerRadius(outerR)
     .startAngle(0 )
-    .endAngle( 5 * (Math.PI/180)) ;
+    .endAngle( 0 * (Math.PI/180)) ;
 var arc1 = d3.svg.arc()
     .innerRadius(innerR)
     .outerRadius(outerR)
@@ -82,26 +82,34 @@ var tmp = xdata_userDimension.top(Infinity);*/
 
             //get all the data for the thread
             var toAdd = [];
-            d3.selectAll("circle").attr("fill","#565656");
-            d3.selectAll("path").attr("fill",colors[0]);
-            var relatedItems = d3.selectAll('circle[tags="' + data.tags + '"],circle[object="' + data.object + '"]');
+            d3.selectAll("circle").attr("stroke","none");
+            d3.selectAll("path").attr("stroke-width","3px");
+            d3.selectAll("path").attr("stroke","none");
+            var relatedItems = [];
+            if(data.tags != undefined && data.tags != "")
+                relatedItems = d3.selectAll('circle[tags="' + data.tags + '"],circle[object="' + data.object + '"]');
+            else
+                relatedItems = d3.selectAll('circle[object="' + data.object + '"]');
             relatedItems[0].forEach(function(d){
 
 
                 //meanwhile indicate which ones are related in the visualisation
                 $(d)
-                        .attr("fill",colors[1])
-                    .attr("stroke",colors[1]);
+                       // .attr("fill",colors[1])
+                    .attr("stroke","#6BAAFC");
 
             });
-            relatedItems = d3.selectAll('path[tags="' + data.tags + '"],path[object="' + data.object + '"]');
+            if(data.tags != undefined && data.tags != "")
+                relatedItems = d3.selectAll('path[tags="' + data.tags + '"],path[object="' + data.object + '"]');
+            else
+                relatedItems = d3.selectAll('path[object="' + data.object + '"]');
             relatedItems[0].forEach(function(d){
                 toAdd.push(d.__data__);
 
                 //meanwhile indicate which ones are related in the visualisation
                 $(d)
-                    .attr("fill","#565656")
-                    .attr("stroke","none");
+                    //.attr("fill","#565656")
+                    .attr("stroke","#6BAAFC");
 
             });
             var byPhaseByObjectByTime = {};
@@ -212,13 +220,13 @@ var tmp = xdata_userDimension.top(Infinity);*/
 
              svgCollection.selectAll("svg").data(tmp)
                  .enter().append("svg")
-                 .attr("height", 8)
-                 .attr("width",8)
+                 .attr("height", 12)
+                 .attr("width",12)
                  .append("circle")
                  .attr("class", "vis_circle")
-                 .attr("cx", 4)
-                 .attr("cy", 4)
-                 .attr("r", 4)
+                 .attr("cx", 6)
+                 .attr("cy", 6)
+                 .attr("r", 5)
                  .attr("fill", "#565656")
                  .attr("tags", function(d){return d.tags;})
                  .attr("object", function(d){return d.object;})
@@ -232,7 +240,7 @@ var tmp = xdata_userDimension.top(Infinity);*/
                      if(_showAdminRating)
                      {
                          if(ratings[d.object]!= undefined && ratings[d.object].adminRatingCount != 0) {
-                             if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 1)
+                             /*if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 1)
                                  return arc1();
                              if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 2)
                                  return arc2();
@@ -241,12 +249,13 @@ var tmp = xdata_userDimension.top(Infinity);*/
                              if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 4)
                                  return arc4();
                              if (Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount) == 5)
-                                 return arc5();
+                             */
+                             return arc5();
                          }
                      }
                      else {
                          if (ratings[d.object] == undefined || ratings[d.object].ratingCount == 0) {
-                             return arc0();
+                             return arc5();
                          }
                          /*if (ratings[d.object] != undefined && ratings[d.object].ratingCount != 0) {
                              if (Math.round(ratings[d.object].rating / ratings[d.object].ratingCount) == 1)
@@ -262,20 +271,32 @@ var tmp = xdata_userDimension.top(Infinity);*/
                          }*/
                          return arc5();
                      }
-                     return arc0();})
+                     return arc5();})
                  .attr("stroke", "#595959")
-                 .attr("transform", "translate(4,4)")
+                 .attr("transform", "translate(6,6)")
                  .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
 
                  .attr("fill", function(d){
                      // if(!d.today)
                      //    return colors_dark[d.phase-1];
                      // else
-                     if (ratings[d.object] != undefined && ratings[d.object].ratingCount != 0) {
-                         var rating = Math.round(ratings[d.object].rating / ratings[d.object].ratingCount);
 
-                         return colors_rating[rating-1];
+                     if(_showAdminRating) {
+                         if(ratings[d.object]!= undefined && ratings[d.object].adminRatingCount != 0) {
+                             var rating = Math.round(ratings[d.object].adminRating / ratings[d.object].adminRatingCount);
+
+                             return colors_rating[rating - 1];
+                         }
                      }
+                     else
+                     {
+                         if (ratings[d.object] != undefined && ratings[d.object].ratingCount != 0) {
+                             var rating = Math.round(ratings[d.object].rating / ratings[d.object].ratingCount);
+
+                             return colors_rating[rating - 1];
+                         }
+                     }
+
                      //return "#000000";
                     // return "#71b9f7";
                  })

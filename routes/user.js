@@ -21,10 +21,40 @@ var http = require('http');
 var RESTful = require('../RESTful.js');
 var DEV_OR_PROD_WESPOT = "inquiry.wespot.net";
 exports.users = {};
+var lastUpdate = 0;
+
+
+
 
 exports.getUsers = function(callback)
 {
-    RESTful.doGET_many(DEV_OR_PROD_WESPOT,'/services/api/rest/json/?method=site.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',callback);
+    if(Date.now() - lastUpdate > 1000 * 60 * 30) {
+        console.log("Updating user cache");
+        lastUpdate = Date.now();
+        RESTful.doGET_many(DEV_OR_PROD_WESPOT, '/services/api/rest/json/?method=site.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',
+        function(d){
+
+            d.forEach(function(u)
+            {
+                try{
+                    //TODO: should not lowercase the ID, quick fix
+                    exports.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name:u.name, icon:u.icon};
+                }
+                catch(exc)
+                {
+                    console.log("error with user name");
+                }
+            });
+            console.log("should be done users");
+            console.log(JSON.stringify(exports.users));
+            callback();
+        });
+
+    }
+    else {
+        console.log("Using user cache");
+        callback();
+    }
 }
 
 exports.getUsersPerInquiry = function(inquiryId, callback)

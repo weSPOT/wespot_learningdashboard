@@ -47,10 +47,11 @@ var user = require('./user.js');
 
 
 function convertEventData(rawEvent) {
+
     var event = {};
 
     event.data = rawEvent;
-    event.id = rawEvent.event_id;
+    event.id = rawEvent._id;
 
     //convert to a day
 
@@ -150,7 +151,7 @@ function convertEventData(rawEvent) {
 
     }
     catch (exc) {
-        //console.log(exc.toString());
+        console.log(exc.toString());
         //console.log(JSON.stringify(rawEvent));
         ////console.log(rawEvent.originalrequest.toString());
         return null;
@@ -384,15 +385,24 @@ function getSubs(inquiryId, parentId, req, res)
 
 }
 var _phases = [];
+var _phaseNames = {};
 var _skillAndActivities = {};
 var _admins = [];
 exports.dashboard_v2 = function(req, res) {
     var userAuthId = req.params.userAuthId;
     var userAuthProvider = req.params.userAuthProvider;
     var inquiryId = req.params.inquiryId;
-
+    user.getUsers(function(){
     inquiry.getPhases(inquiryId, function(phases) {
-        _phases = phases;
+        _phases = [];
+        _phaseNames = {};
+        console.log(phases);
+        phases.forEach(function(phase){
+           _phases.push(phase[0]);
+           _phaseNames[phase[0]] = phase[1];
+        });
+
+
         inquiry.getSkillsAndActivities(inquiryId, function (skills) {
             _skillAndActivities = skills;
             inquiry.getAdmins(inquiryId, function (admins) {
@@ -422,7 +432,8 @@ exports.dashboard_v2 = function(req, res) {
                 });
             });
         });
-    });
+    })}
+    );
 
 
 
@@ -436,8 +447,10 @@ function dashboard_render_yesno(data, total,req, res, defaultInquiry)
     if(Object.keys(data).length >= total) {
         //console.log("got all events: ");
         //console.log(new Date());
-        //console.log(_phases);
-        res.render('dashboard_v2.html', { availablePhases: _phases, skillAndActivities: _skillAndActivities, data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, defaultInquiry: defaultInquiry});
+        console.log(_phases);
+        console.log("rendering");
+
+        res.render('dashboard_v2.html', { availablePhases: _phases, phaseNames: _phaseNames, skillAndActivities: _skillAndActivities, data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, defaultInquiry: defaultInquiry});
     }
     else
         console.log("still loading");

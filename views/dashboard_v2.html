@@ -29,6 +29,8 @@
           var users = <%- JSON.stringify(users) %>;
           var defaultInquiry = <%- defaultInquiry %>;
           var phases =[<%-availablePhases%>];
+        phases.sort();
+
           var filters = <%- JSON.stringify(skillAndActivities) %>;
 
 
@@ -53,37 +55,44 @@
 
 
 
-    <div id="subsections">
-        <select style="min-width: 200px" multiple id="inquirySelection" size="3" onchange="javascript:inquirySelectionChanged()">
-            <% Object.keys(data).forEach(function(inq){ %>
-            <option value="<%=inq%>"><%=data[inq].inquiry.title%></option>
-            <% });%>
-        </select>
-        <select style="min-width: 200px" multiple id="studentSelection" size="3" onchange="javascript:studentSelectionChanged()">
 
-        </select>
-        <% if(skillAndActivities != undefined && skillAndActivities != {} && Object.keys(skillAndActivities).length != 0){%>
-        <select style="min-width: 200px" multiple id="skillSelection" size="3" onchange="javascript:skillSelectionChanged()">
-            <% Object.keys(skillAndActivities).forEach(function(skill){ %>
-            <option value="<%=skill%>" selected="true"><%=skillAndActivities[skill].skill%></option>
-            <% });%>
-        </select>
-        <% }%>
-        <input type="checkbox" id="adminRating" onchange="javascript:adminRatingChanged()"/><span style="color:black">Show only admin ratings</span>
-    </div>
     <table id="legend">
-        <tbody><tr>
-        <tr>
-            <td colspan="6">
-                Star rating 0
+        <tbody>
 
-        <% var ratings = [0,1,2,3,4];
-           ratings.forEach(function(r){
-        %>
-            <span style="display:inline-block;background-color:<%= colors_rating[r] %>" ><%=r+1%></span>
-        <% });%>
+        <tr>
+            <td>
+                <select style="min-width: 200px" multiple id="inquirySelection" size="5" onchange="javascript:inquirySelectionChanged()">
+                    <% Object.keys(data).forEach(function(inq){ %>
+                    <option value="<%=inq%>"><%=data[inq].inquiry.title%></option>
+                    <% });%>
+                </select>
+                <select style="min-width: 200px" multiple id="studentSelection" size="5" onchange="javascript:studentSelectionChanged()">
+
+                </select>
+                <% if(skillAndActivities != undefined && skillAndActivities != {} && Object.keys(skillAndActivities).length != 0){%>
+                <select style="min-width: 200px" multiple id="skillSelection" size="5" onchange="javascript:skillSelectionChanged()">
+                    <% Object.keys(skillAndActivities).forEach(function(skill){ %>
+                    <option value="<%=skill%>" selected="true"><%=skillAndActivities[skill].skill%></option>
+                    <% });%>
+                </select>
+                <% }%>
             </td>
+            <td colspan="6">
+                <span style="display:inline-block;color:<%= colors_rating[0] %>" >&#9733;</span>&#9734;&#9734;&#9734;&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[1] %>" >&#9733;&#9733;</span>&#9734;&#9734;&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[2] %>" >&#9733;&#9733;&#9733;</span>&#9734;&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[3] %>" >&#9733;&#9733;&#9733;&#9733;</span>&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[4] %>" >&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                <br/>
+
+            </td>
+            <td>
+                <input type="checkbox" id="adminRating" onchange="javascript:adminRatingChanged()"/><span style="color:black">only admin&#9733; </span>
+            </td>
+
+
         </tr>
+
 
         </tbody></table>
 </div>
@@ -93,12 +102,12 @@
     <tr id="phases_headers" >
 
         <th class="title_student"><span onclick="javascript:sortBy('name');">Name</span></th>
-        <% if(availablePhases.indexOf(1) >= 0) { %> <th class="title_phase1"><span onclick="javascript:sortBy('1');" title="Question / Hypothesis">Question / Hypothesis</span><a href="#" data-dropdown="#dropdown-phase1"></a></th> <% } %>
-        <% if(availablePhases.indexOf(2) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('2');" title="Operationalisation">Operationalisation</span><a href="#" data-dropdown="#dropdown-phase2"></a></th><% } %>
-        <% if(availablePhases.indexOf(3) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('3');" title="Data Collection">Data Collection</span><a href="#" data-dropdown="#dropdown-phase3"></a></th><% } %>
-        <% if(availablePhases.indexOf(4) >= 0) { %><th class="title_phase1" ><span onclick="javascript:sortBy('4');" title="Data Analysis">Data Analysis</span><a href="#" data-dropdown="#dropdown-phase4"></a></th><% } %>
-        <% if(availablePhases.indexOf(5) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('5');" title="Interpretation">Interpretation</span><a href="#" data-dropdown="#dropdown-phase5"></a></th><% } %>
-        <% if(availablePhases.indexOf(6) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('6');" title="Communication">Communication</span><a href="#" data-dropdown="#dropdown-phase6"></a></th><% } %>
+        <% if(availablePhases.indexOf(1) >= 0) { %> <th class="title_phase1"><span onclick="javascript:sortBy('1');" title="<%= phaseNames[1] %>"><%= phaseNames[1] %></span><a href="#" data-dropdown="#dropdown-phase1"></a></th> <% } %>
+        <% if(availablePhases.indexOf(2) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('2');" title="<%= phaseNames[2] %>"><%= phaseNames[2] %></span><a href="#" data-dropdown="#dropdown-phase2"></a></th><% } %>
+        <% if(availablePhases.indexOf(3) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('3');" title="<%= phaseNames[3] %>"><%= phaseNames[3] %></span><a href="#" data-dropdown="#dropdown-phase3"></a></th><% } %>
+        <% if(availablePhases.indexOf(4) >= 0) { %><th class="title_phase1" ><span onclick="javascript:sortBy('4');" title="<%= phaseNames[4] %>"><%= phaseNames[4] %></span><a href="#" data-dropdown="#dropdown-phase4"></a></th><% } %>
+        <% if(availablePhases.indexOf(5) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('5');" title="<%= phaseNames[5] %>"><%= phaseNames[5] %></span><a href="#" data-dropdown="#dropdown-phase5"></a></th><% } %>
+        <% if(availablePhases.indexOf(6) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('6');" title="<%= phaseNames[6] %>"><%= phaseNames[6] %></span><a href="#" data-dropdown="#dropdown-phase6"></a></th><% } %>
         <!-- <th class="title_data">Data</th> -->
 
     </tr>
@@ -157,23 +166,23 @@
               var phases = $("#phases_headers").children();
               phases.each(function (c) {
                   if (!$(this).hasClass("title_data")) {
-                      $(this).css("width", parseInt((2 * ($("#mainBody").width() / 4)) / phases.length));
+                      $(this).css("width", parseInt((3 * ($("#mainBody").width() / 5)) / phases.length));
                   }
               })
 
 
 
-              $("#em_phases").css("width", parseInt((2 * ($("#mainBody").width() / 4)))+10);
-          $("#phases_headers").css("width", parseInt((2 * ($("#mainBody").width() / 4))));
+              $("#em_phases").css("width", parseInt((3 * ($("#mainBody").width() / 5)))+10);
+          $("#phases_headers").css("width", parseInt((3 * ($("#mainBody").width() / 5))));
 
-              $("#userList").css("width", parseInt((2 * ($("#mainBody").width() / 4)))+10);
-              $("#eventData").css("width", parseInt((($("#mainBody").width() / 2)) - 20));
-              $("#eventData").css("margin-left", parseInt(2 * ($("#mainBody").width() / 4)));
+              $("#userList").css("width", parseInt((3 * ($("#mainBody").width() / 5)))+10);
+              $("#eventData").css("width", parseInt((2*($("#mainBody").width() / 5)) - 20));
+              $("#eventData").css("margin-left", parseInt(3 * ($("#mainBody").width() / 5)));
               $("#userList").css("height", ($("#mainBody").height()) - $("#userList").position().top);
               $("#eventData").css("height", $("#userList").css("height"));
 
-          $(".studentName").css("width", parseInt((2 * ($("#mainBody").width() / 4)) / phases.length));
-          $(".visualization").css("width", parseInt((2 * ($("#mainBody").width() / 4)) / phases.length));
+          $(".studentName").css("width", parseInt((3 * ($("#mainBody").width() / 5)) / phases.length));
+          $(".visualization").css("width", parseInt((3 * ($("#mainBody").width() / 5)) / phases.length));
 
           console.log("resize");
 

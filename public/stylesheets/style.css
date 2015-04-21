@@ -188,6 +188,7 @@
   display: block;
   overflow: hidden;
   width: inherit;
+  text-overflow: ellipsis;
   margin: 0px;
   padding: 0px;
 }
@@ -408,7 +409,7 @@
   background-color: #e4e1e1;
 }
 #eventData li.highlightEvent {
-  background-color: #BBBBBB;
+  background-color: #EEF3FF;
 }
 .oneEvent h3 {
   height: 20px;
@@ -422,40 +423,40 @@
   width: 100%;
 }
 .oneEvent h3.phase1 {
-  background-color: #197F4C;
+  background-color: dodgerblue;
 }
 .oneEvent span.phase1 {
-  border-bottom: solid 2px #197F4C;
+  border-bottom: solid 2px dodgerblue;
 }
 .oneEvent h3.phase2 {
-  background-color: #19667F;
+  background-color: dodgerblue;
 }
 .oneEvent span.phase2 {
-  border-bottom: solid 2px #19667F;
+  border-bottom: solid 2px dodgerblue;
 }
 .oneEvent h3.phase3 {
-  background-color: #667F19;
+  background-color: dodgerblue;
 }
 .oneEvent span.phase3 {
-  border-bottom: solid 2px #667F19;
+  border-bottom: solid 2px dodgerblue;
 }
 .oneEvent h3.phase4 {
-  background-color: #7F0033;
+  background-color: dodgerblue;
 }
 .oneEvent span.phase4 {
-  border-bottom: solid 2px #7F0033;
+  border-bottom: solid 2px dodgerblue;
 }
 .oneEvent h3.phase5 {
-  background-color: #667F7F;
+  background-color: dodgerblue;
 }
 .oneEvent span.phase5 {
-  border-bottom: solid 2px #667F7F;
+  border-bottom: solid 2px dodgerblue;
 }
 .oneEvent h3.phase6 {
-  background-color: #7F3366;
+  background-color: dodgerblue;
 }
 .oneEvent span.phase6 {
-  border-bottom: solid 2px #7F3366;
+  border-bottom: solid 2px dodgerblue;
 }
 #legend {
   display: inline;
