@@ -73,7 +73,7 @@ function convertEventData(rawEvent) {
     else
         event.subphase = context.widget_type;
     event.activityId = context.activity_id;
-
+    event.widget_title = context.widget_title;
     event.object = rawEvent.object;
     try {
         event.originalRequest = rawEvent.originalrequest;// JSON.parse(rawEvent.originalrequest)

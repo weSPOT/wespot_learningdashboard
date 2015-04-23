@@ -43,6 +43,7 @@
       <script type="text/javascript" src="/wespot/static/javascripts/3rdParty/crossfilter.js"></script>
       <script type="text/javascript" src="/wespot/static/javascripts/dashboard_logic.js"></script>
       <script type="text/javascript" src="/wespot/static/javascripts/tracking.js"></script>
+      <script type="text/javascript" src="/wespot/static/javascripts/export.js"></script>
 
       <link rel="stylesheet" href="/wespot/static/stylesheets/style.css">
 </head>
@@ -88,6 +89,9 @@
             </td>
             <td>
                 <input type="checkbox" id="adminRating" onchange="javascript:adminRatingChanged()"/><span style="color:black">only admin&#9733; </span>
+            </td>
+            <td>
+                <a href="#" style="color:black" onclick="javascript:exportData(dataPerInquiry,phases,users);">report&#9780;</a>
             </td>
 
 
