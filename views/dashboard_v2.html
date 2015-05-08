@@ -79,11 +79,12 @@
                 <% }%>
             </td>
             <td colspan="6">
-                <span style="display:inline-block;color:<%= colors_rating[0] %>" >&#9733;</span>&#9734;&#9734;&#9734;&#9734;<br/>
-                <span style="display:inline-block;color:<%= colors_rating[1] %>" >&#9733;&#9733;</span>&#9734;&#9734;&#9734;<br/>
-                <span style="display:inline-block;color:<%= colors_rating[2] %>" >&#9733;&#9733;&#9733;</span>&#9734;&#9734;<br/>
-                <span style="display:inline-block;color:<%= colors_rating[3] %>" >&#9733;&#9733;&#9733;&#9733;</span>&#9734;<br/>
-                <span style="display:inline-block;color:<%= colors_rating[4] %>" >&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                <span style="display:inline-block;color:black" >&#9679; = &#9734;&#9734;&#9734;&#9734;&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[0] %>" >&#9679; = &#9733;</span>&#9734;&#9734;&#9734;&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[1] %>" >&#9679; = &#9733;&#9733;</span>&#9734;&#9734;&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[2] %>" >&#9679; = &#9733;&#9733;&#9733;</span>&#9734;&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[3] %>" >&#9679; = &#9733;&#9733;&#9733;&#9733;</span>&#9734;<br/>
+                <span style="display:inline-block;color:<%= colors_rating[4] %>" >&#9679; = &#9733;&#9733;&#9733;&#9733;&#9733;</span>
                 <br/>
 
             </td>
@@ -106,12 +107,12 @@
     <tr id="phases_headers" >
 
         <th class="title_student"><span onclick="javascript:sortBy('name');">Name</span></th>
-        <% if(availablePhases.indexOf(1) >= 0) { %> <th class="title_phase1"><span onclick="javascript:sortBy('1');" title="<%= phaseNames[1] %>"><%= phaseNames[1] %></span><a href="#" data-dropdown="#dropdown-phase1"></a></th> <% } %>
-        <% if(availablePhases.indexOf(2) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('2');" title="<%= phaseNames[2] %>"><%= phaseNames[2] %></span><a href="#" data-dropdown="#dropdown-phase2"></a></th><% } %>
-        <% if(availablePhases.indexOf(3) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('3');" title="<%= phaseNames[3] %>"><%= phaseNames[3] %></span><a href="#" data-dropdown="#dropdown-phase3"></a></th><% } %>
-        <% if(availablePhases.indexOf(4) >= 0) { %><th class="title_phase1" ><span onclick="javascript:sortBy('4');" title="<%= phaseNames[4] %>"><%= phaseNames[4] %></span><a href="#" data-dropdown="#dropdown-phase4"></a></th><% } %>
-        <% if(availablePhases.indexOf(5) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('5');" title="<%= phaseNames[5] %>"><%= phaseNames[5] %></span><a href="#" data-dropdown="#dropdown-phase5"></a></th><% } %>
-        <% if(availablePhases.indexOf(6) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('6');" title="<%= phaseNames[6] %>"><%= phaseNames[6] %></span><a href="#" data-dropdown="#dropdown-phase6"></a></th><% } %>
+        <% if(availablePhases.indexOf(1) >= 0) { %> <th class="title_phase1"><span onclick="javascript:sortBy('1');" title="&uarr;&darr;"><%= phaseNames[1] %></span><a href="#" data-dropdown="#dropdown-phase1"></a></th> <% } %>
+        <% if(availablePhases.indexOf(2) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('2');" title="&uarr;&darr;"><%= phaseNames[2] %></span><a href="#" data-dropdown="#dropdown-phase2"></a></th><% } %>
+        <% if(availablePhases.indexOf(3) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('3');" title="&uarr;&darr;"><%= phaseNames[3] %></span><a href="#" data-dropdown="#dropdown-phase3"></a></th><% } %>
+        <% if(availablePhases.indexOf(4) >= 0) { %><th class="title_phase1" ><span onclick="javascript:sortBy('4');" title="&uarr;&darr;"><%= phaseNames[4] %></span><a href="#" data-dropdown="#dropdown-phase4"></a></th><% } %>
+        <% if(availablePhases.indexOf(5) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('5');" title="&uarr;&darr;"><%= phaseNames[5] %></span><a href="#" data-dropdown="#dropdown-phase5"></a></th><% } %>
+        <% if(availablePhases.indexOf(6) >= 0) { %><th class="title_phase1"><span onclick="javascript:sortBy('6');" title="&uarr;&darr;"><%= phaseNames[6] %></span><a href="#" data-dropdown="#dropdown-phase6"></a></th><% } %>
         <!-- <th class="title_data">Data</th> -->
 
     </tr>
