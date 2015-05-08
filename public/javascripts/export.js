@@ -20,7 +20,9 @@ var exportData = function(dataPerInquiry,phases,users)
 
     });
 
+
     Object.keys(dataPerInquiry).forEach(function(inq){
+        var Htmls = {};
        Object.keys(dataPerInquiry[inq].data.events).forEach(function(user){
            Object.keys(dataPerInquiry[inq].data.events[user]).forEach(function(phase){
                var phaseData = dataPerInquiry[inq].data.events[user][phase];
@@ -29,15 +31,21 @@ var exportData = function(dataPerInquiry,phases,users)
                    if($("#table" + phase).length == 0) {
                        $("#phase" + phase).append("<table style='width:100%;' id='table" + phase + "'/>");
                    }
+
                    phaseData.forEach(function(event){
+                        if(Htmls[event.widget_type] == undefined)
+                        {
+                            Htmls[event.widget_type] = [];
+                        }
+                       var item = {html:"", date:"", phase:1};
 
-
-                       $("#table"+phase).append("<tr'>" +
+                       /*$("#table"+phase).append(*/
+                       item.html ="<tr'>" +
                            "<td>" +
                            event.phase +
                            "</td>" +
                            "<td>" +
-                           event.widget_title +
+                           (event.widget_title  != undefined ? event.widget_title : "Data Collection")+
                            "</td>" +
                            "<td>" +
                            event.html +
@@ -45,15 +53,38 @@ var exportData = function(dataPerInquiry,phases,users)
                            "<td>" +
                            users[event.username].name  +
                            "</td>" +
-                           /*"<td>" +
+                           "<td>" +
                            (new Date(event.startTime)).toDateString() +
-                           "</td>" +*/
-                           "</tr>")
+                           "</td>" +
+                           "</tr>";
+                       item.date = new Date(event.startTime);
+                       item.phase =  event.phase;
+                       Htmls[event.widget_type].push(item);
                    });
+
+
+
+
 
                }
            });
        });
+        phases.forEach(function(phase) {
+            Object.keys(Htmls).forEach(function (p) {
+                //sort by date
+                Htmls[p].sort(function(a,b){
+                 if (a.date < b.date )return -1;
+                 if (a.date > b.date) return 1;
+                 return 0;
+                 });
+                Htmls[p].forEach(function (o) {
+                    if(o.phase == phase)
+                        $("#table" + phase).append(o.html);
+                })
+
+
+            })
+        });
     });
 
 
