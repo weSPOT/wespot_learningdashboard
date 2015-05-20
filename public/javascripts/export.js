@@ -33,9 +33,9 @@ var exportData = function(dataPerInquiry,phases,users)
                    }
 
                    phaseData.forEach(function(event){
-                        if(Htmls[event.widget_type] == undefined)
+                        if(Htmls[event.widget_title] == undefined)
                         {
-                            Htmls[event.widget_type] = [];
+                            Htmls[event.widget_title] = [];
                         }
                        var item = {html:"", date:"", phase:1};
 
@@ -59,7 +59,7 @@ var exportData = function(dataPerInquiry,phases,users)
                            "</tr>";
                        item.date = new Date(event.startTime);
                        item.phase =  event.phase;
-                       Htmls[event.widget_type].push(item);
+                       Htmls[event.widget_title].push(item);
                    });
 
 
@@ -69,7 +69,7 @@ var exportData = function(dataPerInquiry,phases,users)
                }
            });
        });
-        phases.forEach(function(phase) {
+        //phases.forEach(function(phase) {
             Object.keys(Htmls).forEach(function (p) {
                 //sort by date
                 Htmls[p].sort(function(a,b){
@@ -78,13 +78,15 @@ var exportData = function(dataPerInquiry,phases,users)
                  return 0;
                  });
                 Htmls[p].forEach(function (o) {
-                    if(o.phase == phase)
-                        $("#table" + phase).append(o.html);
+                //    if(o.phase == phase)
+                        $("#table" + o.phase).append(o.html);
+
                 })
 
 
+
             })
-        });
+        //});
     });
 
 
