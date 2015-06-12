@@ -29,6 +29,7 @@
           var users = <%- JSON.stringify(users) %>;
           var defaultInquiry = <%- defaultInquiry %>;
           var phases =[<%-availablePhases%>];
+      var phasesThenWidgetsThenOrder = <%- JSON.stringify(widgets)%>;
         phases.sort();
 
           var filters = <%- JSON.stringify(skillAndActivities) %>;

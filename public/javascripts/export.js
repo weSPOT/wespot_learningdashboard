@@ -77,15 +77,42 @@ var exportData = function(dataPerInquiry,phases,users)
                  if (a.date > b.date) return 1;
                  return 0;
                  });
-                Htmls[p].forEach(function (o) {
-                //    if(o.phase == phase)
-                        $("#table" + o.phase).append(o.html);
 
-                })
 
 
 
             })
+        //also sort by whatever sorting we got back from ELGG
+        var keys = [];
+        Object.keys(Htmls).forEach(function(k)
+        {
+           keys.push(k);
+        });
+        keys.sort(function(a,b){
+
+            var aPhase = Htmls[a].phase;
+            var bPhase = Htmls[b].phase;
+
+            //sanity check. can't sort if data isn't complete
+            if(phasesThenWidgetsThenOrder[aPhase] == undefined || phasesThenWidgetsThenOrder[aPhase][a] == undefined)
+                return 0;
+            if(phasesThenWidgetsThenOrder[bPhase] == undefined || phasesThenWidgetsThenOrder[bPhase][b] == undefined)
+                return 0;
+
+            var aS = phasesThenWidgetsThenOrder[aPhase][a].order;
+            var bS = phasesThenWidgetsThenOrder[bPhase][b].order;
+            if(aS < bS) return -1;
+            if(aS > bS) return 1;
+            return 0;
+        });
+
+        keys.forEach(function(k){
+            Htmls[k].forEach(function (o) {
+
+                $("#table" + o.phase).append(o.html);
+
+            })
+        })
         //});
     });
 

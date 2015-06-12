@@ -388,47 +388,51 @@ var _phases = [];
 var _phaseNames = {};
 var _skillAndActivities = {};
 var _admins = [];
+var _widgets = [];
 exports.dashboard_v2 = function(req, res) {
     var userAuthId = req.params.userAuthId;
     var userAuthProvider = req.params.userAuthProvider;
     var inquiryId = req.params.inquiryId;
     user.getUsers(function(){
-    inquiry.getPhases(inquiryId, function(phases) {
-        _phases = [];
-        _phaseNames = {};
-        console.log(phases);
-        phases.forEach(function(phase){
-           _phases.push(phase[0]);
-           _phaseNames[phase[0]] = phase[1];
-        });
+        inquiry.getWidgets(inquiryId, function(widgets){
+            _widgets = widgets;
+            inquiry.getPhases(inquiryId, function(phases) {
+            _phases = [];
+            _phaseNames = {};
+            console.log(phases);
+            phases.forEach(function(phase){
+               _phases.push(phase[0]);
+               _phaseNames[phase[0]] = phase[1];
+            });
 
 
-        inquiry.getSkillsAndActivities(inquiryId, function (skills) {
-            _skillAndActivities = skills;
-            inquiry.getAdmins(inquiryId, function (admins) {
-                _admins = [];
-                admins.forEach(function(admin){
-                    _admins.push(admin.oauthProvider.toLowerCase() + "_" + admin.oauthId.toLowerCase());
-                });
+            inquiry.getSkillsAndActivities(inquiryId, function (skills) {
+                _skillAndActivities = skills;
+                inquiry.getAdmins(inquiryId, function (admins) {
+                    _admins = [];
+                    admins.forEach(function(admin){
+                        _admins.push(admin.oauthProvider.toLowerCase() + "_" + admin.oauthId.toLowerCase());
+                    });
 
-                inquiry.getParentInquiry(inquiryId, function (p, errorMessage) {
-                    if (errorMessage != undefined) {
-                        res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
-                        return;
-                    }
-                    if (p[0].status == -1 || p[0].result.length == 0) {
-                        //no parent
-                        //does it have sub inquiries?
-                        getSubs(inquiryId, undefined, req, res);
-                        // inquiry.getSubInquiries(i.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
-                    }
-                    else {
-                        var parent = p[0].result[0];
-                        getSubs(inquiryId, parent.inquiryId, req, res);
-                        // inquiry.getSubInquiries(parent.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
-                    }
+                    inquiry.getParentInquiry(inquiryId, function (p, errorMessage) {
+                        if (errorMessage != undefined) {
+                            res.render('noInquiries.html', {errorMessage: errorMessage, users: user.users, inquiries: [], userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true });
+                            return;
+                        }
+                        if (p[0].status == -1 || p[0].result.length == 0) {
+                            //no parent
+                            //does it have sub inquiries?
+                            getSubs(inquiryId, undefined, req, res);
+                            // inquiry.getSubInquiries(i.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
+                        }
+                        else {
+                            var parent = p[0].result[0];
+                            getSubs(inquiryId, parent.inquiryId, req, res);
+                            // inquiry.getSubInquiries(parent.inquiryId, handleSubinquiryCallback, i, inquiries.length, req, res);
+                        }
 
 
+                    });
                 });
             });
         });
@@ -450,7 +454,7 @@ function dashboard_render_yesno(data, total,req, res, defaultInquiry)
         console.log(_phases);
         console.log("rendering");
 
-        res.render('dashboard_v2.html', { availablePhases: _phases, phaseNames: _phaseNames, skillAndActivities: _skillAndActivities, data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, defaultInquiry: defaultInquiry});
+        res.render('dashboard_v2.html', { availablePhases: _phases, phaseNames: _phaseNames, skillAndActivities: _skillAndActivities, data: data, users: user.users, userAuthId: req.params.userAuthId, userAuthProvider: req.params.userAuthProvider, iframe: true, defaultInquiry: defaultInquiry, widgets: _widgets});
     }
     else
         console.log("still loading");

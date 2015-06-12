@@ -169,6 +169,32 @@ exports.getAdmins = function(inquiryId, callback)
     });
 }
 
+//GET WIDGETS OF AN INQUIRY (for report, for sorting ... )
+exports.getWidgets = function(inquiryId, callback)
+{
+    RESTful.doGET(DEV_OR_PROD_WESPOT,'/services/api/rest/json/?method=inquiry.activities&inquiry_id=' + inquiryId + '&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8',function(data,errorMessage){
+        if (errorMessage != undefined || data[0].status != 0) {
+            console.log("getWidgets failed, inquiry.activities:" + JSON.stringify(data) );
+            callback([]);
+            return;
+        }
+        console.log("widget " + JSON.stringify(data));
+        var phaseThenWidgetThenOrder = {};
+        data[0].result.forEach(function(d){
+               if(phaseThenWidgetThenOrder[d.phase] == undefined)
+                   phaseThenWidgetThenOrder[d.phase] = {};
+               if(phaseThenWidgetThenOrder[d.phase][d.title] == undefined)
+                   phaseThenWidgetThenOrder[d.phase][d.title] = {};
+            phaseThenWidgetThenOrder[d.phase][d.title].order = d.order;
+
+
+        });
+        console.log(JSON.stringify(phaseThenWidgetThenOrder));
+        callback(phaseThenWidgetThenOrder);
+
+    });
+}
+
 
 
 
