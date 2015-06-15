@@ -38,7 +38,9 @@ exports.getUsers = function(callback)
             {
                 try{
                     //TODO: should not lowercase the ID, quick fix
-                    exports.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name:u.name, icon:u.icon};
+                    var oauthId = u.oauthId.replace(".","dot");
+                    oauthId = oauthId.replace("@","at");
+                    exports.users[u.oauthProvider.toLowerCase() + "_" + oauthId.toLowerCase()] = {name:u.name, icon:u.icon};
                 }
                 catch(exc)
                 {

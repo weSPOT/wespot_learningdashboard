@@ -142,7 +142,12 @@ function convertEventData(rawEvent) {
             {
                 htmlData = rawEvent.originalrequest.value;
             }
-            event.html =  htmlTitle + "<span class='thread_subtitle phase"+ event.phase+ "''>" + user.users[rawEvent.username.toLowerCase()].name + " [" + event.subphase + "]</span>"+ htmlData + "<br/>[<a target='_blank' href='" + rawEvent.object + "'>source</a>]";
+            var username = rawEvent.username.replace(":","_");
+            username = username.replace(".","dot");
+            username = username.replace("@","at");
+            username = username.toLowerCase();
+
+            event.html =  htmlTitle + "<span class='thread_subtitle phase"+ event.phase+ "''>" + user.users[username].name + " [" + event.subphase + "]</span>"+ htmlData + "<br/>[<a target='_blank' href='" + rawEvent.object + "'>source</a>]";
             if(rawEvent.originalrequest.value && rawEvent.originalrequest.value.tags != undefined)
                 event.tags = rawEvent.originalrequest.value.tags;
             return event;
@@ -151,7 +156,7 @@ function convertEventData(rawEvent) {
 
     }
     catch (exc) {
-        console.log(exc.toString());
+        console.log("it's here" + exc.toString());
         //console.log(JSON.stringify(rawEvent));
         ////console.log(rawEvent.originalrequest.toString());
         return null;
@@ -174,7 +179,8 @@ function convertToEventsByUsersAndEventId(data)
             var username = d.username.toLowerCase();
             //small hack, seems we're getting an odd user
             username = username.replace(":","_");
-
+            username = username.replace(".","dot");
+            username = username.replace("@","at");
             var event = convertEventData(d);
             if(event == null) return;
             if(event.rating != null)
@@ -362,7 +368,10 @@ function getSubs(inquiryId, parentId, req, res)
                         //console.log(new Date());
                         d[0].result.forEach(function (u) {
                                 try {
-                                    user.users[u.oauthProvider.toLowerCase() + "_" + u.oauthId.toLowerCase()] = {name: u.name, icon: u.icon};
+                                    var user = u.oauthId.replace(":","_");
+                                    user = user.replace(".","dot");
+                                    user = user.replace("@","at");
+                                    user.users[u.oauthProvider.toLowerCase() + "_" + user.toLowerCase()] = {name: u.name, icon: u.icon};
                                 }
                                 catch (exc) {
                                     //console.log(u.oauthProvider);

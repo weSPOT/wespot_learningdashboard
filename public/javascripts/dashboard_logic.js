@@ -194,8 +194,8 @@ var tmp = xdata_userDimension.top(Infinity);*/
              /* create 5 arcs for star ratings */
 
 
-             var rUsername = username.replace(".","\\.");
-             var tr = d3.select("#box_"+rUsername);
+
+             var tr = d3.select("#box_"+username);
              tr.attr("entries" + phase, data.length);
 
              var svgCollection = tr
