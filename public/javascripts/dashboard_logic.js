@@ -49,6 +49,7 @@ var arc5 = d3.svg.arc()
     .outerRadius(outerR)
     .startAngle(0 ) //converting from degs to radians
     .endAngle( 5* 72 * (Math.PI/180)) //just radians
+var cross = d3.svg.symbol().type("cross");
 
 
 function scrollToAnchor(aid){
@@ -189,7 +190,7 @@ var tmp = xdata_userDimension.top(Infinity);*/
 
 
         }
-        function drawPhase(data, username,phase, ratings)
+        function drawPhase(data, username,phase, ratings, deleted)
          {
              /* create 5 arcs for star ratings */
 
@@ -226,7 +227,11 @@ var tmp = xdata_userDimension.top(Infinity);*/
                  .attr("class", "vis_circle")
                  .attr("cx", 6)
                  .attr("cy", 6)
-                 .attr("r", 5)
+                 .attr("r",function(d,i){
+                     if(deleted.indexOf(d.object) >=0)
+                         return 0;
+                     return 5;
+                 })
                  .attr("fill", "#565656")
                  .attr("tags", function(d){return d.tags;})
                  .attr("object", function(d){return d.object;})
@@ -237,6 +242,8 @@ var tmp = xdata_userDimension.top(Infinity);*/
                  .attr("class", "vis_circle")
 
                  .attr("d", function(d) {
+                     if(deleted.indexOf(d.object) >=0)
+                        return cross();
                      if(_showAdminRating)
                      {
                          if(ratings[d.object]!= undefined && ratings[d.object].adminRatingCount != 0) {
@@ -272,8 +279,9 @@ var tmp = xdata_userDimension.top(Infinity);*/
                          return arc5();
                      }
                      return arc5();})
+
                  .attr("stroke", "#595959")
-                 .attr("transform", "translate(6,6)")
+                 .attr("transform", "translate(6,6) rotate(-45)")
                  .attr("class", function(d){ return "eventSquare widget_" + d.subphase;})
 
                  .attr("fill", function(d){
@@ -365,7 +373,7 @@ function generateInquiry(selectedInquiry)
             var user_events = user_phases[i]
             if(user_events == undefined) return;
             var d = user_events;
-            drawPhase(d, user_phases.username+ "_" + selectedInquiry.inquiry.inquiryId,i, selectedInquiry.data.ratings);
+            drawPhase(d, user_phases.username+ "_" + selectedInquiry.inquiry.inquiryId,i, selectedInquiry.data.ratings, selectedInquiry.data.deleted);
         });
     }
 }

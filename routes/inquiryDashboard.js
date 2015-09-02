@@ -121,8 +121,16 @@ function convertEventData(rawEvent) {
             event.source = rawEvent.object;
             return event;
         }
+        if(rawEvent.verb == "delete_question" || rawEvent.verb == "delete_question" ||
+        rawEvent.verb == "delete_discussion_topic_reply" || rawEvent.verb == "delete_answer")
+        {
+            event.deleted = true;
+            event.source = rawEvent.object;
+            return event;
+        }
         if(rawEvent.verb == "comment"
-            || rawEvent.verb == "create" || rawEvent.verb == "reply" || rawEvent.verb == "answer")
+            || rawEvent.verb == "create" || rawEvent.verb == "reply" || rawEvent.verb == "answer"
+        )
 
         {
 
@@ -172,6 +180,7 @@ function convertToEventsByUsersAndEventId(data)
     var orderedData = {};
     var widgetsPerPhase = {};
     var ratingsPerEvent = {};
+    var deletedEvents = [];
 
     data.forEach(
         function(d)
@@ -214,6 +223,11 @@ function convertToEventsByUsersAndEventId(data)
 
                 }
                 ratingsPerEvent[event.source].liked++;
+                return;
+            }
+            if(event.deleted != null)
+            {
+                deletedEvents.push(event.source);
                 return;
             }
 
@@ -264,7 +278,7 @@ function convertToEventsByUsersAndEventId(data)
         })
     });
    }
-   return {events: orderedData, widgetsPerPhase: widgetsPerPhase, ratings:ratingsPerEvent};
+   return {events: orderedData, widgetsPerPhase: widgetsPerPhase, ratings:ratingsPerEvent, deleted:deletedEvents};
 
 }
 
